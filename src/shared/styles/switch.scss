@@ -1,0 +1,28 @@
+.switch {
+  @apply relative inline-block w-[3.75em] h-[2.125em];
+}
+
+.switch input {
+  @apply w-0 h-0;
+}
+
+.slider {
+  @apply bg-dark absolute cursor-pointer top-0 left-0 right-0 bottom-0 transition-all duration-300 rounded-full;
+}
+
+.slider:before {
+  @apply absolute h-[1.625em] aspect-square left-[0.25em] bottom-[0.25em] bg-white transition-all;
+  content: "";
+}
+
+input:checked + .slider {
+  @apply bg-yellow;
+}
+
+input:checked + .slider:before {
+  @apply translate-x-[1.625em];
+}
+
+.slider:before {
+  @apply rounded-full;
+}

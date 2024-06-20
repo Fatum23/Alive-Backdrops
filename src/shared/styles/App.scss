@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --default: #e2e8f0;
+    --light: #f1f5f9;
+    --dark: #cbd5e1;
+    --text: #000;
+    --yellow: #ffbf00;
+    --dark-yellow: #cc9900;
+  }
+}
+
+.theme-system {
+  @media (prefers-color-scheme: light) {
+    --default: #e2e8f0;
+    --light: #f1f5f9;
+    --dark: #cbd5e1;
+    --text: #000;
+  }
+  @media (prefers-color-scheme: dark) {
+    --default: #43464a;
+    --light: #5c5f63;
+    --dark: #34373b;
+    --text: #fff;
+  }
+}
+
+.theme-light {
+  --default: #e2e8f0;
+  --light: #f1f5f9;
+  --dark: #cbd5e1;
+  --text: #000;
+}
+
+.theme-dark {
+  --default: #43464a;
+  --light: #5c5f63;
+  --dark: #34373b;
+  --text: #fff;
+}
+
+* {
+  @apply select-none text-text pointer-events-auto;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background-color: var(--yellow);
+  &:hover {
+    background-color: var(--dark-yellow);
+  }
+}
+
+html {
+  @apply h-screen w-screen;
+}
+
+body {
+  @apply min-w-[100vw] min-h-[100vh] m-0 bg-default;
+}
+
+button {
+  @apply cursor-pointer bg-light hover:bg-dark rounded-md;
+  transition: background-color 0.3s;
+  &:disabled {
+    @apply bg-dark;
+  }
+}
+
+img {
+  @apply pointer-events-none;
+}
+
+video {
+  @apply object-fill aspect-video;
+}
+.no-volume-controls::-webkit-media-controls-volume-slider,
+.no-volume-controls::-webkit-media-controls-mute-button {
+  display: none;
+}
+
+h1 {
+  @apply font-medium;
+}
+
+h6 {
+  @apply font-light;
+}
+
+input,
+textarea {
+  @apply outline-0 p-1 rounded-sm bg-light;
+}
+
+input[type="range"] {
+  @apply appearance-none p-0 cursor-pointer bg-dark;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  @apply rounded h-2;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  @apply appearance-none bg-yellow rounded w-2 h-7 -mt-[10px] hover:bg-dark-yellow;
+}
+
+hr {
+  @apply w-full h-0.5 mt-2 bg-dark border-0;
+}
