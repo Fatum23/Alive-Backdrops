@@ -2,10 +2,10 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 import { IoIosSearch, IoIosClose } from "react-icons/io";
 
-export default function Search(props: {
+export const Search = (props: {
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
-}) {
+}) => {
   const [active, setActive] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement | null>(null);
   return (
@@ -33,4 +33,4 @@ export default function Search(props: {
       )}
     </div>
   );
-}
+};

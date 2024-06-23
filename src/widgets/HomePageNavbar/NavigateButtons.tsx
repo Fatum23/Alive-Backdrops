@@ -5,7 +5,7 @@ import { IoMdSettings } from "react-icons/io";
 import { IoAddOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-export default function NavigateButtons() {
+export const NavigateButtons = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { activeWallpaper } = useAppStore();
@@ -13,7 +13,7 @@ export default function NavigateButtons() {
   return (
     <div className="flex flex-row gap-1.5 items-center">
       <button
-        className="flex flex-row items-center p-2 h-8"
+        className="flex flex-row items-center p-2 h-8 "
         onClick={() => navigate("/AddWallpaper")}
       >
         <IoAddOutline size={25} />
@@ -28,10 +28,10 @@ export default function NavigateButtons() {
       </button>
       <button
         onClick={() => navigate("/Settings")}
-        className="flex flex-row items-center p-2 h-8 group"
+        className="flex flex-row items-center p-2 h-8"
       >
         <IoMdSettings size={20} />
       </button>
     </div>
   );
-}
+};

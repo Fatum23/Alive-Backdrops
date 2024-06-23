@@ -1,12 +1,23 @@
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "@shared/store";
 import { TypeSettings } from "@shared/types";
-import { appDataDir } from "@tauri-apps/api/path";
 import { BackButton } from "@widgets";
-import { useTranslation } from "react-i18next";
 
-export default function SettingsNavBar(props: TypeSettings) {
+export const SettingsNavBar = (props: TypeSettings) => {
   const { t } = useTranslation();
   const store = useSettingsStore();
+
+  const [userDataPath, setUserDataPath] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function getUserDataPath() {
+      const path = await window.ipcRenderer.invoke("path:userData");
+      setUserDataPath(path);
+    }
+    getUserDataPath();
+  }, []);
+
   return (
     <>
       <div className="flex flex-row justify-between items-center h-10">
@@ -40,6 +51,24 @@ export default function SettingsNavBar(props: TypeSettings) {
           </button>
           <button
             className="p-1"
+            disabled={
+              props.behaviorWindow === "mute" &&
+              props.behaviorMaximizedWindow === "pause" &&
+              props.behaviorFullscreenWindow === "pause" &&
+              props.volume === "100" &&
+              props.autolaunch === true &&
+              props.colorTheme === "system" &&
+              props.language === "system" &&
+              props.wallpaperPath === userDataPath &&
+              store.behaviorWindow === "mute" &&
+              store.behaviorMaximizedWindow === "pause" &&
+              store.behaviorFullscreenWindow === "pause" &&
+              store.volume === "100" &&
+              store.autolaunch === true &&
+              store.colorTheme === "system" &&
+              store.language === "system" &&
+              store.wallpaperPath === userDataPath
+            }
             onClick={async () => {
               props.setBehaviorWindow("mute");
               props.setBehaviorMaximizedWindow("pause");
@@ -48,7 +77,7 @@ export default function SettingsNavBar(props: TypeSettings) {
               props.setAutolaunch(true);
               props.setColorTheme("system");
               props.setLanguage("system");
-              props.setWallpaperPath(await appDataDir());
+              props.setWallpaperPath(userDataPath!);
               store.setBehaviorWindow("mute");
               store.setBehaviorMaximizedWindow("pause");
               store.setBehaviorFullscreenWindow("pause");
@@ -56,7 +85,7 @@ export default function SettingsNavBar(props: TypeSettings) {
               store.setAutolaunch(true);
               store.setColorTheme("system");
               store.setLanguage("system");
-              store.setWallpaperPath(await appDataDir());
+              store.setWallpaperPath(userDataPath!);
             }}
           >
             {t("Reset")}
@@ -66,4 +95,4 @@ export default function SettingsNavBar(props: TypeSettings) {
       <hr />
     </>
   );
-}
+};

@@ -35,7 +35,7 @@ export type TypeContextMenu = {
   clickedWallpaper: number;
 };
 
-export type TypeWallpaperBehavior = "none" | "mute" | "pause";
+export type TypeWallpaperBehavior = "nothing" | "mute" | "pause";
 export type TypeColorTheme = "system" | "dark" | "light";
 export type TypeLanguage = "system" | "en" | "ru";
 
@@ -66,6 +66,6 @@ export type TypeSettings = {
 };
 
 export type TypeAppStore = {
-  activeWallpaper: TypeWallpaper | null;
+  activeWallpaper: TypeWallpaper | undefined;
   setActiveWallpaper: (wallpaper: TypeWallpaper) => void;
 };

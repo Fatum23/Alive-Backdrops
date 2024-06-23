@@ -1,34 +1,33 @@
 import { Wallpaper } from "@entities";
-import { getWallpapers } from "@shared/services/db";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TypeContextMenu, TypeTab, TypeWallpaper } from "@shared/types";
 
 import { CiImageOff as NoImage } from "react-icons/ci";
 
-export default function WallpaperList(props: {
+export const WallpaperList = (props: {
   activeTab: TypeTab;
   search: string;
   menu: TypeContextMenu;
   setMenu: Dispatch<SetStateAction<TypeContextMenu>>;
-}) {
+}) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [wallpapers, setWallpapers] = useState<TypeWallpaper[]>([]);
+  const [wallpapers, _setWallpapers] = useState<TypeWallpaper[]>([]);
 
-  useEffect(() => {
-    setLoading(true);
-    getWallpapers(props.search).then((res) => {
-      setWallpapers(res);
-      setLoading(false);
-    });
-  }, []);
-  useEffect(() => {
-    setLoading(true);
-    getWallpapers(props.search).then((res) => {
-      setWallpapers(res);
-      setLoading(false);
-    });
-  }, [props.search, props.activeTab]);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   getWallpapers(props.search).then((res) => {
+  //     setWallpapers(res);
+  //     setLoading(false);
+  //   });
+  // }, []);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   getWallpapers(props.search).then((res) => {
+  //     setWallpapers(res);
+  //     setLoading(false);
+  //   });
+  // }, [props.search, props.activeTab]);
 
   const memoizedWallpapers = useMemo(() => wallpapers, [wallpapers]);
 
@@ -78,4 +77,4 @@ export default function WallpaperList(props: {
       )}
     </div>
   );
-}
+};

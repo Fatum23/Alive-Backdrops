@@ -1,1 +1,1 @@
-export { default as AddWallpaperButton } from "./AddWallpaperButton";
+export { AddWallpaperButton } from "./AddWallpaperButton";

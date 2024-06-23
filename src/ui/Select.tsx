@@ -1,13 +1,15 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { default as ReactSelect } from "react-select";
 
 import "@shared/styles/react-select.scss";
 
-export default function Select(props: {
+export const Select = (props: {
   value: string;
   dropdownValues: string[];
   setValue: Dispatch<SetStateAction<string>>;
-}) {
+}) => {
+  const { t } = useTranslation();
   const [options, setOptions] = useState<
     { label: string; value: string }[] | []
   >([]);
@@ -15,8 +17,8 @@ export default function Select(props: {
   useEffect(() => {
     setOptions(
       props.dropdownValues.map((val) => ({
-        label: val.replace(/(^\w{1}|[\s.-]\w{1})/g, (match) =>
-          match.toUpperCase()
+        label: t(
+          val.replace(/(^\w{1}|[\s.-]\w{1})/g, (match) => match.toUpperCase())
         ),
         value: val,
       }))
@@ -30,12 +32,15 @@ export default function Select(props: {
       onChange={(item) => props.setValue(item!.value)}
       options={options}
       value={{
-        label: props.value.replace(/(^\w{1}|[\s.-]\w{1})/g, (match) =>
-          match.toUpperCase()
+        label: t(
+          props.value.replace(/(^\w{1}|[\s.-]\w{1})/g, (match) =>
+            match.toUpperCase()
+          )
         ),
         value: props.value,
       }}
       menuPlacement="auto"
+      menuPosition="fixed"
     />
   );
-}
+};

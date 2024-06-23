@@ -1,10 +1,9 @@
-import { addWallpaper } from "@shared/services/db";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { TypeWallpaper } from "@shared/types";
 
-export default function AddWallpaperButton(props: TypeWallpaper) {
+export const AddWallpaperButton = (props: TypeWallpaper) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [valid, setValid] = useState(
@@ -22,12 +21,12 @@ export default function AddWallpaperButton(props: TypeWallpaper) {
       }`}
       onClick={() => {
         if (valid) {
-          addWallpaper({
-            title: props.title,
-            src: props.src,
-            volume: props.volume,
-            speed: props.speed,
-          });
+          // addWallpaper({
+          //   title: props.title,
+          //   src: props.src,
+          //   volume: props.volume,
+          //   speed: props.speed,
+          // });
           navigate(-1);
         }
       }}
@@ -35,4 +34,4 @@ export default function AddWallpaperButton(props: TypeWallpaper) {
       {t("Add wallpaper")}
     </div>
   );
-}
+};

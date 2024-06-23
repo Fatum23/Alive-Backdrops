@@ -1,75 +1,77 @@
 import { create } from "zustand";
-import { getFromStore, setToStore } from "@shared/services";
 import {
   TypeColorTheme,
   TypeLanguage,
   TypeSettings,
   TypeWallpaperBehavior,
 } from "@shared/types";
+import { getFromStore, setToStore } from "@shared/services";
 
 export const useSettingsStore = create<TypeSettings>((set) => ({
   behaviorWindow: "mute",
-  setBehaviorWindow: (behavior) => {
-    setToStore<TypeWallpaperBehavior>("behaviorWindow", behavior);
+  setBehaviorWindow: async (behavior) => {
+    await setToStore<TypeWallpaperBehavior>("behaviorWindow", behavior);
     set(() => ({
       behaviorWindow: behavior,
     }));
   },
   behaviorMaximizedWindow: "pause",
-  setBehaviorMaximizedWindow: (behavior) => {
-    setToStore<TypeWallpaperBehavior>("behaviorMaximizedWindow", behavior);
+  setBehaviorMaximizedWindow: async (behavior) => {
+    await setToStore<TypeWallpaperBehavior>(
+      "behaviorMaximizedWindow",
+      behavior
+    );
     set(() => ({
       behaviorMaximizedWindow: behavior,
     }));
   },
   behaviorFullscreenWindow: "pause",
-  setBehaviorFullscreenWindow: (behavior) => {
-    setToStore<TypeWallpaperBehavior>("behaviorFullscreenWindow", behavior);
+  setBehaviorFullscreenWindow: async (behavior) => {
+    await setToStore<TypeWallpaperBehavior>(
+      "behaviorFullscreenWindow",
+      behavior
+    );
     set(() => ({
       behaviorFullscreenWindow: behavior,
     }));
   },
-  volume: "",
-  setVolume: (volume) => {
-    setToStore<string>("volume", volume);
+  volume: "0",
+  setVolume: async (volume) => {
+    await setToStore<string>("volume", volume);
     set(() => ({
       volume: volume,
     }));
   },
   autolaunch: false,
   setAutolaunch: async (active) => {
-    if (active) {
-      await enable();
-    } else {
-      await disable();
-    }
-    setToStore<boolean>("autolaunch", active);
+    await window.ipcRenderer.invoke("app:toggle-autolaunch", active);
+    await setToStore<boolean>("autolaunch", active);
     set(() => ({
       autolaunch: active,
     }));
   },
 
   colorTheme: "system",
-  setColorTheme: (theme) => {
-    setToStore<TypeColorTheme>("colorTheme", theme);
+  setColorTheme: async (theme) => {
+    await setToStore<TypeColorTheme>("colorTheme", theme);
     set(() => ({
       colorTheme: theme,
     }));
-    emit("change-theme", theme);
+    await window.ipcRenderer.invoke("theme:change-theme", theme);
   },
 
   language: "system",
-  setLanguage: (language) => {
-    setToStore<TypeLanguage>("language", language);
+  setLanguage: async (language) => {
+    await setToStore<TypeLanguage>("language", language);
     set(() => ({
       language: language,
     }));
-    emit("change-language", language);
+    await window.ipcRenderer.invoke("language:change-language", language);
   },
 
   wallpaperPath: "",
-  setWallpaperPath: (path) => {
-    setToStore<string>("wallpaperPath", path);
+  setWallpaperPath: async (path) => {
+    await setToStore<string>("wallpaperPath", path);
     set(() => ({
       wallpaperPath: path,
     }));
@@ -80,34 +82,32 @@ const initSettingsStore = async () => {
   await getFromStore<TypeWallpaperBehavior>("behaviorWindow").then(
     (behavior) => {
       useSettingsStore.setState({
-        behaviorWindow: behavior !== null ? behavior : "mute",
+        behaviorWindow: behavior !== undefined ? behavior : "mute",
       });
     }
   );
   await getFromStore<TypeWallpaperBehavior>("behaviorMaximizedWindow").then(
     (behavior) => {
       useSettingsStore.setState({
-        behaviorMaximizedWindow: behavior !== null ? behavior : "pause",
+        behaviorMaximizedWindow: behavior !== undefined ? behavior : "pause",
       });
     }
   );
   await getFromStore<TypeWallpaperBehavior>("behaviorFullscreenWindow").then(
     (behavior) => {
       useSettingsStore.setState({
-        behaviorFullscreenWindow: behavior !== null ? behavior : "pause",
+        behaviorFullscreenWindow: behavior !== undefined ? behavior : "pause",
       });
     }
   );
   await getFromStore<string>("volume").then((volume) => {
-    useSettingsStore.setState({ volume: volume !== null ? volume : "100" });
+    useSettingsStore.setState({
+      volume: volume !== undefined ? volume : "100",
+    });
   });
   await getFromStore<boolean>("autolaunch").then(async (active) => {
-    if (active !== null) {
-      if (active) {
-        await enable();
-      } else {
-        await disable();
-      }
+    if (active !== undefined) {
+      await window.ipcRenderer.invoke("app:toggle-autolaunch", active);
       useSettingsStore.setState({
         autolaunch: active,
       });
@@ -118,28 +118,28 @@ const initSettingsStore = async () => {
     }
   });
 
-  await getFromStore<TypeColorTheme>("colorTheme").then((theme) => {
-    emit("change-theme", theme);
+  await getFromStore<TypeColorTheme>("colorTheme").then(async (theme) => {
     useSettingsStore.setState({
-      colorTheme: theme !== null ? theme : "system",
+      colorTheme: theme !== undefined ? theme : "system",
     });
+    await window.ipcRenderer.invoke("theme:change-theme", theme);
   });
 
-  await getFromStore<TypeLanguage>("language").then((language) => {
+  await getFromStore<TypeLanguage>("language").then(async (language) => {
     useSettingsStore.setState({
-      language: language !== null ? language : "system",
+      language: language !== undefined ? language : "system",
     });
+    await window.ipcRenderer.invoke("language:change-language", language);
   });
 
   await getFromStore<string>("wallpaperPath").then(async (path) => {
-    if (path !== null) {
+    if (path !== undefined) {
       useSettingsStore.setState({
         wallpaperPath: path,
       });
     } else {
-      let dataDir = await appDataDir();
       useSettingsStore.setState({
-        wallpaperPath: dataDir,
+        wallpaperPath: await window.ipcRenderer.invoke("path:userData"),
       });
     }
   });

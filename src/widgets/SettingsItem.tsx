@@ -3,38 +3,47 @@ import { useTranslation } from "react-i18next";
 
 import { BsWindow } from "react-icons/bs";
 import { CgMaximize } from "react-icons/cg";
-import { FaVolumeUp, FaDesktop, FaPalette } from "react-icons/fa";
+import { FaVolumeUp, FaDesktop, FaPalette, FaVolumeMute } from "react-icons/fa";
 import { MdRocketLaunch } from "react-icons/md";
 import { GrLanguage } from "react-icons/gr";
 import { GoFileDirectoryFill } from "react-icons/go";
 
 import { TypeSettingsLabel } from "@shared/types";
-import { Select, PathPicker, Switch, Slider } from "@widgets";
-import "@shared/styles/react-select.scss";
+import { PathPicker } from "@widgets";
+import { Select, Slider, Switch } from "@ui";
 
-export default function SettingsItem<T>(props: {
+export const SettingsItem = <T,>(props: {
   value: T;
   dropdownValues?: T[];
   setValue: Dispatch<SetStateAction<T>>;
   label: TypeSettingsLabel;
   title: string;
   description: string;
-}) {
+}) => {
   const { t } = useTranslation();
 
   return (
     <button className="p-2 my-1 h-16 cursor-default gap-2 flex flex-row items-center group">
       <div className="flex flex-row w-[60%] h-full items-center">
-        {props.label === "window" && (
-          <BsWindow size={24} className="[transform:rotateY(180deg)]" />
-        )}
-        {props.label === "maximized-window" && <CgMaximize size={24} />}
-        {props.label === "fullscreen-window" && <FaDesktop size={24} />}
-        {props.label === "volume" && <FaVolumeUp size={24} />}
-        {props.label === "autolaunch" && <MdRocketLaunch size={24} />}
-        {props.label === "theme" && <FaPalette size={24} />}
-        {props.label === "language" && <GrLanguage size={24} />}
-        {props.label === "wallpapers-path" && <GoFileDirectoryFill size={24} />}
+        <div className="w-6">
+          {props.label === "window" && (
+            <BsWindow size={24} className="[transform:rotateY(180deg)]" />
+          )}
+          {props.label === "maximized-window" && <CgMaximize size={24} />}
+          {props.label === "fullscreen-window" && <FaDesktop size={24} />}
+          {props.label === "volume" &&
+            (props.value === "0" ? (
+              <FaVolumeMute size={21} />
+            ) : (
+              <FaVolumeUp size={24} />
+            ))}
+          {props.label === "autolaunch" && <MdRocketLaunch size={24} />}
+          {props.label === "theme" && <FaPalette size={24} />}
+          {props.label === "language" && <GrLanguage size={24} />}
+          {props.label === "wallpapers-path" && (
+            <GoFileDirectoryFill size={24} />
+          )}
+        </div>
         <div className="ml-4 flex flex-col items-start">
           <div>{t(props.title)}</div>
           <h6>{t(props.description)}</h6>
@@ -80,4 +89,4 @@ export default function SettingsItem<T>(props: {
       </div>
     </button>
   );
-}
+};

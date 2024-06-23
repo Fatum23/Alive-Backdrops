@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
 
-export default function Textarea(props: {
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
-}) {
-  const { t } = useTranslation();
+export const Textarea = (
+  props: JSX.IntrinsicElements["textarea"] & {
+    value: string;
+    setValue: Dispatch<SetStateAction<string>>;
+  }
+) => {
   const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -18,11 +18,8 @@ export default function Textarea(props: {
   return (
     <textarea
       ref={ref}
-      className="w-[50%] bg-light overflow-hidden resize-none"
-      placeholder={t("Title")}
-      maxLength={58}
       value={props.value}
       onChange={(event) => props.setValue(event.target.value)}
     />
   );
-}
+};

@@ -2,15 +2,15 @@ import { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { TypeTab } from "@shared/types";
 
-export default function Tab(props: {
+export const Tab = (props: {
   title: TypeTab;
   activeTab: TypeTab;
   setActiveTab: Dispatch<SetStateAction<TypeTab>>;
-}) {
+}) => {
   const { t } = useTranslation();
   return (
     <button
-      className="p-1 bg-transparent hover:bg-transparent"
+      className="p-1 bg-transparent"
       onClick={() => props.setActiveTab(props.title)}
     >
       {t(props.title)}
@@ -21,4 +21,4 @@ export default function Tab(props: {
       ></span>
     </button>
   );
-}
+};

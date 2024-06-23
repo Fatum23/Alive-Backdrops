@@ -1,19 +1,27 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 import "@shared/scripts/i18n";
 import "@shared/styles/App.scss";
 import { AddWallpaperPage, HomePage, SettingsPage } from "@pages";
-import { useSettingsStore } from "@shared/store/SettingsStore";
+import { Titlebar } from "@widgets";
+import { useState } from "react";
 
-export default function App() {
-  useSettingsStore();
+export const App = () => {
+  const [title, setTitle] = useState<string>("");
   return (
-    <BrowserRouter>
+    <HashRouter>
+      <Titlebar title={title} />
       <Routes>
-        <Route path="/src/app/main/main.html" element={<HomePage />} />
-        <Route path="/AddWallpaper" element={<AddWallpaperPage />} />
-        <Route path="/Settings" element={<SettingsPage />} />
+        <Route path="/" element={<HomePage setTitle={setTitle} />} />
+        <Route
+          path="/AddWallpaper"
+          element={<AddWallpaperPage setTitle={setTitle} />}
+        />
+        <Route
+          path="/Settings"
+          element={<SettingsPage setTitle={setTitle} />}
+        />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
-}
+};

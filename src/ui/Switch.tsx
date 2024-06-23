@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import "@shared/styles/switch.scss";
 
-export default function Switch(props: {
+export const Switch = (props: {
   checked: boolean;
   setChecked: Dispatch<SetStateAction<boolean>>;
-}) {
+}) => {
   return (
     <label className="switch text-xs">
       <input
@@ -19,4 +19,4 @@ export default function Switch(props: {
       ></span>
     </label>
   );
-}
+};

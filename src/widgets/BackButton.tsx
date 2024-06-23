@@ -1,8 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
 
-export default function BackButton() {
+export const BackButton = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
@@ -14,4 +14,4 @@ export default function BackButton() {
       <div>{t("Back")}</div>
     </button>
   );
-}
+};

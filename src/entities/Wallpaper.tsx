@@ -1,4 +1,3 @@
-import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import { TypeContextMenu, TypeWallpaper } from "@shared/types";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -14,14 +13,14 @@ const handleLoad = (props: {
   }
 };
 
-export default function Wallpaper(
+export const Wallpaper = (
   props: TypeWallpaper & {
     setLoading: Dispatch<SetStateAction<boolean>> | undefined;
     search: string;
     menu: TypeContextMenu;
     setMenu: Dispatch<SetStateAction<TypeContextMenu>>;
   }
-) {
+) => {
   const ref = useRef<HTMLVideoElement | null>(null);
 
   const [hovered, setHovered] = useState<boolean>(false);
@@ -52,11 +51,11 @@ export default function Wallpaper(
       onMouseLeave={() => setHovered(false)}
       onClick={() => {
         setActiveWallpaper(props);
-        invoke("attach", {
-          src: props.src,
-          volume: props.volume,
-          speed: props.speed,
-        });
+        // invoke("attach", {
+        //   src: props.src,
+        //   volume: props.volume,
+        //   speed: props.speed,
+        // });
       }}
       onContextMenu={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -73,7 +72,7 @@ export default function Wallpaper(
       <video
         ref={ref}
         preload="metadata"
-        src={convertFileSrc(props.src)}
+        src={props.src}
         loop
         onLoadedData={() => {
           handleLoad(props);
@@ -111,4 +110,4 @@ export default function Wallpaper(
         )}
     </div>
   );
-}
+};

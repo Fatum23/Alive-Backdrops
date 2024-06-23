@@ -2,13 +2,13 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 const isValid = (num: string) => /^-{0,1}\d*\.{0,1}\d+$/.test(num);
 
-export default function Slider(props: {
+export const Slider = (props: {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
   min: string;
   max: string;
   step: string;
-}) {
+}) => {
   const range = useRef<HTMLInputElement | null>(null);
   const [value, setValue] = useState<string>(props.value);
 
@@ -63,4 +63,4 @@ export default function Slider(props: {
       />
     </div>
   );
-}
+};

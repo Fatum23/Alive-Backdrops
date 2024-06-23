@@ -1,6 +1,6 @@
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Titlebar, SettingsItem, SettingsNavBar } from "@widgets";
-import { useState } from "react";
+import { SettingsItem, SettingsNavBar, SettingsFooter } from "@widgets";
 import { useSettingsStore } from "@shared/store";
 import {
   TypeColorTheme,
@@ -8,7 +8,11 @@ import {
   TypeWallpaperBehavior,
 } from "@shared/types";
 
-export default function SettingsPage() {
+export const SettingsPage = (props: {
+  setTitle: Dispatch<SetStateAction<string>>;
+}) => {
+  useEffect(() => props.setTitle("Settings"), []);
+
   const { t } = useTranslation();
   const store = useSettingsStore();
 
@@ -30,8 +34,7 @@ export default function SettingsPage() {
   );
 
   return (
-    <div className="h-screen w-screen overflow-hidden relative">
-      <Titlebar title={t("Settings")} />
+    <div className="h-screen w-screen overflow-hidden">
       <SettingsNavBar
         behaviorWindow={behaviorWindow}
         setBehaviorWindow={setBehaviorWindow}
@@ -56,27 +59,27 @@ export default function SettingsPage() {
             <h1>{t("Wallpaper behavior")}</h1>
             <SettingsItem
               value={behaviorWindow}
-              dropdownValues={["none", "mute", "pause"]}
+              dropdownValues={["nothing", "mute", "pause"]}
               setValue={setBehaviorWindow}
               label="window"
-              title="Window in the foreground"
-              description="If there is a window that is in the foreground"
+              title="Window"
+              description="If there is an active window"
             />
             <SettingsItem
               value={behaviorMaximizedWindow}
-              dropdownValues={["none", "mute", "pause"]}
+              dropdownValues={["nothing", "mute", "pause"]}
               setValue={setBehaviorMaximizedWindow}
               label="maximized-window"
               title="Maximized window"
-              description="If there is a maximized window"
+              description="If there is an active maximized window"
             />
             <SettingsItem
               value={behaviorFullscreenWindow}
-              dropdownValues={["none", "mute", "pause"]}
+              dropdownValues={["nothing", "mute", "pause"]}
               setValue={setBehaviorFullscreenWindow}
               label="fullscreen-window"
-              title="Window in the fullscreen"
-              description="If there is a window that is in the fullscreen"
+              title="Fullscreen window"
+              description="If there is an active fullscreen window"
             />
           </div>
           <div className="flex flex-col">
@@ -122,8 +125,9 @@ export default function SettingsPage() {
               description="Path to the folder where the wallpapers are stored"
             />
           </div>
+          <SettingsFooter />
         </div>
       </div>
     </div>
   );
-}
+};

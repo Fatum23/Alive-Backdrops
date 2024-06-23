@@ -20,24 +20,24 @@
     @apply text-text #{!important};
   }
   &__menu {
-    background-color: var(--dark) !important;
+    @apply bg-dark w-max min-w-full #{!important};
     animation: scaleIn 0.1s ease-in-out;
   }
   &__option {
-    cursor: pointer !important;
+    @apply cursor-pointer #{!important};
 
     &--is-focused {
-      background-color: var(--light) !important;
+      @apply bg-light #{!important};
     }
 
     &--is-selected {
-      background-color: var(--yellow) !important;
+      @apply bg-yellow #{!important};
     }
   }
   &__indicator-separator {
-    background-color: var(--text) !important;
+    @apply bg-text #{!important};
   }
   &__indicator {
-    color: var(--text) !important;
+    @apply text-text #{!important};
   }
 }

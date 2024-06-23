@@ -1,22 +1,24 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { TypeContextMenu, TypeTab } from "@shared/types";
-import { ContextMenu, Navbar, Titlebar, WallpaperList } from "@widgets";
-import { useAppStore } from "@shared/store/AppStore";
+import { ContextMenu, HomePageNavbar, WallpaperList } from "@widgets";
+import { useAppStore } from "@shared/store";
 
-export default function HomePage() {
+export const HomePage = (props: {
+  setTitle: Dispatch<SetStateAction<string>>;
+}) => {
+  useEffect(() => props.setTitle(""), []);
   const [activeTab, setActiveTab] = useState<TypeTab>("My library");
   const [search, setSearch] = useState<string>("");
   const activeWallpaper = useAppStore((state) => state.activeWallpaper);
   const [menu, setMenu] = useState<TypeContextMenu>({
     x: -1,
     y: -1,
-    activeWallpaper: activeWallpaper !== null ? activeWallpaper.id! : -1,
+    activeWallpaper: activeWallpaper !== undefined ? activeWallpaper.id! : -1,
     clickedWallpaper: -1,
   });
   return (
-    <div className="h-screen w-screen overflow-y-hidden">
-      <Titlebar title="" />
-      <Navbar
+    <div className="h-screen w-screen overflow-hidden">
+      <HomePageNavbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         search={search}
@@ -31,4 +33,4 @@ export default function HomePage() {
       <ContextMenu contextMenu={menu} setContextMenu={setMenu} />
     </div>
   );
-}
+};

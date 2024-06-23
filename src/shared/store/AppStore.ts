@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { TypeAppStore, TypeWallpaper } from "@shared/types";
-import { getFromStore, setToStore, getWallpaperById } from "@shared/services";
+import { getFromStore, setToStore } from "@shared/services";
 
 export const useAppStore = create<TypeAppStore>((set) => ({
-  activeWallpaper: null,
-  setActiveWallpaper: (wallpaper: TypeWallpaper) => {
-    setToStore<number>("activeWallpaper", wallpaper.id!);
+  activeWallpaper: undefined,
+  setActiveWallpaper: async (wallpaper: TypeWallpaper) => {
+    await setToStore<number>("activeWallpaper", wallpaper.id!);
     set(() => ({
       activeWallpaper: {
         id: wallpaper.id!,
@@ -20,13 +20,12 @@ export const useAppStore = create<TypeAppStore>((set) => ({
 
 const initAppStore = async () => {
   await getFromStore<number>("activeWallpaper").then(async (id) => {
-    if (id !== null) {
-      const activeWallpaper = await getWallpaperById(id);
-
-      useAppStore.setState({
-        activeWallpaper: activeWallpaper,
-      });
-    }
+    useAppStore.setState({
+      activeWallpaper:
+        id === undefined
+          ? undefined
+          : { id: 1, speed: "1", volume: "1", title: "a", src: "a" },
+    });
   });
 };
 

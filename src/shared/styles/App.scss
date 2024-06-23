@@ -43,7 +43,8 @@
 }
 
 * {
-  @apply select-none text-text pointer-events-auto;
+  @apply select-none text-text;
+  transition: background-color 0.3s;
 }
 
 ::-webkit-scrollbar {
@@ -64,12 +65,11 @@ html {
 }
 
 body {
-  @apply min-w-[100vw] min-h-[100vh] m-0 bg-default;
+  @apply min-w-[100vw] min-h-[100vh] overflow-hidden m-0 bg-default;
 }
 
 button {
   @apply cursor-pointer bg-light hover:bg-dark rounded-md;
-  transition: background-color 0.3s;
   &:disabled {
     @apply bg-dark;
   }
@@ -77,6 +77,10 @@ button {
 
 img {
   @apply pointer-events-none;
+}
+
+a {
+  @apply cursor-pointer hover:text-sky-400;
 }
 
 video {
@@ -114,4 +118,8 @@ input[type="range"]::-webkit-slider-thumb {
 
 hr {
   @apply w-full h-0.5 mt-2 bg-dark border-0;
+}
+
+.window-drag-region {
+  -webkit-app-region: drag;
 }

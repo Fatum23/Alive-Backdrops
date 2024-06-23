@@ -1,1 +1,1 @@
-export { default as Wallpaper } from "./Wallpaper";
+export { Wallpaper } from "./Wallpaper";

@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
-import { SUPPORTED_WALLPAPER_EXTENSIONS } from "@shared/constants";
-import {
-  BackButton,
-  Filepicker,
-  Slider,
-  Textarea,
-  Titlebar,
-  WallpaperPreview,
-} from "@widgets";
-import { AddWallpaperButton } from "@features";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BackButton, Filepicker, WallpaperPreview } from "@widgets";
+import { AddWallpaperButton } from "@features";
+import { Slider, Textarea } from "@ui";
 
-export default function AddWallpaperPage() {
+export const AddWallpaperPage = (props: {
+  setTitle: Dispatch<SetStateAction<string>>;
+}) => {
+  useEffect(() => props.setTitle("Add wallpaper"), []);
+
   const { t } = useTranslation();
   const [wallpaperSrc, setWallpaperSrc] = useState<string>("");
   const [title, setTitle] = useState<string>("");
@@ -21,16 +18,12 @@ export default function AddWallpaperPage() {
   useEffect(() => {
     if (wallpaperSrc !== "") {
       let fileName: string = wallpaperSrc.split("\\").pop()!;
-      SUPPORTED_WALLPAPER_EXTENSIONS.forEach(
-        (extension) => (fileName = fileName?.replace(`.${extension}`, ""))
-      );
-      setTitle(fileName);
+      setTitle(fileName.split(".")[0]!);
     }
   }, [wallpaperSrc]);
 
   return (
-    <div className="flex flex-col w-[100vw] h-[100vh]">
-      <Titlebar title="Add wallpaper" />
+    <div className="flex flex-col h-screen w-screen">
       <div className="flex flex-col w-full h-full overflow-x-hidden overflow-y-auto">
         <div className="absolute">
           <BackButton />
@@ -43,7 +36,13 @@ export default function AddWallpaperPage() {
             </div>
           )}
           <Filepicker setVideoSrc={setWallpaperSrc} />
-          <Textarea value={title} setValue={setTitle} />
+          <Textarea
+            className="w-[50%] bg-light overflow-hidden resize-none"
+            placeholder={t("Title")}
+            maxLength={58}
+            value={title}
+            setValue={setTitle}
+          />
           <div className="w-[50%] flex flex-row">
             <div>
               <div className="mt-1.5">{t("Volume")}</div>
@@ -76,4 +75,4 @@ export default function AddWallpaperPage() {
       </div>
     </div>
   );
-}
+};

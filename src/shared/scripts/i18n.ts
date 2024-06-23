@@ -1,4 +1,3 @@
-import { listen } from "@tauri-apps/api/event";
 import i18next from "i18next";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
@@ -26,16 +25,20 @@ i18n.use(initReactI18next).init({
         Title: "Title",
 
         "Wallpaper behavior": "Wallpaper behavior",
-        "Window in the foreground": "Window in the foreground",
-        "If there is a window that is in the foreground":
-          "If there is a window that is in the foreground",
+        Window: "Window",
+        "If there is an active window": "If there is an active window",
 
         "Maximized window": "Maximized window",
-        "If there is a maximized window": "If there is a maximized window",
+        "If there is an active maximized window":
+          "If there is an active maximized window",
 
-        "Window in the fullscreen": "Window in the fullscreen",
-        "If there is a window that is in the fullscreen":
-          "If there is a window that is in the fullscreen",
+        "Fullscreen window": "Fullscreen window",
+        "If there is an active fullscreen window":
+          "If there is an active fullscreen window",
+
+        Nothing: "Nothing",
+        Mute: "Mute",
+        Pause: "Pause",
 
         Volume: "Volume",
         "General volume": "General volume",
@@ -81,28 +84,21 @@ i18n.use(initReactI18next).init({
         Title: "Название",
 
         "Wallpaper behavior": "Поведение обоев",
-        "Apps in the foreground": "Приложения на переднем плане",
-        "If there is an application that is in the foreground":
-          "Если есть приложение, которое находится на переднем плане",
+        Window: "Окно",
+        "If there is an active window": "Если есть активное окно",
 
-        "Maximized apps": "Развернутые приложения",
-        "If there is an maximized application":
-          "Если есть развернутое приложение",
+        "Maximized window": "Развернутое окно",
+        "If there is an active maximized window":
+          "Если есть активное развернутое окно",
 
-        "Apps in the fullscreen": "Приложения в полноэкранном режиме",
-        "If there is an application that is in the fullscreen":
-          "Если есть приложение, которое в полноэкранном режиме",
+        "Fullscreen window": "Полноэкранное окно",
+        "If there is an active fullscreen window":
+          "Если есть активное полноэкранное окно",
 
-        "Window in the foreground": "Окно на переднем плане",
-        "If there is a window that is in the foreground":
-          "If there is a window that is in the foreground",
+        Nothing: "Ничего",
+        Mute: "Заглушить",
+        Pause: "Приостановить",
 
-        "Maximized window": "Maximized window",
-        "If there is a maximized window": "If there is a maximized window",
-
-        "Window in the fullscreen": "Window in the fullscreen",
-        "If there is a window that is in the fullscreen":
-          "If there is a window that is in the fullscreen",
         Volume: "Громкость",
         "General volume": "Общая громкость",
         "General volume for all wallpapers": "Общая громкость для всех обоев",
@@ -131,7 +127,7 @@ i18n.use(initReactI18next).init({
   },
 });
 
-listen("change-language", (ev: { payload: string }) => {
-  ev.payload = ev.payload !== "system" ? ev.payload : navigator.language;
-  i18next.changeLanguage(ev.payload);
+window.ipcRenderer.on("language:change-language", (_e, payload: string) => {
+  payload = payload !== "system" ? payload : navigator.language;
+  i18next.changeLanguage(payload);
 });
