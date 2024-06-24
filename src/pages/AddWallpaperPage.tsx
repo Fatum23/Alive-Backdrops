@@ -1,13 +1,17 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { BackButton, Filepicker, WallpaperPreview } from "@widgets";
 import { AddWallpaperButton } from "@features";
 import { Slider, Textarea } from "@ui";
+import { TypePage } from "@shared/types";
 
-export const AddWallpaperPage = (props: {
-  setTitle: Dispatch<SetStateAction<string>>;
-}) => {
-  useEffect(() => props.setTitle("Add wallpaper"), []);
+export const AddWallpaperPage = (props: TypePage) => {
+  const location = useLocation();
+  useEffect(() => {
+    props.setTitle("Add wallpaper");
+    props.setLocation(location.pathname);
+  }, []);
 
   const { t } = useTranslation();
   const [wallpaperSrc, setWallpaperSrc] = useState<string>("");
@@ -15,11 +19,23 @@ export const AddWallpaperPage = (props: {
   const [volume, setVolume] = useState("100");
   const [speed, setSpeed] = useState("1");
 
+  const { state } = useLocation();
+
   useEffect(() => {
-    if (wallpaperSrc !== "") {
-      let fileName: string = wallpaperSrc.split("\\").pop()!;
-      setTitle(fileName.split(".")[0]!);
+    if (state !== null) {
+      console.log(state);
+      setWallpaperSrc(state.drop);
     }
+  }, [state]);
+
+  useEffect(() => {
+    const check = async () => {
+      if (wallpaperSrc !== "") {
+        let fileName: string = wallpaperSrc.split("\\").pop()!;
+        setTitle(fileName.split(".")[0]!);
+      }
+    };
+    check();
   }, [wallpaperSrc]);
 
   return (
@@ -41,7 +57,7 @@ export const AddWallpaperPage = (props: {
             placeholder={t("Title")}
             maxLength={58}
             value={title}
-            setValue={setTitle}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <div className="w-[50%] flex flex-row">
             <div>

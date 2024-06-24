@@ -8,9 +8,7 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
-        "Add wallpaper": "Add wallpaper",
-        "My library": "My library",
-        "Online library": "Online library",
+        Library: "Library",
         Add: "Add",
         Active: "Active",
         Settings: "Settings",
@@ -20,8 +18,8 @@ i18n.use(initReactI18next).init({
         Loading: "Loading wallpapers...",
         "No such wallpapers found": "No such wallpapers found",
         "You have no wallpapers added yet": "You have no wallpapers added yet",
-        "Invalid video format": "Invalid video format",
-        "Drop or select video": "Drop or select video",
+        "Invalid file extension": "Invalid file extension",
+        "Drop or select file": "Drop or select file",
         Title: "Title",
 
         "Wallpaper behavior": "Wallpaper behavior",
@@ -39,6 +37,13 @@ i18n.use(initReactI18next).init({
         Nothing: "Nothing",
         Mute: "Mute",
         Pause: "Pause",
+
+        System: "System",
+        Light: "Light",
+        Dark: "Dark",
+
+        Ru: "Russian",
+        En: "English",
 
         Volume: "Volume",
         "General volume": "General volume",
@@ -65,9 +70,7 @@ i18n.use(initReactI18next).init({
     },
     ru: {
       translation: {
-        "Add wallpaper": "Добавить обои",
-        "My library": "Моя библиотека",
-        "Online library": "Онлайн библиотека",
+        Library: "Библиотека",
         Add: "Добавить",
         Active: "Активные",
         Settings: "Настройки",
@@ -79,8 +82,8 @@ i18n.use(initReactI18next).init({
           "У вас пока что нет добавленных обоев",
         "No such wallpapers found": "Такие обои не найдены",
 
-        "Invalid video format": "Неправильный формат видео",
-        "Drop or select video": "Перетащите сюда видео или выберите его",
+        "Invalid file format": "Неподдер",
+        "Drop or select file": "Перетащите или выберите файл",
         Title: "Название",
 
         "Wallpaper behavior": "Поведение обоев",
@@ -98,6 +101,13 @@ i18n.use(initReactI18next).init({
         Nothing: "Ничего",
         Mute: "Заглушить",
         Pause: "Приостановить",
+
+        System: "Система",
+        Light: "Светлая",
+        Dark: "Тёмная",
+
+        Ru: "Русский",
+        En: "English",
 
         Volume: "Громкость",
         "General volume": "Общая громкость",

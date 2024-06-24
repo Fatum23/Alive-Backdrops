@@ -1,25 +1,35 @@
+import { useState } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 
 import "@shared/scripts/i18n";
 import "@shared/styles/App.scss";
 import { AddWallpaperPage, HomePage, SettingsPage } from "@pages";
-import { Titlebar } from "@widgets";
-import { useState } from "react";
+import { DropHandler, Titlebar } from "@widgets";
 
 export const App = () => {
   const [title, setTitle] = useState<string>("");
+  const [location, setLocation] = useState<string>("/");
+
   return (
     <HashRouter>
       <Titlebar title={title} />
+      <DropHandler location={location} />
       <Routes>
-        <Route path="/" element={<HomePage setTitle={setTitle} />} />
+        <Route
+          path="/"
+          element={<HomePage setTitle={setTitle} setLocation={setLocation} />}
+        />
         <Route
           path="/AddWallpaper"
-          element={<AddWallpaperPage setTitle={setTitle} />}
+          element={
+            <AddWallpaperPage setTitle={setTitle} setLocation={setLocation} />
+          }
         />
         <Route
           path="/Settings"
-          element={<SettingsPage setTitle={setTitle} />}
+          element={
+            <SettingsPage setTitle={setTitle} setLocation={setLocation} />
+          }
         />
       </Routes>
     </HashRouter>

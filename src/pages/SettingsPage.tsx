@@ -1,17 +1,21 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SettingsItem, SettingsNavBar, SettingsFooter } from "@widgets";
 import { useSettingsStore } from "@shared/store";
 import {
   TypeColorTheme,
   TypeLanguage,
+  TypePage,
   TypeWallpaperBehavior,
 } from "@shared/types";
+import { useLocation } from "react-router-dom";
 
-export const SettingsPage = (props: {
-  setTitle: Dispatch<SetStateAction<string>>;
-}) => {
-  useEffect(() => props.setTitle("Settings"), []);
+export const SettingsPage = (props: TypePage) => {
+  const location = useLocation();
+  useEffect(() => {
+    props.setTitle("Settings");
+    props.setLocation(location.pathname);
+  }, []);
 
   const { t } = useTranslation();
   const store = useSettingsStore();

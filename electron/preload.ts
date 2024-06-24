@@ -1,5 +1,11 @@
 import { ipcRenderer, contextBridge } from "electron";
 
+let app = {
+  quit() {
+    console.log("quit");
+  },
+};
+
 contextBridge.exposeInMainWorld("ipcRenderer", {
   on(...args: Parameters<typeof ipcRenderer.on>) {
     const [channel, listener] = args;
@@ -11,18 +17,9 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
     const [channel, ...omit] = args;
     return ipcRenderer.off(channel, ...omit);
   },
-  send(...args: Parameters<typeof ipcRenderer.send>) {
-    const [channel, ...omit] = args;
-    return ipcRenderer.send(channel, ...omit);
-  },
   invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
     const [channel, ...omit] = args;
     return ipcRenderer.invoke(channel, ...omit);
   },
-  removeAllListeners(channel: string) {
-    return ipcRenderer.removeAllListeners(channel);
-  },
-  listeners(channel: string) {
-    return ipcRenderer.listeners(channel);
-  },
+  app: app,
 });

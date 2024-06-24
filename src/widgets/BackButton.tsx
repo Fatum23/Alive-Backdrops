@@ -6,10 +6,7 @@ export const BackButton = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <button
-      className="flex flex-row mt-2 ml-2 p-1"
-      onClick={() => navigate(-1)}
-    >
+    <button className="flex flex-row" onClick={() => navigate(-1)}>
       <IoMdArrowRoundBack size={25} />
       <div>{t("Back")}</div>
     </button>

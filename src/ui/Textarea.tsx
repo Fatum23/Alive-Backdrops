@@ -1,11 +1,6 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-export const Textarea = (
-  props: JSX.IntrinsicElements["textarea"] & {
-    value: string;
-    setValue: Dispatch<SetStateAction<string>>;
-  }
-) => {
+export const Textarea = (props: JSX.IntrinsicElements["textarea"]) => {
   const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -15,11 +10,5 @@ export const Textarea = (
     }
   }, [props.value]);
 
-  return (
-    <textarea
-      ref={ref}
-      value={props.value}
-      onChange={(event) => props.setValue(event.target.value)}
-    />
-  );
+  return <textarea ref={ref} />;
 };

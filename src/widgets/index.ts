@@ -1,5 +1,5 @@
 export { BackButton } from "./BackButton";
-export { HomePageNavbar } from "./HomePageNavbar/HomePageNavbar";
+export { HomeNavbar } from "./HomeNavbar";
 export { Titlebar } from "./Titlebar";
 export { WallpaperList } from "./WallpaperList";
 export { WallpaperPreview } from "./WallpaperPreview";
@@ -11,3 +11,4 @@ export { PathPicker } from "./PathPicker";
 export { SettingsNavBar } from "./SettingsNavBar";
 export { SettingsFooter } from "./SettingsFooter";
 export { UpdateButton } from "./UpdateButton";
+export { DropHandler } from "./DropHandler";

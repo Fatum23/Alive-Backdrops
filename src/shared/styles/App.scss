@@ -44,20 +44,15 @@
 
 * {
   @apply select-none text-text;
-  transition: background-color 0.3s;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 10px;
   background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 20px;
-  background-color: var(--yellow);
-  &:hover {
-    background-color: var(--dark-yellow);
-  }
+  @apply bg-yellow hover:bg-dark-yellow;
 }
 
 html {
@@ -101,7 +96,7 @@ h6 {
 
 input,
 textarea {
-  @apply outline-0 p-1 rounded-sm bg-light;
+  @apply outline-0 p-1 rounded-md bg-light;
 }
 
 input[type="range"] {
@@ -117,7 +112,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 hr {
-  @apply w-full h-0.5 mt-2 bg-dark border-0;
+  @apply w-full h-0.5 bg-dark border-0;
 }
 
 .window-drag-region {

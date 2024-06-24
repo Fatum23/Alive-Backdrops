@@ -1,13 +1,15 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { TypeContextMenu, TypeTab } from "@shared/types";
-import { ContextMenu, HomePageNavbar, WallpaperList } from "@widgets";
+import { useEffect, useState } from "react";
+import { TypeContextMenu, TypePage } from "@shared/types";
+import { ContextMenu, HomeNavbar, WallpaperList } from "@widgets";
 import { useAppStore } from "@shared/store";
+import { useLocation } from "react-router-dom";
 
-export const HomePage = (props: {
-  setTitle: Dispatch<SetStateAction<string>>;
-}) => {
-  useEffect(() => props.setTitle(""), []);
-  const [activeTab, setActiveTab] = useState<TypeTab>("My library");
+export const HomePage = (props: TypePage) => {
+  const location = useLocation();
+  useEffect(() => {
+    props.setTitle("");
+    props.setLocation(location.pathname);
+  }, []);
   const [search, setSearch] = useState<string>("");
   const activeWallpaper = useAppStore((state) => state.activeWallpaper);
   const [menu, setMenu] = useState<TypeContextMenu>({
@@ -18,14 +20,9 @@ export const HomePage = (props: {
   });
   return (
     <div className="h-screen w-screen overflow-hidden">
-      <HomePageNavbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        search={search}
-        setSearch={setSearch}
-      />
+      <HomeNavbar search={search} setSearch={setSearch} />
       <WallpaperList
-        activeTab={activeTab}
+        activeTab={""}
         search={search}
         menu={menu}
         setMenu={setMenu}

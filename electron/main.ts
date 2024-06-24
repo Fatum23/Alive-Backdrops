@@ -12,59 +12,25 @@ import "./ipc/shell";
 import "./ipc/theme";
 import "./ipc/language";
 import "./ipc/wallpaper";
+import "./ipc/db";
 
 import "./protocol";
 import { buildTray } from "./tray";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-let splashWindow: BrowserWindow | null = null;
 let mainWindow: BrowserWindow | null = null;
 let trayWindow: BrowserWindow | null = null;
 export let wallpaperWindow: BrowserWindow | null = null;
 
-const createSplashWindow = () => {
-  splashWindow = new BrowserWindow({
-    center: true,
-    width: 100,
-    height: 100,
-    frame: false,
-    resizable: false,
-    alwaysOnTop: true,
-    skipTaskbar: true,
-    show: false,
-  });
-  splashWindow.setMenu(null);
-  if (paths.VITE_DEV_SERVER_URL) {
-    splashWindow.loadURL(
-      path.join(
-        paths.VITE_DEV_SERVER_URL,
-        "src",
-        "app",
-        "splash",
-        "splash.html"
-      )
-    );
-  } else {
-    splashWindow.loadFile(
-      path.join(paths.VITE_DIST, "src", "app", "splash", "splash.html")
-    );
-  }
-  splashWindow.webContents.on("dom-ready", () => {
-    if (splashWindow !== null) {
-      splashWindow.show();
-    }
-  });
-  splashWindow.on("close", (e) => e.preventDefault());
-};
-
 const createMainWindow = () => {
+  const width = getFr;
   mainWindow = new BrowserWindow({
     center: true,
     width: 900,
     height: 600,
-    minWidth: 900,
-    minHeight: 600,
+    minWidth: 550,
+    minHeight: 400,
     icon: path.join(paths.VITE_PUBLIC, "icon.jpg"),
     title: "Alive Backdrops",
     show: false,
@@ -95,13 +61,7 @@ const createMainWindow = () => {
       path.join(paths.VITE_DIST, "src", "app", "main", "main.html")
     );
   }
-  mainWindow?.webContents.on("dom-ready", () => {
-    setTimeout(() => {
-      splashWindow!.destroy();
-      splashWindow = null;
-      mainWindow?.show();
-    }, 500);
-  });
+  mainWindow?.webContents.on("dom-ready", () => mainWindow?.show());
   mainWindow.on("close", (e) => {
     e.preventDefault();
     mainWindow?.hide();
@@ -154,7 +114,6 @@ const createWallpaperWindow = () => {
 };
 
 app.whenReady().then(() => {
-  createSplashWindow();
   if (mainWindow === null && !app.isPackaged) {
     createMainWindow();
   }

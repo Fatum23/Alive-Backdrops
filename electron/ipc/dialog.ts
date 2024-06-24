@@ -32,3 +32,9 @@ ipcMain.handle("dialog:pick-wallpapers-path", async (e) => {
     });
   return path;
 });
+
+ipcMain.handle("dialog:warning", async (e) => {
+  await dialog.showMessageBox(BrowserWindow.fromWebContents(e.sender)!, {
+    message: "a",
+  });
+});

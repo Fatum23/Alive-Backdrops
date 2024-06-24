@@ -14,14 +14,14 @@ export const SettingsFooter = () => {
   }, []);
   return (
     <div className="flex flex-row gap-4">
-      <>
+      <div>
         Версия: <span className="select-text">{version}</span>
-      </>
+      </div>
       <A
         href="https://github.com/Fatum23/Alive-Backdrops"
         className="flex flex-row items-center gap-1"
       >
-        <FaGithub className="group-hover:fill-sky-400" />
+        <FaGithub className="group-hover:fill-sky-400 transition-colors duration-300" />
         Github
       </A>
       <UpdateButton />

@@ -20,9 +20,9 @@ export const SettingsNavBar = (props: TypeSettings) => {
 
   return (
     <>
-      <div className="flex flex-row justify-between items-center h-10">
+      <div className="flex flex-row justify-between items-center h-8 m-2">
         <BackButton />
-        <div className="flex flex-row gap-2 items-center mr-2 mt-2">
+        <div className="flex flex-row gap-2 items-center">
           <button
             className="p-1"
             disabled={

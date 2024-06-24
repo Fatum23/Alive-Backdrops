@@ -1,14 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 
-export type TypeNavbar = {
-  activeTab: TypeTab;
-  setActiveTab: Dispatch<SetStateAction<TypeTab>>;
-
-  search: string;
-  setSearch: Dispatch<SetStateAction<string>>;
+export type TypePage = {
+  setTitle: Dispatch<SetStateAction<string>>;
+  setLocation: Dispatch<SetStateAction<string>>;
 };
-
-export type TypeTab = "My library" | "Online library";
 
 export type TypeWallpaper = {
   id?: number;

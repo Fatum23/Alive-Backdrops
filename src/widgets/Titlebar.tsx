@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 
 import icon from "@shared/assets/images/icon.jpg";
@@ -10,8 +11,6 @@ import { IoClose as Close } from "react-icons/io5";
 export const Titlebar = (props: { title: string }) => {
   const { t } = useTranslation();
   const [isWindowMaximized, setIsWindowMaximized] = useState<boolean>(false);
-
-  const [title, setTitle] = useState<string>("Alive Backdrops");
 
   const listener = useCallback(
     (_e: Electron.IpcRendererEvent, isMaximized: boolean) =>
@@ -32,17 +31,18 @@ export const Titlebar = (props: { title: string }) => {
   }, []);
 
   useEffect(() => {
-    const newTitle =
+    const title =
       "Alive Backdrops" + (props.title !== "" ? " - " + t(props.title) : "");
-    setTitle(newTitle);
-    window.ipcRenderer.invoke("window:set-title", newTitle);
-  }, [props.title, title]);
+    window.ipcRenderer.invoke("window:set-title", title);
+  }, [props.title, i18next.language]);
 
   return (
     <div className="flex flex-row justify-between bg-dark h-6 w-full">
       <div className="flex flex-row grow window-drag-region">
         <img className="h-6" src={icon} alt="" />
-        <div className="pl-1">{title}</div>
+        <div className="pl-1">
+          Alive Backdrops{props.title !== "" && ` - ${t(props.title)}`}
+        </div>
       </div>
       <div className="flex flex-row">
         <button

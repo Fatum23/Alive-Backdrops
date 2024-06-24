@@ -44,9 +44,11 @@ export const SettingsItem = <T,>(props: {
             <GoFileDirectoryFill size={24} />
           )}
         </div>
-        <div className="ml-4 flex flex-col items-start">
+        <div className="flex flex-col items-start">
           <div>{t(props.title)}</div>
-          <h6>{t(props.description)}</h6>
+          <h6 className="text-ellipsis line-clamp-1 break-all bg-red-200">
+            {t(props.description)}
+          </h6>
         </div>
       </div>
       <div className="flex w-[40%] h-full mr-3">

@@ -1,18 +1,15 @@
 export const A = (props: JSX.IntrinsicElements["a"]) => {
   return (
-    <>
-      <a
-        {...props}
-        title={props.href}
-        className={props.className + " group"}
-        onClick={async (e) => {
-          e.preventDefault();
-          await window.ipcRenderer.invoke("shell:open-url", props.href);
-        }}
-      >
-        {props.children}
-      </a>
-      <span />
-    </>
+    <a
+      {...props}
+      title={props.href}
+      className={`group transition-all duration-300 border-b-2 border-b-text hover:border-b-sky-400 ${props.className}`}
+      onClick={async (e) => {
+        e.preventDefault();
+        await window.ipcRenderer.invoke("shell:open-url", props.href);
+      }}
+    >
+      {props.children}
+    </a>
   );
 };
