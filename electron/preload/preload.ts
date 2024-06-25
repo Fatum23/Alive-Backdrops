@@ -1,10 +1,5 @@
 import { ipcRenderer, contextBridge } from "electron";
-
-let app = {
-  quit() {
-    console.log("quit");
-  },
-};
+import { app } from "./app";
 
 contextBridge.exposeInMainWorld("ipcRenderer", {
   on(...args: Parameters<typeof ipcRenderer.on>) {

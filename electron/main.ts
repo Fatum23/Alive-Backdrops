@@ -16,6 +16,7 @@ import "./ipc/db";
 
 import "./protocol";
 import { buildTray } from "./tray";
+import { getFromStore, setToStore } from "./services";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -23,12 +24,13 @@ let mainWindow: BrowserWindow | null = null;
 let trayWindow: BrowserWindow | null = null;
 export let wallpaperWindow: BrowserWindow | null = null;
 
-const createMainWindow = () => {
-  const width = getFr;
+const createMainWindow = async () => {
+  const width = await getFromStore<number>("mainWindow.width");
+  const height = await getFromStore<number>("mainWindow.height");
   mainWindow = new BrowserWindow({
     center: true,
-    width: 900,
-    height: 600,
+    width: width !== undefined ? width : 900,
+    height: height !== undefined ? height : 600,
     minWidth: 550,
     minHeight: 400,
     icon: path.join(paths.VITE_PUBLIC, "icon.jpg"),
@@ -119,4 +121,9 @@ app.whenReady().then(() => {
   }
   createTrayWindow();
   createWallpaperWindow();
+});
+
+app.on("before-quit", () => {
+  setToStore<number>("mainWindow.width", mainWindow?.getBounds().width!);
+  setToStore<number>("mainWindow.height", mainWindow?.getBounds().height!);
 });

@@ -1,12 +1,8 @@
 import { ipcMain } from "electron";
-import Store from "electron-store";
+import { getFromStore, setToStore } from "../services";
 
-const store = new Store();
+ipcMain.handle("store:get", async (_e, key: string) => await getFromStore(key));
 
-ipcMain.handle("store:get", async (_e, key: string) => {
-  return await store.get(key);
-});
-
-ipcMain.handle("store:set", async (_e, key: string, value: any) => {
-  await store.set(key, value);
-});
+ipcMain.handle("store:set", (_e, key: string, value: any) =>
+  setToStore<typeof value>(key, value)
+);

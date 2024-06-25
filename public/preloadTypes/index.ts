@@ -1,0 +1,1 @@
+export { TypeApp } from "./app";
