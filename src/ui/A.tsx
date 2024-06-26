@@ -6,7 +6,7 @@ export const A = (props: JSX.IntrinsicElements["a"]) => {
       className={`group transition-all duration-300 border-b-2 border-b-text hover:border-b-sky-400 ${props.className}`}
       onClick={async (e) => {
         e.preventDefault();
-        await window.ipcRenderer.invoke("shell:open-url", props.href);
+        window.ipcRenderer.shell.openUrl(props.href!);
       }}
     >
       {props.children}

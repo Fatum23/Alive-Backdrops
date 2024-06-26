@@ -1,7 +1,7 @@
 import { Wallpaper } from "@entities";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TypeContextMenu, TypeTab, TypeWallpaper } from "@shared/types";
+import { TypeContextMenu, TypeTab, TypeWallpaper } from "@public/types";
 
 import { CiImageOff as NoImage } from "react-icons/ci";
 

@@ -1,12 +1,10 @@
-import { TypeColorTheme } from "@shared/types";
-
 const separateStylesheet = document.createElement("style");
 document.head.appendChild(separateStylesheet);
 
 let themeLoaded: boolean = false;
-window.ipcRenderer.on("theme:change-theme", (_e, payload: TypeColorTheme) => {
-  document.documentElement.className = `theme-${payload}`;
-  if (themeLoaded === false) {
+window.ipcRenderer.theme.onChange((_e, theme) => {
+  document.documentElement.className = `theme-${theme}`;
+  if (!themeLoaded) {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         separateStylesheet.sheet!.insertRule(

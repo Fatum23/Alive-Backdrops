@@ -30,7 +30,7 @@ export const App = () => {
     }
   }, [loaded, volume, speed]);
   return (
-    <div className="h-[100vh] w-[100vw] bg-white">
+    <div className="h-screen w-screen bg-white">
       {src !== "" && (
         <video
           ref={ref}

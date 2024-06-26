@@ -4,7 +4,7 @@ import {
   TypeLanguage,
   TypeSettings,
   TypeWallpaperBehavior,
-} from "@shared/types";
+} from "@public/types";
 
 export const useSettingsStore = create<TypeSettings>((set) => ({
   behaviorWindow: "mute",
@@ -46,11 +46,11 @@ export const useSettingsStore = create<TypeSettings>((set) => ({
   },
   autolaunch: false,
   setAutolaunch: (autolaunch) => {
-    window.ipcRenderer.app.toggleAutolaunch(autolaunch);
     window.ipcRenderer.store.set<boolean>("autolaunch", autolaunch);
     set(() => ({
       autolaunch: autolaunch,
     }));
+    window.ipcRenderer.app.toggleAutolaunch(autolaunch);
   },
 
   colorTheme: "system",
@@ -59,7 +59,7 @@ export const useSettingsStore = create<TypeSettings>((set) => ({
     set(() => ({
       colorTheme: theme,
     }));
-    window.ipcRenderer.invoke("theme:change-theme", theme);
+    window.ipcRenderer.theme.set(theme);
   },
 
   language: "system",
@@ -68,7 +68,7 @@ export const useSettingsStore = create<TypeSettings>((set) => ({
     set(() => ({
       language: language,
     }));
-    window.ipcRenderer.invoke("language:change-language", language);
+    window.ipcRenderer.language.set(language);
   },
 
   wallpaperPath: "",
@@ -109,35 +109,31 @@ const initSettingsStore = async () => {
   });
   await window.ipcRenderer.store
     .get<boolean>("autolaunch")
-    .then(async (active) => {
-      if (active !== undefined) {
-        await window.ipcRenderer.invoke("app:toggle-autolaunch", active);
-        useSettingsStore.setState({
-          autolaunch: active,
-        });
-      } else {
-        useSettingsStore.setState({
-          autolaunch: true,
-        });
-      }
+    .then(async (autolaunch) => {
+      autolaunch = autolaunch !== undefined ? autolaunch : true;
+      useSettingsStore.setState({ autolaunch: autolaunch });
+      window.ipcRenderer.app.toggleAutolaunch(autolaunch);
     });
 
   await window.ipcRenderer.store
     .get<TypeColorTheme>("colorTheme")
     .then(async (theme) => {
-      useSettingsStore.setState({
-        colorTheme: theme !== undefined ? theme : "system",
-      });
-      await window.ipcRenderer.invoke("theme:change-theme", theme);
+      (theme = theme !== undefined ? theme : "system"),
+        useSettingsStore.setState({
+          colorTheme: theme,
+        });
+
+      window.ipcRenderer.theme.set(theme);
     });
 
   await window.ipcRenderer.store
     .get<TypeLanguage>("language")
     .then(async (language) => {
-      useSettingsStore.setState({
-        language: language !== undefined ? language : "system",
-      });
-      await window.ipcRenderer.invoke("language:change-language", language);
+      (language = language !== undefined ? language : "system"),
+        useSettingsStore.setState({
+          language: language,
+        });
+      window.ipcRenderer.language.set(language);
     });
 
   await window.ipcRenderer.store
@@ -149,7 +145,7 @@ const initSettingsStore = async () => {
         });
       } else {
         useSettingsStore.setState({
-          wallpaperPath: await window.ipcRenderer.invoke("path:userData"),
+          wallpaperPath: await window.ipcRenderer.path.get("userData"),
         });
       }
     });

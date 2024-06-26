@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 
 import ContextMenuItem from "./ContextMenuItem";
 
-import { TypeContextMenu } from "@shared/types";
+import { TypeContextMenu } from "@public/types";
 
 export default function ContextMenu(props: {
   contextMenu: TypeContextMenu;

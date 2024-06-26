@@ -18,7 +18,9 @@ i18n.use(initReactI18next).init({
         Loading: "Loading wallpapers...",
         "No such wallpapers found": "No such wallpapers found",
         "You have no wallpapers added yet": "You have no wallpapers added yet",
-        "Invalid file extension": "Invalid file extension",
+
+        "Add wallpaper": "Add wallpaper",
+        "Invalid wallpaper file extension": "Invalid wallpaper file extension",
         "Drop or select file": "Drop or select file",
         Title: "Title",
 
@@ -82,7 +84,8 @@ i18n.use(initReactI18next).init({
           "У вас пока что нет добавленных обоев",
         "No such wallpapers found": "Такие обои не найдены",
 
-        "Invalid file format": "Неподдер",
+        "Add wallpaper": "Добавить обои",
+        "Invalid wallpaper file extension": "Неверное расширение файла обоев",
         "Drop or select file": "Перетащите или выберите файл",
         Title: "Название",
 
@@ -137,7 +140,7 @@ i18n.use(initReactI18next).init({
   },
 });
 
-window.ipcRenderer.on("language:change-language", (_e, payload: string) => {
-  payload = payload !== "system" ? payload : navigator.language;
-  i18next.changeLanguage(payload);
+window.ipcRenderer.language.onChange((_e, language) => {
+  language = language !== "system" ? language : navigator.language;
+  i18next.changeLanguage(language);
 });

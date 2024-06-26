@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "@shared/store";
-import { TypeSettings } from "@shared/types";
+import { TypeSettings } from "@public/types";
 import { BackButton } from "@widgets";
 
 export const SettingsNavBar = (props: TypeSettings) => {
@@ -12,8 +12,7 @@ export const SettingsNavBar = (props: TypeSettings) => {
 
   useEffect(() => {
     async function getUserDataPath() {
-      const path = await window.ipcRenderer.invoke("path:userData");
-      setUserDataPath(path);
+      setUserDataPath(await window.ipcRenderer.path.get("userData"));
     }
     getUserDataPath();
   }, []);

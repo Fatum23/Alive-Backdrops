@@ -5,4 +5,7 @@ export type TypeWindow = {
   hide: () => void;
   toggleMaximize: (maximize?: boolean) => void;
   toggleFullscreen: (fullscreen?: boolean) => void;
+  onResize: (
+    callback: (e: Electron.IpcRendererEvent, isMaximized: boolean) => void
+  ) => void;
 };

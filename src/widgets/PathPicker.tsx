@@ -7,9 +7,7 @@ export const PathPicker = (props: {
   return (
     <div
       onClick={async () => {
-        const path = await window.ipcRenderer.invoke(
-          "dialog:pick-wallpapers-path"
-        );
+        const path = await window.ipcRenderer.dialog.openDir();
         if (path !== null) {
           props.setValue(path);
         }

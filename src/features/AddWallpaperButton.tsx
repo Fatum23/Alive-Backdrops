@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { TypeWallpaper } from "@shared/types";
+import { TypeWallpaper } from "@public/types";
 
 export const AddWallpaperButton = (props: TypeWallpaper) => {
   const { t } = useTranslation();

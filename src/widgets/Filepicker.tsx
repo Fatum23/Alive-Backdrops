@@ -36,7 +36,7 @@ export const Filepicker = (props: {
       ref={dropzoneRef}
       className="w-[50%] h-24 flex items-center justify-center text-lg"
       onClick={async () => {
-        const path = await window.ipcRenderer.invoke("dialog:pick-wallpaper");
+        const path = await window.ipcRenderer.dialog.pickWallpaper();
         if (path !== null) {
           props.setVideoSrc(path);
         }

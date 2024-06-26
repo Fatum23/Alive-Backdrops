@@ -8,7 +8,7 @@ import { MdRocketLaunch } from "react-icons/md";
 import { GrLanguage } from "react-icons/gr";
 import { GoFileDirectoryFill } from "react-icons/go";
 
-import { TypeSettingsLabel } from "@shared/types";
+import { TypeSettingsLabel } from "@public/types";
 import { PathPicker } from "@widgets";
 import { Select, Slider, Switch } from "@ui";
 
@@ -44,9 +44,9 @@ export const SettingsItem = <T,>(props: {
             <GoFileDirectoryFill size={24} />
           )}
         </div>
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start ml-4">
           <div>{t(props.title)}</div>
-          <h6 className="text-ellipsis line-clamp-1 break-all bg-red-200">
+          <h6 className="text-ellipsis line-clamp-1 break-all">
             {t(props.description)}
           </h6>
         </div>

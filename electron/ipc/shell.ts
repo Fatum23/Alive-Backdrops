@@ -1,3 +1,3 @@
 import { ipcMain, shell } from "electron";
 
-ipcMain.handle("shell:open-url", (_e, url: string) => shell.openExternal(url));
+ipcMain.handle("shell:openUrl", (_e, url: string) => shell.openExternal(url));

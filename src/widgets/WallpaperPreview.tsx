@@ -7,8 +7,7 @@ export const WallpaperPreview = (props: {
 }) => {
   const ref = useRef<HTMLVideoElement | null>(null);
   ref.current?.addEventListener("fullscreenchange", () =>
-    window.ipcRenderer.invoke(
-      "window:toggle-fullscreen",
+    window.ipcRenderer.window.toggleFullscreen(
       document.fullscreenElement !== null ? true : false
     )
   );

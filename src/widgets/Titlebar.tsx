@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 
-import icon from "@shared/assets/images/icon.jpg";
+import icon from "/icon.jpg";
 import { FaMinus as Minimize } from "react-icons/fa";
 import { CgMinimize as Unmaximize } from "react-icons/cg";
 import { CgMaximize as Maximize } from "react-icons/cg";
@@ -20,20 +20,15 @@ export const Titlebar = (props: { title: string }) => {
 
   useEffect(() => {
     const init = async () =>
-      setIsWindowMaximized(
-        await window.ipcRenderer.invoke("window:is-maximized")
-      );
+      setIsWindowMaximized(await window.ipcRenderer.window.isMaximized());
     init();
-    window.ipcRenderer.on("window:resize", listener);
-    return () => {
-      window.ipcRenderer.off("window:resize", listener);
-    };
+    window.ipcRenderer.window.onResize(listener);
   }, []);
 
   useEffect(() => {
     const title =
       "Alive Backdrops" + (props.title !== "" ? " - " + t(props.title) : "");
-    window.ipcRenderer.invoke("window:set-title", title);
+    window.ipcRenderer.window.setTitle(title);
   }, [props.title, i18next.language]);
 
   return (
@@ -47,13 +42,13 @@ export const Titlebar = (props: { title: string }) => {
       <div className="flex flex-row">
         <button
           className="cursor-default flex items-center px-1 bg-transparent hover:bg-light rounded-none"
-          onClick={() => window.ipcRenderer.invoke("window:minimize")}
+          onClick={() => window.ipcRenderer.window.minimize()}
         >
           <Minimize className="icon" size={16} />
         </button>
         <button
           className="cursor-default flex items-center px-1 bg-transparent hover:bg-light rounded-none"
-          onClick={() => window.ipcRenderer.invoke("window:toggle-maximize")}
+          onClick={() => window.ipcRenderer.window.toggleMaximize()}
         >
           {isWindowMaximized ? (
             <Unmaximize className="icon" size={20} />
@@ -63,7 +58,7 @@ export const Titlebar = (props: { title: string }) => {
         </button>
         <button
           className="cursor-default flex items-center bg-transparent hover:bg-red-500 rounded-none"
-          onClick={() => window.ipcRenderer.invoke("window:hide")}
+          onClick={() => window.ipcRenderer.window.hide()}
         >
           <Close className="icon-close" size={26} />
         </button>

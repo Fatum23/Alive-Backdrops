@@ -4,6 +4,9 @@ import { window } from "./window";
 import { dialog } from "./dialog";
 import { store } from "./store";
 import { path } from "./path";
+import { theme } from "./theme";
+import { language } from "./language";
+import { shell } from "./shell";
 
 contextBridge.exposeInMainWorld("ipcRenderer", {
   on(...args: Parameters<typeof ipcRenderer.on>) {
@@ -25,4 +28,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
   dialog: dialog,
   store: store,
   path: path,
+  theme: theme,
+  language: language,
+  shell: shell,
 });

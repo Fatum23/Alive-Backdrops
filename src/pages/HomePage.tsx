@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TypeContextMenu, TypePage } from "@shared/types";
+import { TypeContextMenu, TypePage } from "@public/types";
 import { ContextMenu, HomeNavbar, WallpaperList } from "@widgets";
 import { useAppStore } from "@shared/store";
 import { useLocation } from "react-router-dom";

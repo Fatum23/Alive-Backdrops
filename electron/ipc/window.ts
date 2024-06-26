@@ -18,11 +18,13 @@ ipcMain.handle("window:hide", (e) =>
 
 ipcMain.handle("window:toggleMaximize", (e, maximize: boolean | undefined) => {
   const win = BrowserWindow.fromWebContents(e.sender);
-  if (maximize) {
+  if (maximize === true) {
     win?.maximize();
-  } else if (!maximize) {
-    win?.minimize();
-  } else {
+  }
+  if (!maximize === false) {
+    win?.unmaximize();
+  }
+  if (maximize === undefined) {
     win?.isMaximized() ? win.unmaximize() : win?.maximize();
   }
 });

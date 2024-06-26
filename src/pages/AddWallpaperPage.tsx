@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { BackButton, Filepicker, WallpaperPreview } from "@widgets";
 import { AddWallpaperButton } from "@features";
 import { Slider, Textarea } from "@ui";
-import { TypePage } from "@shared/types";
+import { TypePage } from "@public/types";
 
 export const AddWallpaperPage = (props: TypePage) => {
   const location = useLocation();
@@ -41,7 +41,7 @@ export const AddWallpaperPage = (props: TypePage) => {
   return (
     <div className="flex flex-col h-screen w-screen">
       <div className="flex flex-col w-full h-full overflow-x-hidden overflow-y-auto">
-        <div className="absolute">
+        <div className="absolute m-2">
           <BackButton />
         </div>
         <div className="flex w-full h-[200%] flex-col items-center gap-4 m-2">

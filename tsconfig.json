@@ -28,7 +28,8 @@
       "@entities": ["src/entities"],
       "@features": ["src/features"],
       "@widgets": ["src/widgets"],
-      "@shared/*": ["src/shared/*"]
+      "@shared/*": ["src/shared/*"],
+      "@public/*": ["public/*"]
       // "@types": ["src/shared/types"],
       // "@utils/*": ["src/shared/utils/*"],
       // "@assets/*": ["./src/shared/assets/*"],
@@ -98,6 +99,6 @@
     "skipDefaultLibCheck": true /* Skip type checking .d.ts files that are included with TypeScript. */,
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["src", "electron", "vite-env.d.ts"],
+  "include": ["src", "electron", "vite-env.d.ts", "public"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

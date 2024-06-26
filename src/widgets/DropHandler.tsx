@@ -39,7 +39,9 @@ export const DropHandler = (props: { location: string }) => {
           });
         }
       } else {
-        await window.ipcRenderer.invoke("dialog:warning");
+        await window.ipcRenderer.dialog.error(
+          t("Invalid wallpaper file extension")
+        );
       }
     });
     document.addEventListener("dragenter", () => setVisible(true));

@@ -7,13 +7,11 @@ export const SettingsFooter = () => {
   const [version, setVersion] = useState<string>("");
   useEffect(() => {
     const getVersion = async () =>
-      await window.ipcRenderer
-        .invoke("app:get-version")
-        .then((payload) => setVersion(payload));
+      setVersion(await window.ipcRenderer.app.getVersion());
     getVersion();
   }, []);
   return (
-    <div className="flex flex-row gap-4">
+    <div className="flex flex-row items-center gap-4">
       <div>
         Версия: <span className="select-text">{version}</span>
       </div>

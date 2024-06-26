@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { TypeAppStore, TypeWallpaper } from "@shared/types";
+import { TypeAppStore, TypeWallpaper } from "@public/types";
 
 export const useAppStore = create<TypeAppStore>((set) => ({
   activeWallpaper: undefined,

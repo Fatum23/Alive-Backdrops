@@ -7,7 +7,7 @@ import {
   TypeLanguage,
   TypePage,
   TypeWallpaperBehavior,
-} from "@shared/types";
+} from "@public/types";
 import { useLocation } from "react-router-dom";
 
 export const SettingsPage = (props: TypePage) => {

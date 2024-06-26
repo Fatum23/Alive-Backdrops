@@ -1,4 +1,4 @@
-import { TypeContextMenu, TypeWallpaper } from "@shared/types";
+import { TypeContextMenu, TypeWallpaper } from "@public/types";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 import { IoIosMore } from "react-icons/io";
