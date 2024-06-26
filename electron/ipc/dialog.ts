@@ -1,6 +1,6 @@
 import { BrowserWindow, dialog, ipcMain } from "electron";
 
-ipcMain.handle("dialog:pick-wallpaper", async (e) => {
+ipcMain.handle("dialog:pickWallpaper", async (e) => {
   let path: string | null = null;
   await dialog
     .showOpenDialog(BrowserWindow.fromWebContents(e.sender)!, {
@@ -19,7 +19,7 @@ ipcMain.handle("dialog:pick-wallpaper", async (e) => {
   return path;
 });
 
-ipcMain.handle("dialog:pick-wallpapers-path", async (e) => {
+ipcMain.handle("dialog:openDir", async (e) => {
   let path: string | null = null;
   await dialog
     .showOpenDialog(BrowserWindow.fromWebContents(e.sender)!, {
@@ -33,8 +33,8 @@ ipcMain.handle("dialog:pick-wallpapers-path", async (e) => {
   return path;
 });
 
-ipcMain.handle("dialog:warning", async (e) => {
+ipcMain.handle("dialog:error", async (e, text: string) => {
   await dialog.showMessageBox(BrowserWindow.fromWebContents(e.sender)!, {
-    message: "a",
+    message: text,
   });
 });

@@ -1,5 +1,5 @@
 export type TypeApp = {
   quit: () => void;
-  toggleAutolaunch: (payload: boolean) => void;
+  toggleAutolaunch: (autolaunch?: boolean) => void;
   getVersion: () => void;
 };

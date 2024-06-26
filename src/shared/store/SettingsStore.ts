@@ -5,19 +5,21 @@ import {
   TypeSettings,
   TypeWallpaperBehavior,
 } from "@shared/types";
-import { getFromStore, setToStore } from "@shared/services";
 
 export const useSettingsStore = create<TypeSettings>((set) => ({
   behaviorWindow: "mute",
-  setBehaviorWindow: async (behavior) => {
-    await setToStore<TypeWallpaperBehavior>("behaviorWindow", behavior);
+  setBehaviorWindow: (behavior) => {
+    window.ipcRenderer.store.set<TypeWallpaperBehavior>(
+      "behaviorWindow",
+      behavior
+    );
     set(() => ({
       behaviorWindow: behavior,
     }));
   },
   behaviorMaximizedWindow: "pause",
-  setBehaviorMaximizedWindow: async (behavior) => {
-    await setToStore<TypeWallpaperBehavior>(
+  setBehaviorMaximizedWindow: (behavior) => {
+    window.ipcRenderer.store.set<TypeWallpaperBehavior>(
       "behaviorMaximizedWindow",
       behavior
     );
@@ -26,8 +28,8 @@ export const useSettingsStore = create<TypeSettings>((set) => ({
     }));
   },
   behaviorFullscreenWindow: "pause",
-  setBehaviorFullscreenWindow: async (behavior) => {
-    await setToStore<TypeWallpaperBehavior>(
+  setBehaviorFullscreenWindow: (behavior) => {
+    window.ipcRenderer.store.set<TypeWallpaperBehavior>(
       "behaviorFullscreenWindow",
       behavior
     );
@@ -36,42 +38,42 @@ export const useSettingsStore = create<TypeSettings>((set) => ({
     }));
   },
   volume: "0",
-  setVolume: async (volume) => {
-    await setToStore<string>("volume", volume);
+  setVolume: (volume) => {
+    window.ipcRenderer.store.set<string>("volume", volume);
     set(() => ({
       volume: volume,
     }));
   },
   autolaunch: false,
-  setAutolaunch: async (active) => {
-    await window.ipcRenderer.invoke("app:toggle-autolaunch", active);
-    await setToStore<boolean>("autolaunch", active);
+  setAutolaunch: (autolaunch) => {
+    window.ipcRenderer.app.toggleAutolaunch(autolaunch);
+    window.ipcRenderer.store.set<boolean>("autolaunch", autolaunch);
     set(() => ({
-      autolaunch: active,
+      autolaunch: autolaunch,
     }));
   },
 
   colorTheme: "system",
-  setColorTheme: async (theme) => {
-    await setToStore<TypeColorTheme>("colorTheme", theme);
+  setColorTheme: (theme) => {
+    window.ipcRenderer.store.set<TypeColorTheme>("colorTheme", theme);
     set(() => ({
       colorTheme: theme,
     }));
-    await window.ipcRenderer.invoke("theme:change-theme", theme);
+    window.ipcRenderer.invoke("theme:change-theme", theme);
   },
 
   language: "system",
-  setLanguage: async (language) => {
-    await setToStore<TypeLanguage>("language", language);
+  setLanguage: (language) => {
+    window.ipcRenderer.store.set<TypeLanguage>("language", language);
     set(() => ({
       language: language,
     }));
-    await window.ipcRenderer.invoke("language:change-language", language);
+    window.ipcRenderer.invoke("language:change-language", language);
   },
 
   wallpaperPath: "",
-  setWallpaperPath: async (path) => {
-    await setToStore<string>("wallpaperPath", path);
+  setWallpaperPath: (path) => {
+    window.ipcRenderer.store.set<string>("wallpaperPath", path);
     set(() => ({
       wallpaperPath: path,
     }));
@@ -79,70 +81,78 @@ export const useSettingsStore = create<TypeSettings>((set) => ({
 }));
 
 const initSettingsStore = async () => {
-  await getFromStore<TypeWallpaperBehavior>("behaviorWindow").then(
-    (behavior) => {
+  await window.ipcRenderer.store
+    .get<TypeWallpaperBehavior>("behaviorWindow")
+    .then((behavior) => {
       useSettingsStore.setState({
         behaviorWindow: behavior !== undefined ? behavior : "mute",
       });
-    }
-  );
-  await getFromStore<TypeWallpaperBehavior>("behaviorMaximizedWindow").then(
-    (behavior) => {
+    });
+  await window.ipcRenderer.store
+    .get<TypeWallpaperBehavior>("behaviorMaximizedWindow")
+    .then((behavior) => {
       useSettingsStore.setState({
         behaviorMaximizedWindow: behavior !== undefined ? behavior : "pause",
       });
-    }
-  );
-  await getFromStore<TypeWallpaperBehavior>("behaviorFullscreenWindow").then(
-    (behavior) => {
+    });
+  await window.ipcRenderer.store
+    .get<TypeWallpaperBehavior>("behaviorFullscreenWindow")
+    .then((behavior) => {
       useSettingsStore.setState({
         behaviorFullscreenWindow: behavior !== undefined ? behavior : "pause",
       });
-    }
-  );
-  await getFromStore<string>("volume").then((volume) => {
+    });
+  await window.ipcRenderer.store.get<string>("volume").then((volume) => {
     useSettingsStore.setState({
       volume: volume !== undefined ? volume : "100",
     });
   });
-  await getFromStore<boolean>("autolaunch").then(async (active) => {
-    if (active !== undefined) {
-      await window.ipcRenderer.invoke("app:toggle-autolaunch", active);
-      useSettingsStore.setState({
-        autolaunch: active,
-      });
-    } else {
-      useSettingsStore.setState({
-        autolaunch: true,
-      });
-    }
-  });
-
-  await getFromStore<TypeColorTheme>("colorTheme").then(async (theme) => {
-    useSettingsStore.setState({
-      colorTheme: theme !== undefined ? theme : "system",
+  await window.ipcRenderer.store
+    .get<boolean>("autolaunch")
+    .then(async (active) => {
+      if (active !== undefined) {
+        await window.ipcRenderer.invoke("app:toggle-autolaunch", active);
+        useSettingsStore.setState({
+          autolaunch: active,
+        });
+      } else {
+        useSettingsStore.setState({
+          autolaunch: true,
+        });
+      }
     });
-    await window.ipcRenderer.invoke("theme:change-theme", theme);
-  });
 
-  await getFromStore<TypeLanguage>("language").then(async (language) => {
-    useSettingsStore.setState({
-      language: language !== undefined ? language : "system",
+  await window.ipcRenderer.store
+    .get<TypeColorTheme>("colorTheme")
+    .then(async (theme) => {
+      useSettingsStore.setState({
+        colorTheme: theme !== undefined ? theme : "system",
+      });
+      await window.ipcRenderer.invoke("theme:change-theme", theme);
     });
-    await window.ipcRenderer.invoke("language:change-language", language);
-  });
 
-  await getFromStore<string>("wallpaperPath").then(async (path) => {
-    if (path !== undefined) {
+  await window.ipcRenderer.store
+    .get<TypeLanguage>("language")
+    .then(async (language) => {
       useSettingsStore.setState({
-        wallpaperPath: path,
+        language: language !== undefined ? language : "system",
       });
-    } else {
-      useSettingsStore.setState({
-        wallpaperPath: await window.ipcRenderer.invoke("path:userData"),
-      });
-    }
-  });
+      await window.ipcRenderer.invoke("language:change-language", language);
+    });
+
+  await window.ipcRenderer.store
+    .get<string>("wallpaperPath")
+    .then(async (path) => {
+      if (path !== undefined) {
+        useSettingsStore.setState({
+          wallpaperPath: path,
+        });
+      } else {
+        useSettingsStore.setState({
+          wallpaperPath: await window.ipcRenderer.invoke("path:userData"),
+        });
+      }
+    });
 };
 
 initSettingsStore();

@@ -48,7 +48,7 @@ export type TypeSettings = {
   setVolume: (volume: string) => void;
 
   autolaunch: boolean;
-  setAutolaunch: (active: boolean) => void;
+  setAutolaunch: (autolaunch: boolean) => void;
 
   colorTheme: TypeColorTheme;
   setColorTheme: (theme: TypeColorTheme) => void;

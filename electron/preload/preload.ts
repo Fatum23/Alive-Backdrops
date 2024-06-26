@@ -1,5 +1,9 @@
 import { ipcRenderer, contextBridge } from "electron";
 import { app } from "./app";
+import { window } from "./window";
+import { dialog } from "./dialog";
+import { store } from "./store";
+import { path } from "./path";
 
 contextBridge.exposeInMainWorld("ipcRenderer", {
   on(...args: Parameters<typeof ipcRenderer.on>) {
@@ -17,4 +21,8 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
     return ipcRenderer.invoke(channel, ...omit);
   },
   app: app,
+  window: window,
+  dialog: dialog,
+  store: store,
+  path: path,
 });
