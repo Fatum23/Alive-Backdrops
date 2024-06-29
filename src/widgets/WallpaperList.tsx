@@ -1,12 +1,11 @@
 import { Wallpaper } from "@entities";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TypeContextMenu, TypeTab, TypeWallpaper } from "@public/types";
+import { TypeContextMenu, TypeWallpaper } from "@public/types";
 
 import { CiImageOff as NoImage } from "react-icons/ci";
 
 export const WallpaperList = (props: {
-  activeTab: TypeTab;
   search: string;
   menu: TypeContextMenu;
   setMenu: Dispatch<SetStateAction<TypeContextMenu>>;

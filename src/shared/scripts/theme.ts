@@ -12,6 +12,7 @@ window.ipcRenderer.theme.onChange((_e, theme) => {
           0
         );
         themeLoaded = true;
+        window.ipcRenderer.invoke("window:theme");
       })
     );
   }

@@ -1,5 +1,12 @@
-import { app, BrowserWindow } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  systemPreferences,
+  screen,
+} from "electron";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import path from "node:path";
 import * as paths from "./paths";
 
@@ -19,18 +26,24 @@ import { buildTray } from "./tray";
 import { getFromStore, setToStore } from "./services";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+import localShortcut from "electron-localshortcut";
+
+import { TypeWindowState } from "public/types";
+
+import debug from "electron-debug";
+
+debug({ showDevTools: false });
 
 let mainWindow: BrowserWindow | null = null;
 let trayWindow: BrowserWindow | null = null;
 export let wallpaperWindow: BrowserWindow | null = null;
 
 const createMainWindow = async () => {
-  const width = await getFromStore<number>("mainWindow.width");
-  const height = await getFromStore<number>("mainWindow.height");
+  const windowState = await getFromStore<TypeWindowState>("mainWindow.state");
   mainWindow = new BrowserWindow({
-    center: true,
-    width: width !== undefined ? width : 900,
-    height: height !== undefined ? height : 600,
+    width: windowState ? windowState?.width : 900,
+    height: windowState ? windowState.height : 600,
     minWidth: 550,
     minHeight: 400,
     icon: path.join(paths.VITE_PUBLIC, "icon.jpg"),
@@ -41,19 +54,38 @@ const createMainWindow = async () => {
       preload: path.join(__dirname, "preload.mjs"),
     },
   });
-  mainWindow.setMenu(null);
-  if (!app.isPackaged) {
-    mainWindow.webContents.on("before-input-event", (_e, input) => {
-      if (input.type === "keyUp") {
-        if (input.key === "F12") {
-          mainWindow?.webContents.openDevTools({ mode: "undocked" });
-        }
-        if (input.key === "F11") {
-          mainWindow?.setFullScreen(!mainWindow.isFullScreen());
-        }
-      }
-    });
+
+  if (windowState) {
+    const screenSize = screen.getPrimaryDisplay().workAreaSize;
+    mainWindow!.setBounds({ x: windowState.x, y: windowState.y });
+    windowState.isFullscreen && mainWindow!.setFullScreen(true);
+    if (windowState.isMaximized) {
+      mainWindow!.setBounds({
+        width: screenSize.width,
+        height: screenSize.height,
+      });
+      mainWindow!.center();
+    }
   }
+
+  mainWindow.on("show", () => {
+    console.log("show", Date.now());
+    if (windowState && windowState.isMaximized) {
+      mainWindow?.maximize();
+      mainWindow!.setBounds({
+        x: windowState.x,
+        y: windowState.y,
+        width: windowState.width,
+        height: windowState.height,
+      });
+    }
+  });
+
+  localShortcut.register("F11", () => {
+    mainWindow?.setFullScreen(!mainWindow.isFullScreen());
+  });
+
+  mainWindow.setMenu(null);
   if (paths.VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(
       path.join(paths.VITE_DEV_SERVER_URL, "src", "app", "main", "main.html")
@@ -63,14 +95,41 @@ const createMainWindow = async () => {
       path.join(paths.VITE_DIST, "src", "app", "main", "main.html")
     );
   }
-  mainWindow?.webContents.on("dom-ready", () => mainWindow?.show());
+
+  let theme = false;
+  let language = false;
+
+  mainWindow.webContents.on("dom-ready", () => {
+    console.log("dom", Date.now());
+  });
+
+  ipcMain.handle("window:theme", () => {
+    theme = true;
+    console.log("theme", Date.now());
+    mainWindow?.show();
+    if (language) {
+      mainWindow?.show();
+    }
+  });
+  ipcMain.handle("window:language", () => {
+    language = true;
+    console.log("language", Date.now());
+    // mainWindow?.show();
+    if (theme) {
+      mainWindow?.show();
+    }
+  });
   mainWindow.on("close", (e) => {
     e.preventDefault();
     mainWindow?.hide();
   });
 
   mainWindow.on("resize", () => {
-    mainWindow?.webContents.send("window:resize", mainWindow?.isMaximized());
+    mainWindow?.webContents.send(
+      "window:resize",
+      mainWindow?.isMaximized(),
+      mainWindow.isFullScreen()
+    );
   });
 };
 
@@ -115,15 +174,40 @@ const createWallpaperWindow = () => {
   wallpaperWindow.on("close", (e) => e.preventDefault());
 };
 
-app.whenReady().then(() => {
-  if (mainWindow === null && !app.isPackaged) {
+app.whenReady().then(async () => {
+  console.log(systemPreferences.getAccentColor());
+  if (!mainWindow && !app.isPackaged) {
     createMainWindow();
   }
   createTrayWindow();
   createWallpaperWindow();
 });
 
+const singleInstanceLock = app.requestSingleInstanceLock();
+
+if (!singleInstanceLock) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    if (!mainWindow) {
+      createMainWindow();
+    } else {
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+}
+
 app.on("before-quit", () => {
-  setToStore<number>("mainWindow.width", mainWindow?.getBounds().width!);
-  setToStore<number>("mainWindow.height", mainWindow?.getBounds().height!);
+  mainWindow!.hide();
+  const isMaximized = mainWindow!.isMaximized();
+  const isFullscreen = mainWindow!.isFullScreen();
+  mainWindow!.unmaximize();
+  mainWindow?.setFullScreen(false);
+  setToStore<TypeWindowState>("mainWindow.state", {
+    ...mainWindow!.getBounds(),
+    isMaximized: isMaximized,
+    isFullscreen: isFullscreen,
+  });
+  BrowserWindow.getAllWindows().forEach((win) => win.removeAllListeners());
 });

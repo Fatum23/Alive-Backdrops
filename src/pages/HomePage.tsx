@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { TypeContextMenu, TypePage } from "@public/types";
 import { ContextMenu, HomeNavbar, WallpaperList } from "@widgets";
 import { useAppStore } from "@shared/store";
-import { useLocation } from "react-router-dom";
 
 export const HomePage = (props: TypePage) => {
   const location = useLocation();
@@ -21,12 +21,7 @@ export const HomePage = (props: TypePage) => {
   return (
     <div className="h-screen w-screen overflow-hidden">
       <HomeNavbar search={search} setSearch={setSearch} />
-      <WallpaperList
-        activeTab={""}
-        search={search}
-        menu={menu}
-        setMenu={setMenu}
-      />
+      <WallpaperList search={search} menu={menu} setMenu={setMenu} />
       <ContextMenu contextMenu={menu} setContextMenu={setMenu} />
     </div>
   );

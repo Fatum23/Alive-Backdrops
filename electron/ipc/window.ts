@@ -8,6 +8,10 @@ ipcMain.handle("window:isMaximized", (e) =>
   BrowserWindow.fromWebContents(e.sender)?.isMaximized()
 );
 
+ipcMain.handle("window:isFullscreen", (e) =>
+  BrowserWindow.fromWebContents(e.sender)?.isFullScreen()
+);
+
 ipcMain.handle("window:minimize", (e) =>
   BrowserWindow.fromWebContents(e.sender)?.minimize()
 );

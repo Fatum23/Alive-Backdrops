@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { IoAddOutline } from "react-icons/io5";
 import { isValidExtension } from "@shared/utils";
+import { VIDEO_WALLPAPER_EXTENSIONS } from "@public/constants";
 
 export const DropHandler = (props: { location: string }) => {
   const { t } = useTranslation();
@@ -39,8 +40,9 @@ export const DropHandler = (props: { location: string }) => {
           });
         }
       } else {
-        await window.ipcRenderer.dialog.error(
-          t("Invalid wallpaper file extension")
+        window.ipcRenderer.dialog.message(
+          t("Invalid wallpaper file extension"),
+          `Video: ${VIDEO_WALLPAPER_EXTENSIONS}`
         );
       }
     });

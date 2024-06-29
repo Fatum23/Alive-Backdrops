@@ -1,4 +1,9 @@
-import { BrowserWindow, dialog, ipcMain } from "electron";
+import {
+  AUDIO_WALLPAPER_EXTENSIONS,
+  VIDEO_WALLPAPER_EXTENSIONS,
+  WEB_WALLPAPER_EXTENSIONS,
+} from "../../public/constants";
+import { BrowserWindow, app, dialog, ipcMain } from "electron";
 
 ipcMain.handle("dialog:pickWallpaper", async (e) => {
   let path: string | null = null;
@@ -6,9 +11,9 @@ ipcMain.handle("dialog:pickWallpaper", async (e) => {
     .showOpenDialog(BrowserWindow.fromWebContents(e.sender)!, {
       properties: ["openFile"],
       filters: [
-        { name: "Video", extensions: ["mp4", "mov", "avi"] },
-        { name: "Audio", extensions: ["mp3", "wav", "aac"] },
-        { name: "Web", extensions: ["html"] },
+        { name: "Video", extensions: VIDEO_WALLPAPER_EXTENSIONS },
+        { name: "Audio", extensions: AUDIO_WALLPAPER_EXTENSIONS },
+        { name: "Web", extensions: WEB_WALLPAPER_EXTENSIONS },
       ],
     })
     .then((result) => {
@@ -23,6 +28,7 @@ ipcMain.handle("dialog:openDir", async (e) => {
   let path: string | null = null;
   await dialog
     .showOpenDialog(BrowserWindow.fromWebContents(e.sender)!, {
+      defaultPath: app.getPath("downloads"),
       properties: ["openDirectory", "createDirectory"],
     })
     .then((result) => {
@@ -33,8 +39,9 @@ ipcMain.handle("dialog:openDir", async (e) => {
   return path;
 });
 
-ipcMain.handle("dialog:error", async (e, text: string) => {
+ipcMain.handle("dialog:message", async (e, message: string, detail: string) => {
   await dialog.showMessageBox(BrowserWindow.fromWebContents(e.sender)!, {
-    message: text,
+    detail: detail,
+    message: message,
   });
 });

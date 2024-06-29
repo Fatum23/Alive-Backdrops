@@ -22,7 +22,7 @@ export const HomeNavbar = (props: {
       <div className="h-8 m-2 flex flex-row gap-2 items-center">
         <button className="flex flex-row items-center p-1 px-2 gap-1">
           <RiShoppingBag4Fill size={20} />
-          {t("Library")}
+          <span className="hidden sm:inline">{t("Library")}</span>
         </button>
         <div className="flex flex-row items-center flex-grow relative">
           <IoIosSearch size={20} className="absolute mx-1" />
@@ -47,14 +47,14 @@ export const HomeNavbar = (props: {
             onClick={() => navigate("/AddWallpaper")}
           >
             <IoAddOutline size={25} />
-            {t("Add")}
+            <span className="hidden sm:inline">{t("Add")}</span>
           </button>
           <button
-            disabled={activeWallpaper === null}
+            disabled={activeWallpaper === undefined}
             className="flex flex-row items-center p-2 h-8"
           >
-            <FaDesktop size={18} style={{ marginRight: 5 }} />
-            {t("Active")}
+            <FaDesktop size={18} className="m-[5px]" />
+            <span className="hidden sm:inline">{t("Active")}</span>
           </button>
           <button
             onClick={() => navigate("/Settings")}

@@ -8,7 +8,7 @@ export const BackButton = () => {
   return (
     <button className="flex flex-row p-1" onClick={() => navigate(-1)}>
       <IoMdArrowRoundBack size={25} />
-      <div>{t("Back")}</div>
+      <div className="hidden sm:inline">{t("Back")}</div>
     </button>
   );
 };

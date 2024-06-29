@@ -4,6 +4,7 @@ import path from "node:path";
 import electron from "vite-plugin-electron/simple";
 import react from "@vitejs/plugin-react";
 import tsConfigPaths from "vite-tsconfig-paths";
+import { fileURLToPath, URL } from "url";
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
@@ -43,6 +44,14 @@ export default defineConfig(() => {
           tray: "./src/app/tray/tray.html",
         },
       },
+    },
+    resolve: {
+      alias: [
+        {
+          find: "@public",
+          replacement: fileURLToPath(new URL("./public/", import.meta.url)),
+        },
+      ],
     },
   };
 });

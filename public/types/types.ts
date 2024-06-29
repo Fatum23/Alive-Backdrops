@@ -1,5 +1,14 @@
 import { Dispatch, SetStateAction } from "react";
 
+export type TypeWindowState = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  isMaximized: boolean;
+  isFullscreen: boolean;
+};
+
 export type TypePage = {
   setTitle: Dispatch<SetStateAction<string>>;
   setLocation: Dispatch<SetStateAction<string>>;

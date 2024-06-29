@@ -2,7 +2,7 @@ import {
   VIDEO_WALLPAPER_EXTENSIONS,
   AUDIO_WALLPAPER_EXTENSIONS,
   WEB_WALLPAPER_EXTENSIONS,
-} from "@shared/constants";
+} from "@public/constants";
 
 export const isValidExtension = (path: string): boolean => {
   let fileName: string = path.split("\\").pop()!;
