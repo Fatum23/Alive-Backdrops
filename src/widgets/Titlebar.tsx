@@ -19,7 +19,6 @@ export const Titlebar = (props: { title: string }) => {
       isMaximized: boolean,
       isFullscreen: boolean
     ) => {
-      console.log(isMaximized, isFullscreen);
       setIsWindowMaximized(isMaximized);
       setIsWindowFullscreen(isFullscreen);
     },
@@ -47,7 +46,10 @@ export const Titlebar = (props: { title: string }) => {
         <div className="flex flex-row justify-between bg-dark h-6 w-full">
           <div className="flex flex-row grow window-drag-region">
             <img className="h-6" src={icon} alt="" />
-            <div className="pl-1">{isWindowFullscreen}</div>
+            <div className="pl-1">
+              {"Alive Backdrops" +
+                (props.title !== "" ? " - " + t(props.title) : "")}
+            </div>
           </div>
           <div className="flex flex-row">
             <button

@@ -16,6 +16,11 @@ export const buildTray = (
   tray.on("double-click", () => mainWindow.show());
   tray.on("right-click", (_key, mouse) => {
     trayWindow.show();
-    trayWindow.setPosition(mouse.x, mouse.y - trayWindow.getBounds().height);
+    trayWindow.setBounds({
+      height: 200,
+      width: 200,
+      x: mouse.x,
+      y: mouse.y - 200,
+    });
   });
 };

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Slider } from "@ui";
+
+import "@shared/scripts/i18n";
+import "@shared/scripts/theme";
 import "@shared/styles/App.scss";
 
 export const App = () => {

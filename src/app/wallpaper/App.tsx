@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import "@shared/styles/App.scss";
 
 export const App = () => {
   const ref = useRef<HTMLVideoElement | null>(null);

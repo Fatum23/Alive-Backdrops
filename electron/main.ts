@@ -1,12 +1,6 @@
-import {
-  app,
-  BrowserWindow,
-  ipcMain,
-  systemPreferences,
-  screen,
-} from "electron";
+import { app, BrowserWindow, ipcMain, screen } from "electron";
 import { fileURLToPath } from "node:url";
-import { createRequire } from "node:module";
+// import { createRequire } from "node:module";
 import path from "node:path";
 import * as paths from "./paths";
 
@@ -26,7 +20,7 @@ import { buildTray } from "./tray";
 import { getFromStore, setToStore } from "./services";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const require = createRequire(import.meta.url);
+// const require = createRequire(import.meta.url);
 import localShortcut from "electron-localshortcut";
 
 import { TypeWindowState } from "public/types";
@@ -71,13 +65,13 @@ const createMainWindow = async () => {
   mainWindow.on("show", () => {
     console.log("show", Date.now());
     if (windowState && windowState.isMaximized) {
-      mainWindow?.maximize();
-      mainWindow!.setBounds({
-        x: windowState.x,
-        y: windowState.y,
-        width: windowState.width,
-        height: windowState.height,
-      });
+      // setTimeout(() => mainWindow!.maximize(), 100);
+      // mainWindow!.setBounds({
+      //   x: windowState.x,
+      //   y: windowState.y,
+      //   width: windowState.width,
+      //   height: windowState.height,
+      // });
     }
   });
 
@@ -106,7 +100,7 @@ const createMainWindow = async () => {
   ipcMain.handle("window:theme", () => {
     theme = true;
     console.log("theme", Date.now());
-    mainWindow?.show();
+    mainWindow?.maximize();
     if (language) {
       mainWindow?.show();
     }
@@ -142,6 +136,9 @@ const createTrayWindow = () => {
     show: false,
     alwaysOnTop: true,
     skipTaskbar: true,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.mjs"),
+    },
   });
   trayWindow.setMenu(null);
   if (paths.VITE_DEV_SERVER_URL) {
@@ -155,9 +152,7 @@ const createTrayWindow = () => {
   }
 
   trayWindow.on("blur", () => trayWindow?.hide());
-  trayWindow.webContents.on("dom-ready", () => {
-    setTimeout(() => buildTray(mainWindow!, trayWindow!), 500);
-  });
+  buildTray(mainWindow!, trayWindow!);
   trayWindow.on("close", (e) => {
     e.preventDefault();
     trayWindow?.hide();
@@ -170,13 +165,15 @@ const createWallpaperWindow = () => {
     frame: false,
     show: false,
     skipTaskbar: true,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.mjs"),
+    },
   });
   wallpaperWindow.on("close", (e) => e.preventDefault());
 };
 
 app.whenReady().then(async () => {
-  console.log(systemPreferences.getAccentColor());
-  if (!mainWindow && !app.isPackaged) {
+  if (!app.isPackaged || !(await getFromStore<number>("activeWallpaper"))) {
     createMainWindow();
   }
   createTrayWindow();
