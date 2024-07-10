@@ -1,179 +1,32 @@
-import { app, BrowserWindow, ipcMain, screen } from "electron";
-import { fileURLToPath } from "node:url";
+import { BrowserWindow, app } from "electron";
 // import { createRequire } from "node:module";
-import path from "node:path";
-import * as paths from "./paths";
-
-import "./ipc/app";
-import "./ipc/window";
-import "./ipc/dialog";
-import "./ipc/path";
-import "./ipc/store";
-import "./ipc/shell";
-import "./ipc/theme";
-import "./ipc/language";
-import "./ipc/wallpaper";
-import "./ipc/db";
 
 import "./protocol";
-import { buildTray } from "./tray";
-import { getFromStore, setToStore } from "./services";
+import "@ipc";
+// import { buildTray } from "./tray";
+import { getFromStore } from "@services";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // const require = createRequire(import.meta.url);
-import localShortcut from "electron-localshortcut";
-
-import { TypeWindowState } from "public/types";
 
 import debug from "electron-debug";
+import {
+  createMainWindow,
+  createTrayWindow,
+  createWallpaperWindow,
+  mainWindow,
+  saveMainWindowState,
+} from "@windows";
 
 debug({ showDevTools: false });
+import contextMenu from "electron-context-menu";
 
-let mainWindow: BrowserWindow | null = null;
-let trayWindow: BrowserWindow | null = null;
-export let wallpaperWindow: BrowserWindow | null = null;
-
-const createMainWindow = async () => {
-  const windowState = await getFromStore<TypeWindowState>("mainWindow.state");
-  mainWindow = new BrowserWindow({
-    width: windowState ? windowState?.width : 900,
-    height: windowState ? windowState.height : 600,
-    minWidth: 550,
-    minHeight: 400,
-    icon: path.join(paths.VITE_PUBLIC, "icon.jpg"),
-    title: "Alive Backdrops",
-    show: false,
-    frame: false,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.mjs"),
-    },
-  });
-
-  if (windowState) {
-    const screenSize = screen.getPrimaryDisplay().workAreaSize;
-    mainWindow!.setBounds({ x: windowState.x, y: windowState.y });
-    windowState.isFullscreen && mainWindow!.setFullScreen(true);
-    if (windowState.isMaximized) {
-      mainWindow!.setBounds({
-        width: screenSize.width,
-        height: screenSize.height,
-      });
-      mainWindow!.center();
-    }
-  }
-
-  mainWindow.on("show", () => {
-    console.log("show", Date.now());
-    if (windowState && windowState.isMaximized) {
-      // setTimeout(() => mainWindow!.maximize(), 100);
-      // mainWindow!.setBounds({
-      //   x: windowState.x,
-      //   y: windowState.y,
-      //   width: windowState.width,
-      //   height: windowState.height,
-      // });
-    }
-  });
-
-  localShortcut.register("F11", () => {
-    mainWindow?.setFullScreen(!mainWindow.isFullScreen());
-  });
-
-  mainWindow.setMenu(null);
-  if (paths.VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(
-      path.join(paths.VITE_DEV_SERVER_URL, "src", "app", "main", "main.html")
-    );
-  } else {
-    mainWindow.loadFile(
-      path.join(paths.VITE_DIST, "src", "app", "main", "main.html")
-    );
-  }
-
-  let theme = false;
-  let language = false;
-
-  mainWindow.webContents.on("dom-ready", () => {
-    console.log("dom", Date.now());
-  });
-
-  ipcMain.handle("window:theme", () => {
-    theme = true;
-    console.log("theme", Date.now());
-    mainWindow?.maximize();
-    if (language) {
-      mainWindow?.show();
-    }
-  });
-  ipcMain.handle("window:language", () => {
-    language = true;
-    console.log("language", Date.now());
-    // mainWindow?.show();
-    if (theme) {
-      mainWindow?.show();
-    }
-  });
-  mainWindow.on("close", (e) => {
-    e.preventDefault();
-    mainWindow?.hide();
-  });
-
-  mainWindow.on("resize", () => {
-    mainWindow?.webContents.send(
-      "window:resize",
-      mainWindow?.isMaximized(),
-      mainWindow.isFullScreen()
-    );
-  });
-};
-
-const createTrayWindow = () => {
-  trayWindow = new BrowserWindow({
-    width: 200,
-    height: 200,
-    resizable: false,
-    frame: false,
-    show: false,
-    alwaysOnTop: true,
-    skipTaskbar: true,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.mjs"),
-    },
-  });
-  trayWindow.setMenu(null);
-  if (paths.VITE_DEV_SERVER_URL) {
-    trayWindow.loadURL(
-      path.join(paths.VITE_DEV_SERVER_URL, "src", "app", "tray", "tray.html")
-    );
-  } else {
-    trayWindow.loadFile(
-      path.join(paths.VITE_DIST, "src", "app", "tray", "tray.html")
-    );
-  }
-
-  trayWindow.on("blur", () => trayWindow?.hide());
-  buildTray(mainWindow!, trayWindow!);
-  trayWindow.on("close", (e) => {
-    e.preventDefault();
-    trayWindow?.hide();
-  });
-};
-
-const createWallpaperWindow = () => {
-  wallpaperWindow = new BrowserWindow({
-    fullscreen: true,
-    frame: false,
-    show: false,
-    skipTaskbar: true,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.mjs"),
-    },
-  });
-  wallpaperWindow.on("close", (e) => e.preventDefault());
-};
+contextMenu({});
 
 app.whenReady().then(async () => {
-  if (!app.isPackaged || !(await getFromStore<number>("activeWallpaper"))) {
+  if (
+    (!app.isPackaged || !(await getFromStore<number>("activeWallpaper"))) &&
+    !process.argv.includes("--autolaunch")
+  ) {
     createMainWindow();
   }
   createTrayWindow();
@@ -196,15 +49,6 @@ if (!singleInstanceLock) {
 }
 
 app.on("before-quit", () => {
-  mainWindow!.hide();
-  const isMaximized = mainWindow!.isMaximized();
-  const isFullscreen = mainWindow!.isFullScreen();
-  mainWindow!.unmaximize();
-  mainWindow?.setFullScreen(false);
-  setToStore<TypeWindowState>("mainWindow.state", {
-    ...mainWindow!.getBounds(),
-    isMaximized: isMaximized,
-    isFullscreen: isFullscreen,
-  });
+  saveMainWindowState();
   BrowserWindow.getAllWindows().forEach((win) => win.removeAllListeners());
 });

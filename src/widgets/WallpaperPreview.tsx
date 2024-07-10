@@ -6,11 +6,6 @@ export const WallpaperPreview = (props: {
   speed: string;
 }) => {
   const ref = useRef<HTMLVideoElement | null>(null);
-  ref.current?.addEventListener("fullscreenchange", () =>
-    window.ipcRenderer.window.toggleFullscreen(
-      document.fullscreenElement !== null ? true : false
-    )
-  );
   useEffect(() => {
     if (props.src !== "") {
       ref.current!.volume = parseFloat(props.volume) / 100;

@@ -7,7 +7,7 @@
 }
 
 .slider {
-  @apply bg-dark absolute cursor-pointer top-0 left-0 right-0 bottom-0 transition-all duration-300 rounded-full;
+  @apply bg-dark absolute cursor-pointer top-0 left-0 right-0 bottom-0 transition-all rounded-full;
 }
 
 .slider:before {
@@ -16,7 +16,7 @@
 }
 
 input:checked + .slider {
-  @apply bg-yellow;
+  @apply bg-accent;
 }
 
 input:checked + .slider:before {

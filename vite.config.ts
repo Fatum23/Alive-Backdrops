@@ -17,6 +17,42 @@ export default defineConfig(() => {
         main: {
           // Shortcut of `build.lib.entry`.
           entry: "electron/main.ts",
+          vite: {
+            resolve: {
+              alias: [
+                {
+                  find: "@paths",
+                  replacement: fileURLToPath(
+                    new URL("./electron/paths/", import.meta.url)
+                  ),
+                },
+                {
+                  find: "@ipc",
+                  replacement: fileURLToPath(
+                    new URL("./electron/ipc/", import.meta.url)
+                  ),
+                },
+                {
+                  find: "@preload",
+                  replacement: fileURLToPath(
+                    new URL("./electron/preload/", import.meta.url)
+                  ),
+                },
+                {
+                  find: "@windows",
+                  replacement: fileURLToPath(
+                    new URL("./electron/windows/", import.meta.url)
+                  ),
+                },
+                {
+                  find: "@services",
+                  replacement: fileURLToPath(
+                    new URL("./electron/services/", import.meta.url)
+                  ),
+                },
+              ],
+            },
+          },
         },
         preload: {
           // Shortcut of `build.rollupOptions.input`.
@@ -38,20 +74,11 @@ export default defineConfig(() => {
       emptyOutDir: true,
       rollupOptions: {
         input: {
-          splash: "./src/app/splash/splash.html",
           main: "./src/app/main/main.html",
-          wallpaper: "./src/app/wallpaper/wallpaper.html",
           tray: "./src/app/tray/tray.html",
+          wallpaper: "./src/app/wallpaper/wallpaper.html",
         },
       },
-    },
-    resolve: {
-      alias: [
-        {
-          find: "@public",
-          replacement: fileURLToPath(new URL("./public/", import.meta.url)),
-        },
-      ],
     },
   };
 });

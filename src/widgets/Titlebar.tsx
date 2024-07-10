@@ -56,23 +56,23 @@ export const Titlebar = (props: { title: string }) => {
               className="cursor-default flex items-center px-1 bg-transparent hover:bg-light rounded-none"
               onClick={() => window.ipcRenderer.window.minimize()}
             >
-              <Minimize className="icon" size={16} />
+              <Minimize size={16} />
             </button>
             <button
               className="cursor-default flex items-center px-1 bg-transparent hover:bg-light rounded-none"
               onClick={() => window.ipcRenderer.window.toggleMaximize()}
             >
               {isWindowMaximized ? (
-                <Unmaximize className="icon" size={20} />
+                <Unmaximize size={20} />
               ) : (
-                <Maximize className="icon" size={20} />
+                <Maximize size={20} />
               )}
             </button>
             <button
               className="cursor-default flex items-center bg-transparent hover:bg-red-500 rounded-none"
-              onClick={() => window.ipcRenderer.app.quit()}
+              onClick={() => window.ipcRenderer.window.hide()}
             >
-              <Close className="icon-close" size={26} />
+              <Close size={26} />
             </button>
           </div>
         </div>

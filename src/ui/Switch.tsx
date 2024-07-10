@@ -20,6 +20,7 @@ export const Switch = (
   const thumbRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    console.log(up);
     if (!down) {
       setMove(null);
       setUp(null);
@@ -39,7 +40,7 @@ export const Switch = (
         style={{
           transform: move ? `translateX(${move}px)` : "translateX(0)",
         }}
-        className="h-5 aspect-square rounded-full bg-yellow"
+        className="h-5 aspect-square rounded-full bg-accent"
         onMouseDown={(e) =>
           setDown({
             switchX: e.clientX - switchRef.current!.offsetLeft,

@@ -40,7 +40,7 @@ export type TypeContextMenu = {
 };
 
 export type TypeWallpaperBehavior = "nothing" | "mute" | "pause";
-export type TypeColorTheme = "system" | "dark" | "light";
+export type TypeColorTheme = "system" | "dark" | "light" | "custom";
 export type TypeLanguage = "system" | "en" | "ru";
 
 export type TypeSettings = {

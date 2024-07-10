@@ -8,7 +8,7 @@ window.ipcRenderer.theme.onChange((_e, theme) => {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         separateStylesheet.sheet!.insertRule(
-          "* { transition: color 0.3s, background-color 0.3s; }",
+          "* { transition: color 0.3s, background-color 0.3s !important; }",
           0
         );
         themeLoaded = true;

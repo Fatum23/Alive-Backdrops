@@ -12,3 +12,4 @@ export { SettingsNavBar } from "./SettingsNavBar";
 export { SettingsFooter } from "./SettingsFooter";
 export { UpdateButton } from "./UpdateButton";
 export { DropHandler } from "./DropHandler";
+export { CustomizeTheme } from "./CustomizeTheme";

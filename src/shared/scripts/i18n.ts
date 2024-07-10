@@ -43,6 +43,7 @@ i18n.use(initReactI18next).init({
         System: "System",
         Light: "Light",
         Dark: "Dark",
+        Custom: "Custom",
 
         Ru: "Russian",
         En: "English",
@@ -57,17 +58,22 @@ i18n.use(initReactI18next).init({
         "Launch app with system to enable wallpapers":
           "Launch app with system to enable wallpapers",
 
+        "Customize theme": "Customize theme",
         "Color theme": "Color theme",
         "App color theme": "App color theme",
 
         Language: "Language",
         "App language": "App language",
 
+        "Open in explorer": "Open in explorer",
         "Path to wallpapers folder": "Path to wallpapers folder",
         "Path to the folder where the wallpapers are stored":
           "Path to the folder where the wallpapers are stored",
 
         Speed: "Speed",
+
+        Ok: "Ok",
+        Cancel: "Cancel",
       },
     },
     ru: {
@@ -108,6 +114,7 @@ i18n.use(initReactI18next).init({
         System: "Система",
         Light: "Светлая",
         Dark: "Тёмная",
+        Custom: "Пользовательская",
 
         Ru: "Русский",
         En: "English",
@@ -121,17 +128,22 @@ i18n.use(initReactI18next).init({
         "Launch app with system to enable wallpapers":
           "Запускать приложение с системой, чтобы включить обои",
 
+        "Customize theme": "Настроить тему",
         "Color theme": "Цветовая тема",
         "App color theme": "Цветовая тема приложения",
 
         Language: "Язык",
         "App language": "Язык приложения",
 
+        "Open in explorer": "Открыть в проводнике",
         "Path to wallpapers folder": "Путь к папке с обоями",
         "Path to the folder where the wallpapers are stored":
           "Путь к папке, в которой хранятся обои",
 
         Speed: "Скорость",
+
+        Ok: "Ок",
+        Cancel: "Отмена",
       },
     },
   },
@@ -140,7 +152,15 @@ i18n.use(initReactI18next).init({
   },
 });
 
+let languageLoaded: boolean = false;
 window.ipcRenderer.language.onChange((_e, language) => {
   language = language !== "system" ? language : navigator.language;
   i18next.changeLanguage(language);
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      if (!languageLoaded) {
+        window.ipcRenderer.invoke("window:language");
+      }
+    })
+  );
 });

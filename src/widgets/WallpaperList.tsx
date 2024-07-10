@@ -57,7 +57,7 @@ export const WallpaperList = (props: {
       {loading && (
         <div className="absolute top-0 left-0 flex w-full h-full justify-center items-center">
           <div className="h-10 flex flex-row items-center gap-3">
-            <div className="h-full aspect-square border-4 border-dark border-t-yellow border-l-yellow rounded-full animate-loading"></div>
+            <div className="h-full aspect-square border-4 border-dark border-t-accent border-l-accent rounded-full animate-loading"></div>
             <div>{t("Loading")}</div>
           </div>
         </div>

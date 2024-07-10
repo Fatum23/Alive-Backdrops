@@ -106,7 +106,7 @@ export const Wallpaper = (
       {!hovered &&
         activeWallpaper !== null &&
         props.id! === activeWallpaper!.id! && (
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-yellow"></div>
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-accent"></div>
         )}
     </div>
   );

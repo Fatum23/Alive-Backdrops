@@ -18,7 +18,7 @@ export const Slider = (props: {
         ((parseFloat(value!) - parseFloat(props.min)) /
           (parseFloat(range.current!.max) - parseFloat(props.min))) *
         100;
-      range.current!.style.background = `linear-gradient(to right, var(--yellow) ${progress}%, var(--dark) ${progress}%)`;
+      range.current!.style.background = `linear-gradient(to right, var(--accent) ${progress}%, var(--dark) ${progress}%)`;
     }
   };
 

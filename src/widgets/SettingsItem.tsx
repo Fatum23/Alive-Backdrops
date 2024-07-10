@@ -8,8 +8,8 @@ import { MdRocketLaunch } from "react-icons/md";
 import { GrLanguage } from "react-icons/gr";
 import { GoFileDirectoryFill } from "react-icons/go";
 
-import { TypeSettingsLabel } from "@public/types";
-import { PathPicker } from "@widgets";
+import { TypeColorTheme, TypeSettingsLabel } from "@public/types";
+import { CustomizeTheme, PathPicker } from "@widgets";
 import { Select, Slider, Switch } from "@ui";
 
 export const SettingsItem = <T,>(props: {
@@ -57,14 +57,20 @@ export const SettingsItem = <T,>(props: {
             "window",
             "maximized-window",
             "fullscreen-window",
-            "language",
             "theme",
+            "language",
           ].includes(props.label) && (
-            <Select
-              value={props.value as string}
-              dropdownValues={props.dropdownValues! as string[]}
-              setValue={props.setValue as Dispatch<SetStateAction<string>>}
-            />
+            <div className="flex flex-row gap-2">
+              {props.label === "theme" &&
+                (props.value as TypeColorTheme) === "custom" && (
+                  <CustomizeTheme />
+                )}
+              <Select
+                value={props.value as string}
+                dropdownValues={props.dropdownValues! as string[]}
+                setValue={props.setValue as Dispatch<SetStateAction<string>>}
+              />
+            </div>
           )}
           {props.label === "volume" && (
             <Slider

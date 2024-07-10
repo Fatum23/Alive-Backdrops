@@ -16,8 +16,8 @@ export const AddWallpaperButton = (props: TypeWallpaper) => {
 
   return (
     <div
-      className={`mb-1 py-2 px-5 rounded-sm transition-colors duration-300 ${
-        valid ? "hover:bg-dark-yellow bg-yellow cursor-pointer" : "bg-dark"
+      className={`mb-1 py-2 px-5 rounded-sm ${
+        valid ? "hover:bg-dark-accent bg-accent cursor-pointer" : "bg-dark"
       }`}
       onClick={() => {
         if (valid) {

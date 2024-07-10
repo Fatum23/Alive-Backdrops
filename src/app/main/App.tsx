@@ -13,27 +13,37 @@ export const App = () => {
   const [location, setLocation] = useState<string>("/");
 
   return (
-    <HashRouter>
+    <>
       <Titlebar title={title} />
-      <DropHandler location={location} />
-      <Routes>
-        <Route
-          path="/"
-          element={<HomePage setTitle={setTitle} setLocation={setLocation} />}
-        />
-        <Route
-          path="/AddWallpaper"
-          element={
-            <AddWallpaperPage setTitle={setTitle} setLocation={setLocation} />
-          }
-        />
-        <Route
-          path="/Settings"
-          element={
-            <SettingsPage setTitle={setTitle} setLocation={setLocation} />
-          }
-        />
-      </Routes>
-    </HashRouter>
+      <div id="router">
+        <div id="modal"></div>
+        <HashRouter>
+          <DropHandler location={location} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <HomePage setTitle={setTitle} setLocation={setLocation} />
+              }
+            />
+            <Route
+              path="/AddWallpaper"
+              element={
+                <AddWallpaperPage
+                  setTitle={setTitle}
+                  setLocation={setLocation}
+                />
+              }
+            />
+            <Route
+              path="/Settings"
+              element={
+                <SettingsPage setTitle={setTitle} setLocation={setLocation} />
+              }
+            />
+          </Routes>
+        </HashRouter>
+      </div>
+    </>
   );
 };

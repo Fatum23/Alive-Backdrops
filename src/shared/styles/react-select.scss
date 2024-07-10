@@ -14,7 +14,7 @@
 
 .react-select {
   &__control {
-    @apply cursor-pointer shadow-none border-none bg-dark group-hover:bg-light transition-colors duration-300 #{!important};
+    @apply cursor-pointer shadow-none border-none bg-dark group-hover:bg-light #{!important};
   }
   &__single-value {
     @apply text-text #{!important};
@@ -31,7 +31,7 @@
     }
 
     &--is-selected {
-      @apply bg-yellow #{!important};
+      @apply bg-accent #{!important};
     }
   }
   &__indicator-separator {

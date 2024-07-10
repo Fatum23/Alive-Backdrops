@@ -6,11 +6,10 @@ ipcMain.handle(
   "app:toggleAutolaunch",
   (_e, autolaunch: boolean | undefined) => {
     app.setLoginItemSettings({
-      openAtLogin:
-        autolaunch !== undefined
-          ? autolaunch
-          : app.getLoginItemSettings().openAtLogin,
-      path: app.getPath("exe"),
+      openAtLogin: autolaunch
+        ? autolaunch
+        : app.getLoginItemSettings().openAtLogin,
+      args: ["--autolaunch"],
     });
   }
 );

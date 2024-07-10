@@ -8,7 +8,7 @@ export const HighlightText = (props: { text: string; highlight: string }) => {
           key={i}
           className={`${
             part.toLowerCase() === props.highlight.toLowerCase()
-              ? "text-yellow"
+              ? "text-accent"
               : "text-white"
           }`}
         >

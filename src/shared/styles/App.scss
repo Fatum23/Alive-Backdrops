@@ -8,8 +8,9 @@
     --light: #f1f5f9;
     --dark: #cbd5e1;
     --text: #000;
-    --yellow: #ffbf00;
-    --dark-yellow: #cc9900;
+    --accent: #ffbf00;
+    --dark-accent: color-mix(in srgb, var(--accent), black 20%);
+    --link: #38bdf8;
   }
 }
 
@@ -48,11 +49,10 @@
 
 ::-webkit-scrollbar {
   width: 10px;
-  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-yellow hover:bg-dark-yellow;
+  @apply bg-accent hover:bg-dark-accent;
 }
 
 html {
@@ -63,10 +63,14 @@ body {
   @apply min-w-[100vw] min-h-[100vh] overflow-hidden m-0 bg-default;
 }
 
-button {
+button,
+.button {
   @apply cursor-pointer bg-light hover:bg-dark rounded-md;
   &:disabled {
     @apply bg-dark;
+    &:hover {
+      @apply bg-dark;
+    }
   }
 }
 
@@ -75,7 +79,7 @@ img {
 }
 
 a {
-  @apply cursor-pointer hover:text-sky-400;
+  @apply cursor-pointer hover:text-link;
 }
 
 video {
@@ -108,7 +112,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 }
 
 input[type="range"]::-webkit-slider-thumb {
-  @apply appearance-none bg-yellow rounded w-2 h-7 -mt-[10px] hover:bg-dark-yellow;
+  @apply appearance-none bg-accent rounded w-2 h-7 -mt-[10px] hover:bg-dark-accent;
 }
 
 hr {

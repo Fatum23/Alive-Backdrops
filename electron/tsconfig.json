@@ -22,14 +22,12 @@
     "moduleResolution": "node10" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "baseUrl": ".",
     "paths": {
-      "@public/*": ["public/*"],
-      "@app/*": ["src/app/*"],
-      "@pages": ["src/pages"],
-      "@ui": ["src/ui"],
-      "@entities": ["src/entities"],
-      "@features": ["src/features"],
-      "@widgets": ["src/widgets"],
-      "@shared/*": ["src/shared/*"]
+      "@public/*": ["../public/*"],
+      "@paths": ["./paths"],
+      "@ipc": ["./ipc"],
+      "@preload/*": ["./preload/*"],
+      "@windows": ["./windows"],
+      "@services": ["./services"]
     },
 
     /* JavaScript Support */
@@ -95,6 +93,6 @@
     "skipDefaultLibCheck": true /* Skip type checking .d.ts files that are included with TypeScript. */,
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["src", "vite-env.d.ts", "public"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["."],
+  "references": [{ "path": "../tsconfig.node.json" }]
 }

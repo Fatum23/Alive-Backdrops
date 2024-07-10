@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { TypeWindow } from "public/preloadTypes";
+import { TypeWindow } from "@public/preloadTypes";
 
 export const window: TypeWindow = {
   setTitle: (title) => ipcRenderer.invoke("window:setTitle", title),

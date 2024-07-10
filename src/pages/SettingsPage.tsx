@@ -107,7 +107,7 @@ export const SettingsPage = (props: TypePage) => {
             />
             <SettingsItem
               value={colorTheme}
-              dropdownValues={["system", "light", "dark"]}
+              dropdownValues={["system", "light", "dark", "custom"]}
               setValue={setColorTheme}
               label="theme"
               title="Color theme"

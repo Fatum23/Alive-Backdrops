@@ -17,10 +17,10 @@ export const SettingsFooter = () => {
       </div>
       <A
         href="https://github.com/Fatum23/Alive-Backdrops"
-        className="flex flex-row items-center gap-1"
+        className="group flex flex-row items-center gap-1"
       >
-        <FaGithub className="group-hover:fill-sky-400 transition-colors duration-300" />
-        Github
+        <FaGithub className="group-hover:fill-link [transition:fill_0.3s_!important]" />
+        <span className="group-hover:text-link">Github</span>
       </A>
       <UpdateButton />
     </div>
