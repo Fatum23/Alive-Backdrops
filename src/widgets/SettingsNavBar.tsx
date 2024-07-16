@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "@shared/store";
-import { TypeSettings } from "@public/types";
+import { TypeSettingsStore } from "@public/types";
 import { BackButton } from "@widgets";
 
-export const SettingsNavBar = (props: TypeSettings) => {
+export const SettingsNavBar = (props: TypeSettingsStore) => {
   const { t } = useTranslation();
   const store = useSettingsStore();
 

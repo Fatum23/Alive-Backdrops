@@ -3,7 +3,14 @@ document.head.appendChild(separateStylesheet);
 
 let themeLoaded: boolean = false;
 window.ipcRenderer.theme.onChange((_e, theme) => {
-  document.documentElement.className = `theme-${theme}`;
+  const classList = document.documentElement.classList;
+  const classNames = document.documentElement.className;
+  const getPrevTheme = (className: string) => className.includes("theme-");
+  classNames.includes("theme-") &&
+    classList.remove(
+      classNames.split(" ").at(classNames.split(" ").findIndex(getPrevTheme))!
+    );
+  classList.add(`theme-${theme}`);
   if (!themeLoaded) {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
@@ -12,7 +19,6 @@ window.ipcRenderer.theme.onChange((_e, theme) => {
           0
         );
         themeLoaded = true;
-        window.ipcRenderer.invoke("window:theme");
       })
     );
   }

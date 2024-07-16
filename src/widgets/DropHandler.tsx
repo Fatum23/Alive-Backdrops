@@ -18,11 +18,11 @@ export const DropHandler = (props: { location: string }) => {
   }, [props.location]);
 
   useEffect(() => {
-    document.addEventListener("dragover", (e) => {
+    document.getElementById("router")!.addEventListener("dragover", (e) => {
       e.preventDefault();
       e.stopPropagation();
     });
-    document.addEventListener("drop", async (e) => {
+    document.getElementById("router")!.addEventListener("drop", async (e) => {
       setVisible(false);
       e.preventDefault();
       e.stopPropagation();
@@ -46,8 +46,10 @@ export const DropHandler = (props: { location: string }) => {
         );
       }
     });
-    document.addEventListener("dragenter", () => setVisible(true));
-    document.addEventListener("dragleave", (e) => {
+    document
+      .getElementById("router")!
+      .addEventListener("dragenter", () => setVisible(true));
+    document.getElementById("router")!.addEventListener("dragleave", (e) => {
       if (e.x === 0 && e.y === 0) {
         setVisible(false);
       }
@@ -58,7 +60,7 @@ export const DropHandler = (props: { location: string }) => {
       style={{
         opacity: visible ? 1 : 0,
       }}
-      className="pointer-events-none absolute h-screen w-screen bg-transparent transition-all z-50 backdrop-blur-sm flex flex-col items-center justify-center"
+      className="pointer-events-none absolute h-screen w-screen bg-transparent !transition-all z-50 backdrop-blur-sm flex flex-col items-center justify-center"
     >
       <IoAddOutline size={48} />
       <div className="text-2xl">{t("Add wallpaper")}</div>

@@ -3,6 +3,7 @@ import path from "node:path";
 import { ELECTRON_DIST, VITE_DEV_SERVER_URL, VITE_DIST } from "@paths";
 
 export let trayWindow: BrowserWindow | null = null;
+export let trayWindowReady: boolean = false;
 
 export const createTrayWindow = () => {
   trayWindow = new BrowserWindow({
@@ -17,6 +18,7 @@ export const createTrayWindow = () => {
       preload: path.join(ELECTRON_DIST, "preload.mjs"),
     },
   });
+
   trayWindow.setMenu(null);
   if (VITE_DEV_SERVER_URL) {
     trayWindow.loadURL(
@@ -27,10 +29,13 @@ export const createTrayWindow = () => {
       path.join(VITE_DIST, "src", "app", "tray", "tray.html")
     );
   }
-
   trayWindow.on("blur", () => trayWindow?.hide());
   trayWindow.on("close", (e) => {
     e.preventDefault();
     trayWindow?.hide();
   });
+};
+
+export const onTrayWindowReady = () => {
+  trayWindowReady = true;
 };

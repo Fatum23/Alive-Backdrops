@@ -12,4 +12,5 @@ export const window: TypeWindow = {
   toggleFullscreen: (fullscreen) =>
     ipcRenderer.invoke("window:toggleFullscreen", fullscreen),
   onResize: (callback) => ipcRenderer.on("window:resize", callback),
+  settingsLoaded: () => ipcRenderer.invoke("window:settingsLoaded"),
 };

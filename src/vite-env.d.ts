@@ -1,7 +1,17 @@
 /// <reference types="vite/client" />
 
 interface Window {
-  ipcRenderer: import("electron").IpcRenderer & {
+  ipcRenderer: {
+    on(
+      channel: string,
+      listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void
+    ): Electron.IpcRenderer;
+    off(
+      channel: string,
+      listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void
+    ): Electron.IpcRenderer;
+    invoke(channel: string, ...args: any[]): Promise<any>;
+  } & {
     app: import("../public/preloadTypes").TypeApp;
     window: import("../public/preloadTypes").TypeWindow;
     dialog: import("../public/preloadTypes").TypeDialog;

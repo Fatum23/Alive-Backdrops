@@ -13,4 +13,5 @@ export type TypeWindow = {
       isFullScreen: boolean
     ) => void
   ) => void;
+  settingsLoaded: () => void;
 };

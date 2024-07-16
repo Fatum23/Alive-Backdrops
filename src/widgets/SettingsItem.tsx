@@ -8,7 +8,7 @@ import { MdRocketLaunch } from "react-icons/md";
 import { GrLanguage } from "react-icons/gr";
 import { GoFileDirectoryFill } from "react-icons/go";
 
-import { TypeColorTheme, TypeSettingsLabel } from "@public/types";
+import { TypeColorTheme, TypeSettingsStoreKeys } from "@public/types";
 import { CustomizeTheme, PathPicker } from "@widgets";
 import { Select, Slider, Switch } from "@ui";
 
@@ -16,7 +16,7 @@ export const SettingsItem = <T,>(props: {
   value: T;
   dropdownValues?: T[];
   setValue: Dispatch<SetStateAction<T>>;
-  label: TypeSettingsLabel;
+  label: TypeSettingsStoreKeys;
   title: string;
   description: string;
 }) => {

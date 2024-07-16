@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow } from "electron";
 import localShortcut from "electron-localshortcut";
 import path from "node:path";
 import {
@@ -12,9 +12,10 @@ import { TypeWindowState } from "@public/types";
 import { getFromStore, setToStore } from "@services";
 
 export let mainWindow: BrowserWindow | null = null;
+export let mainWindowReady: boolean = false;
 
 export const createMainWindow = async () => {
-  const windowState = await getFromStore<TypeWindowState>("mainWindow:state");
+  const windowState = await getFromStore<TypeWindowState>("mainWindowState");
   mainWindow = new BrowserWindow({
     center: true,
     width: windowState ? windowState.width : 900,
@@ -54,26 +55,6 @@ export const createMainWindow = async () => {
       path.join(VITE_DIST, "src", "app", "main", "main.html")
     );
   }
-
-  let theme = false;
-  let language = false;
-
-  ipcMain.handle("window:theme", (e) => {
-    if (BrowserWindow.fromWebContents(e.sender) === mainWindow) {
-      theme = true;
-      if (language) {
-        showMainWindow();
-      }
-    }
-  });
-  ipcMain.handle("window:language", (e) => {
-    if (BrowserWindow.fromWebContents(e.sender) === mainWindow) {
-      language = true;
-      if (theme) {
-        showMainWindow();
-      }
-    }
-  });
   mainWindow.on("close", (e) => {
     e.preventDefault();
     mainWindow?.hide();
@@ -86,14 +67,24 @@ export const createMainWindow = async () => {
       mainWindow.isFullScreen()
     );
   });
+
+  mainWindow.on("show", () => {
+    mainWindow!.webContents.setAudioMuted(false);
+  });
+  mainWindow.on("hide", () => {
+    mainWindow!.webContents.setAudioMuted(true);
+  });
+
+  mainWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
 };
 
-const showMainWindow = async () => {
-  const windowState = await getFromStore<TypeWindowState>("mainWindow:state");
+export const onMainWindowReady = async () => {
+  const windowState = await getFromStore<TypeWindowState>("mainWindowState");
   if (windowState && windowState.isMaximized) {
     mainWindow!.maximize();
   }
   mainWindow!.show();
+  mainWindowReady = true;
 };
 
 export const saveMainWindowState = () => {
@@ -102,7 +93,7 @@ export const saveMainWindowState = () => {
   const isFullscreen = mainWindow!.isFullScreen();
   mainWindow!.unmaximize();
   mainWindow?.setFullScreen(false);
-  setToStore<TypeWindowState>("mainWindow:state", {
+  setToStore<TypeWindowState>("mainWindowState", {
     ...mainWindow!.getBounds(),
     isMaximized: isMaximized,
     isFullscreen: isFullscreen,

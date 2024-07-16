@@ -4,9 +4,11 @@ import { Slider } from "@ui";
 import "@shared/scripts/i18n";
 import "@shared/scripts/theme";
 import "@shared/styles/App.scss";
+import { useSettingsStore } from "@shared/store";
 
 export const App = () => {
   const [volume, setVolume] = useState("");
+  useSettingsStore();
   return (
     <div className="scale-90">
       <Slider value={volume} setValue={setVolume} min="0" max="100" step="1" />

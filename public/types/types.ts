@@ -22,16 +22,6 @@ export type TypeWallpaper = {
   speed: string;
 };
 
-export type TypeSettingsLabel =
-  | "window"
-  | "maximized-window"
-  | "fullscreen-window"
-  | "volume"
-  | "autolaunch"
-  | "theme"
-  | "language"
-  | "wallpapers-path";
-
 export type TypeContextMenu = {
   x: number;
   y: number;
@@ -41,9 +31,30 @@ export type TypeContextMenu = {
 
 export type TypeWallpaperBehavior = "nothing" | "mute" | "pause";
 export type TypeColorTheme = "system" | "dark" | "light" | "custom";
+
+export type TypeColorThemeCustom = {
+  bg: string;
+  text: string;
+  primary: string;
+  secondary: string;
+  accent: string;
+  accentHover: string;
+  link: string;
+};
+
 export type TypeLanguage = "system" | "en" | "ru";
 
-export type TypeSettings = {
+export type TypeSettingsStoreKeys =
+  | "behaviorWindow"
+  | "behaviorMaximizedWindow"
+  | "behaviorFullscreenWindow"
+  | "volume"
+  | "autolaunch"
+  | "colorTheme"
+  | "language"
+  | "wallpaperPath";
+
+export type TypeSettingsStore = {
   behaviorWindow: TypeWallpaperBehavior;
   setBehaviorWindow: (behavior: TypeWallpaperBehavior) => void;
 
@@ -68,6 +79,8 @@ export type TypeSettings = {
   wallpaperPath: string;
   setWallpaperPath: (path: string) => void;
 };
+
+export type TypeAppStoreKeys = "activeWallpaper";
 
 export type TypeAppStore = {
   activeWallpaper: TypeWallpaper | undefined;

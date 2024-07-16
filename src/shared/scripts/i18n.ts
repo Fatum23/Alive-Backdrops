@@ -74,6 +74,14 @@ i18n.use(initReactI18next).init({
 
         Ok: "Ok",
         Cancel: "Cancel",
+
+        Background: "Background",
+        Text: "Text",
+        Primary: "Primary",
+        Secondary: "Secondary",
+        Accent: "Accent",
+        "Accent hover": "Accent hover",
+        "Links color": "Links color",
       },
     },
     ru: {
@@ -144,6 +152,14 @@ i18n.use(initReactI18next).init({
 
         Ok: "Ок",
         Cancel: "Отмена",
+
+        Background: "Задний фон",
+        Text: "Текст",
+        Primary: "Основной",
+        Secondary: "Вторичный",
+        Accent: "Акцентный",
+        "Accent hover": "Акцентный при наведении",
+        "Links color": "Цвет ссылок",
       },
     },
   },
@@ -152,15 +168,7 @@ i18n.use(initReactI18next).init({
   },
 });
 
-let languageLoaded: boolean = false;
 window.ipcRenderer.language.onChange((_e, language) => {
   language = language !== "system" ? language : navigator.language;
   i18next.changeLanguage(language);
-  requestAnimationFrame(() =>
-    requestAnimationFrame(() => {
-      if (!languageLoaded) {
-        window.ipcRenderer.invoke("window:language");
-      }
-    })
-  );
 });

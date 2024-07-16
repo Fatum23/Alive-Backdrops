@@ -9,7 +9,7 @@ export default {
         dark: "var(--dark)",
         text: "var(--text)",
         accent: "var(--accent)",
-        "dark-accent": "var(--dark-accent)",
+        "accent-hover": "var(--accent-hover)",
         link: "var(--link)",
       },
       animation: {

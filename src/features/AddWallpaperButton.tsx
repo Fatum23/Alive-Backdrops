@@ -17,7 +17,7 @@ export const AddWallpaperButton = (props: TypeWallpaper) => {
   return (
     <div
       className={`mb-1 py-2 px-5 rounded-sm ${
-        valid ? "hover:bg-dark-accent bg-accent cursor-pointer" : "bg-dark"
+        valid ? "hover:bg-accent-hover bg-accent cursor-pointer" : "bg-dark"
       }`}
       onClick={() => {
         if (valid) {

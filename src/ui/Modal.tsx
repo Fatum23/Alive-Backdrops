@@ -4,6 +4,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useState,
 } from "react";
 import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
@@ -17,17 +18,33 @@ export const Modal = (props: {
   confirmEnabled: boolean;
   onCancel: () => void;
   onConfirm: () => void;
+  onClose?: () => void;
 }) => {
-  const onKeyDownListener = useCallback(
+  const { t } = useTranslation();
+
+  const [modalTimeout, setModalTimeout] = useState<
+    NodeJS.Timeout | undefined
+  >();
+
+  useEffect(() => {
+    if (props.open) {
+      clearTimeout(modalTimeout);
+      document.getElementById("router")!.classList.add("modal-open");
+    } else {
+      setModalTimeout(
+        setTimeout(() => {
+          document.getElementById("router")!.classList.remove("modal-open");
+        }, 300)
+      );
+    }
+  }, [props.open]);
+
+  const documentOnKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (props.open) {
         if (e.key === "Escape") {
           (document.activeElement! as HTMLElement).blur();
           props.closable && props.setOpen(false);
-        }
-        if (e.key === "Tab") {
-          e.preventDefault();
-          e.stopPropagation();
         }
       }
     },
@@ -35,30 +52,33 @@ export const Modal = (props: {
   );
 
   useEffect(() => {
-    document.getElementById("router")!.style.pointerEvents = props.open
-      ? "none"
-      : "auto";
+    document.getElementById("router")!.inert = props.open ? true : false;
+    document.getElementById("modal")!.inert = props.open ? false : true;
   }, [props.open]);
+
   useEffect(() => {
-    if (!props.open) {
-      document.getElementById("router")!.style.pointerEvents = "auto";
-      //enable pointer events when hot reload
-    }
-    document.addEventListener("keydown", onKeyDownListener);
+    document.addEventListener("keydown", documentOnKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", onKeyDownListener);
+      document.removeEventListener("keydown", documentOnKeyDown);
     };
-  }, [onKeyDownListener]);
+  }, [documentOnKeyDown]);
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    if (!props.open) {
+      document.getElementById("router")!.inert = false;
+      //disable inert when hot reload
+    }
+  }, []);
+  //TODO maybe remove ueh above
+
   return ReactDOM.createPortal(
     <div
       style={{
         opacity: props.open ? 1 : 0,
-        pointerEvents: props.open ? "auto" : "none",
         backgroundColor: "rgba(0, 0, 0, 0.3)",
       }}
+      {...{ inert: props.open ? undefined : "" }}
       onMouseDown={() =>
         props.closable ? props.setOpen(false) : window.ipcRenderer.shell.beep()
       }
@@ -66,9 +86,7 @@ export const Modal = (props: {
     >
       <div
         onMouseDown={(e) => e.stopPropagation()}
-        style={{
-          pointerEvents: props.open ? "auto" : "none",
-        }}
+        {...{ inert: props.open ? undefined : "" }}
       >
         <div className="min-w-48 p-2 bg-default rounded-md flex flex-col gap-2 justify-between drop-shadow-2xl">
           {props.title && <h1 className="text-center">{t(props.title)}</h1>}
@@ -79,7 +97,7 @@ export const Modal = (props: {
             </button>
             <button
               disabled={!props.confirmEnabled}
-              className="w-1/2 p-1 px-2 bg-accent hover:bg-dark-accent"
+              className="w-1/2 p-1 px-2 bg-accent hover:bg-accent-hover"
               onClick={props.onConfirm}
             >
               {t("Ok")}

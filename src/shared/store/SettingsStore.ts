@@ -2,11 +2,11 @@ import { create } from "zustand";
 import {
   TypeColorTheme,
   TypeLanguage,
-  TypeSettings,
+  TypeSettingsStore,
   TypeWallpaperBehavior,
 } from "@public/types";
 
-export const useSettingsStore = create<TypeSettings>((set) => ({
+export const useSettingsStore = create<TypeSettingsStore>((set) => ({
   behaviorWindow: "mute",
   setBehaviorWindow: (behavior) => {
     window.ipcRenderer.store.set<TypeWallpaperBehavior>(
@@ -149,6 +149,10 @@ const initSettingsStore = async () => {
         });
       }
     });
+
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => window.ipcRenderer.window.settingsLoaded())
+  );
 };
 
 initSettingsStore();

@@ -9,8 +9,8 @@
     --dark: #cbd5e1;
     --text: #000;
     --accent: #ffbf00;
-    --dark-accent: color-mix(in srgb, var(--accent), black 20%);
-    --link: #38bdf8;
+    --accent-hover: color-mix(in srgb, var(--accent), black 20%);
+    --link: #0ea5e9;
   }
 }
 
@@ -44,7 +44,7 @@
 }
 
 * {
-  @apply select-none text-text;
+  @apply select-none text-text focus:outline-accent;
 }
 
 ::-webkit-scrollbar {
@@ -52,7 +52,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-accent hover:bg-dark-accent;
+  @apply bg-accent hover:bg-accent-hover;
 }
 
 html {
@@ -112,7 +112,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 }
 
 input[type="range"]::-webkit-slider-thumb {
-  @apply appearance-none bg-accent rounded w-2 h-7 -mt-[10px] hover:bg-dark-accent;
+  @apply appearance-none bg-accent rounded w-2 h-7 -mt-[10px] hover:bg-accent-hover;
 }
 
 hr {

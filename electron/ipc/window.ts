@@ -1,3 +1,9 @@
+import {
+  mainWindow,
+  onMainWindowReady,
+  onTrayWindowReady,
+  trayWindow,
+} from "@/windows";
 import { BrowserWindow, ipcMain } from "electron";
 
 ipcMain.handle("window:setTitle", (e, title: string) =>
@@ -42,3 +48,13 @@ ipcMain.handle(
     );
   }
 );
+
+ipcMain.handle("window:settingsLoaded", (e) => {
+  const window = BrowserWindow.fromWebContents(e.sender);
+  if (window === mainWindow) {
+    onMainWindowReady();
+  }
+  if (window === trayWindow) {
+    onTrayWindowReady();
+  }
+});

@@ -27,7 +27,7 @@ export const HomeNavbar = (props: {
         <div className="flex flex-row items-center flex-grow relative">
           <IoIosSearch size={20} className="absolute mx-1" />
           <input
-            className={"outline-none flex-grow w-full pl-7 pr-9"}
+            className={"flex-grow w-full pl-7 pr-9"}
             ref={inputRef}
             value={props.search}
             onChange={(event) => props.setSearch(event.target.value)}

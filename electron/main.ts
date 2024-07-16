@@ -19,10 +19,12 @@ import {
 
 debug({ showDevTools: false });
 import contextMenu from "electron-context-menu";
+import { buildTray } from "./tray";
 
 contextMenu({});
 
 app.whenReady().then(async () => {
+  buildTray();
   if (
     (!app.isPackaged || !(await getFromStore<number>("activeWallpaper"))) &&
     !process.argv.includes("--autolaunch")

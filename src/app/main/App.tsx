@@ -15,8 +15,8 @@ export const App = () => {
   return (
     <>
       <Titlebar title={title} />
+      <div id="modal"></div>
       <div id="router">
-        <div id="modal"></div>
         <HashRouter>
           <DropHandler location={location} />
           <Routes>

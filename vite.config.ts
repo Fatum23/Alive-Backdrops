@@ -21,6 +21,12 @@ export default defineConfig(() => {
             resolve: {
               alias: [
                 {
+                  find: "@",
+                  replacement: fileURLToPath(
+                    new URL("./electron/", import.meta.url)
+                  ),
+                },
+                {
                   find: "@paths",
                   replacement: fileURLToPath(
                     new URL("./electron/paths/", import.meta.url)
