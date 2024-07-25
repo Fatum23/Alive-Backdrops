@@ -8,7 +8,7 @@ import { MdRocketLaunch } from "react-icons/md";
 import { GrLanguage } from "react-icons/gr";
 import { GoFileDirectoryFill } from "react-icons/go";
 
-import { TypeColorTheme, TypeSettingsStoreKeys } from "@public/types";
+import { TypeSettingsStoreKeys } from "@public/types";
 import { CustomizeTheme, PathPicker } from "@widgets";
 import { Select, Slider, Switch } from "@ui";
 
@@ -16,7 +16,7 @@ export const SettingsItem = <T,>(props: {
   value: T;
   dropdownValues?: T[];
   setValue: Dispatch<SetStateAction<T>>;
-  label: TypeSettingsStoreKeys;
+  storekey: TypeSettingsStoreKeys;
   title: string;
   description: string;
 }) => {
@@ -26,21 +26,25 @@ export const SettingsItem = <T,>(props: {
     <button className="p-2 my-1 h-16 cursor-default gap-2 flex flex-row items-center group">
       <div className="flex flex-row w-[60%] h-full items-center">
         <div className="w-6">
-          {props.label === "window" && (
+          {props.storekey === "behaviorWindow" && (
             <BsWindow size={24} className="[transform:rotateY(180deg)]" />
           )}
-          {props.label === "maximized-window" && <CgMaximize size={24} />}
-          {props.label === "fullscreen-window" && <FaDesktop size={24} />}
-          {props.label === "volume" &&
+          {props.storekey === "behaviorMaximizedWindow" && (
+            <CgMaximize size={24} />
+          )}
+          {props.storekey === "behaviorFullscreenWindow" && (
+            <FaDesktop size={24} />
+          )}
+          {props.storekey === "volume" &&
             (props.value === "0" ? (
               <FaVolumeMute size={21} />
             ) : (
               <FaVolumeUp size={24} />
             ))}
-          {props.label === "autolaunch" && <MdRocketLaunch size={24} />}
-          {props.label === "theme" && <FaPalette size={24} />}
-          {props.label === "language" && <GrLanguage size={24} />}
-          {props.label === "wallpapers-path" && (
+          {props.storekey === "autolaunch" && <MdRocketLaunch size={24} />}
+          {props.storekey === "colorTheme" && <FaPalette size={24} />}
+          {props.storekey === "language" && <GrLanguage size={24} />}
+          {props.storekey === "wallpapersPath" && (
             <GoFileDirectoryFill size={24} />
           )}
         </div>
@@ -54,17 +58,20 @@ export const SettingsItem = <T,>(props: {
       <div className="flex w-[40%] h-full mr-3">
         <div className="flex items-center justify-end h-full flex-grow">
           {[
-            "window",
-            "maximized-window",
-            "fullscreen-window",
-            "theme",
+            "behaviorWindow",
+            "behaviorMaximizedWindow",
+            "behaviorFullscreenWindow",
             "language",
-          ].includes(props.label) && (
+          ].includes(props.storekey) && (
+            <Select
+              value={props.value as string}
+              dropdownValues={props.dropdownValues! as string[]}
+              setValue={props.setValue as Dispatch<SetStateAction<string>>}
+            />
+          )}
+          {props.storekey === "colorTheme" && (
             <div className="flex flex-row gap-2">
-              {props.label === "theme" &&
-                (props.value as TypeColorTheme) === "custom" && (
-                  <CustomizeTheme />
-                )}
+              {props.value === "custom" && <CustomizeTheme />}
               <Select
                 value={props.value as string}
                 dropdownValues={props.dropdownValues! as string[]}
@@ -72,7 +79,7 @@ export const SettingsItem = <T,>(props: {
               />
             </div>
           )}
-          {props.label === "volume" && (
+          {props.storekey === "volume" && (
             <Slider
               value={props.value as string}
               min="0"
@@ -81,13 +88,13 @@ export const SettingsItem = <T,>(props: {
               setValue={props.setValue as Dispatch<SetStateAction<string>>}
             />
           )}
-          {props.label === "autolaunch" && (
+          {props.storekey === "autolaunch" && (
             <Switch
               checked={props.value as boolean}
               setChecked={props.setValue as Dispatch<SetStateAction<boolean>>}
             />
           )}
-          {props.label === "wallpapers-path" && (
+          {props.storekey === "wallpapersPath" && (
             <PathPicker
               value={props.value as string}
               setValue={props.setValue as Dispatch<SetStateAction<string>>}

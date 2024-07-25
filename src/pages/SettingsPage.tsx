@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SettingsItem, SettingsNavBar, SettingsFooter } from "@widgets";
 import { useSettingsStore } from "@shared/store";
@@ -9,8 +9,12 @@ import {
   TypeWallpaperBehavior,
 } from "@public/types";
 import { useLocation } from "react-router-dom";
+import {
+  contextColorThemeCustom,
+  ProviderColorThemeCustom,
+} from "@shared/contexts";
 
-export const SettingsPage = (props: TypePage) => {
+const SettingsPageWithoutProvider = (props: TypePage) => {
   const location = useLocation();
   useEffect(() => {
     props.setTitle("Settings");
@@ -32,9 +36,12 @@ export const SettingsPage = (props: TypePage) => {
   const [colorTheme, setColorTheme] = useState<TypeColorTheme>(
     store.colorTheme
   );
+  const { colorThemeCustom, setColorThemeCustom } = useContext(
+    contextColorThemeCustom
+  );
   const [language, setLanguage] = useState<TypeLanguage>(store.language);
-  const [wallpaperPath, setWallpaperPath] = useState<string>(
-    store.wallpaperPath!
+  const [wallpapersPath, setWallpapersPath] = useState<string>(
+    store.wallpapersPath
   );
 
   return (
@@ -52,10 +59,12 @@ export const SettingsPage = (props: TypePage) => {
         setAutolaunch={setAutolaunch}
         colorTheme={colorTheme}
         setColorTheme={setColorTheme}
+        colorThemeCustom={colorThemeCustom}
+        setColorThemeCustom={setColorThemeCustom}
         language={language}
         setLanguage={setLanguage}
-        wallpaperPath={wallpaperPath}
-        setWallpaperPath={setWallpaperPath}
+        wallpapersPath={wallpapersPath}
+        setWallpapersPath={setWallpapersPath}
       />
       <div className="h-[calc(100%-72px)] overflow-y-auto">
         <div className="flex flex-col gap-6 m-4">
@@ -65,7 +74,7 @@ export const SettingsPage = (props: TypePage) => {
               value={behaviorWindow}
               dropdownValues={["nothing", "mute", "pause"]}
               setValue={setBehaviorWindow}
-              label="window"
+              storekey="behaviorWindow"
               title="Window"
               description="If there is an active window"
             />
@@ -73,7 +82,7 @@ export const SettingsPage = (props: TypePage) => {
               value={behaviorMaximizedWindow}
               dropdownValues={["nothing", "mute", "pause"]}
               setValue={setBehaviorMaximizedWindow}
-              label="maximized-window"
+              storekey="behaviorMaximizedWindow"
               title="Maximized window"
               description="If there is an active maximized window"
             />
@@ -81,7 +90,7 @@ export const SettingsPage = (props: TypePage) => {
               value={behaviorFullscreenWindow}
               dropdownValues={["nothing", "mute", "pause"]}
               setValue={setBehaviorFullscreenWindow}
-              label="fullscreen-window"
+              storekey="behaviorFullscreenWindow"
               title="Fullscreen window"
               description="If there is an active fullscreen window"
             />
@@ -91,7 +100,7 @@ export const SettingsPage = (props: TypePage) => {
             <SettingsItem
               value={volume}
               setValue={setVolume}
-              label="volume"
+              storekey="volume"
               title="General volume"
               description="General volume for all wallpapers"
             />
@@ -101,7 +110,7 @@ export const SettingsPage = (props: TypePage) => {
             <SettingsItem
               value={autolaunch}
               setValue={setAutolaunch}
-              label="autolaunch"
+              storekey="autolaunch"
               title="Autolaunch"
               description="Launch app with system to enable wallpapers"
             />
@@ -109,7 +118,7 @@ export const SettingsPage = (props: TypePage) => {
               value={colorTheme}
               dropdownValues={["system", "light", "dark", "custom"]}
               setValue={setColorTheme}
-              label="theme"
+              storekey="colorTheme"
               title="Color theme"
               description="App color theme"
             />
@@ -117,14 +126,14 @@ export const SettingsPage = (props: TypePage) => {
               value={language}
               dropdownValues={["system", "en", "ru"]}
               setValue={setLanguage}
-              label="language"
+              storekey="language"
               title="Language"
               description="App language"
             />
             <SettingsItem
-              value={wallpaperPath}
-              setValue={setWallpaperPath}
-              label="wallpapers-path"
+              value={wallpapersPath}
+              setValue={setWallpapersPath}
+              storekey="wallpapersPath"
               title="Path to wallpapers folder"
               description="Path to the folder where the wallpapers are stored"
             />
@@ -135,3 +144,12 @@ export const SettingsPage = (props: TypePage) => {
     </div>
   );
 };
+
+export const SettingsPage = (props: TypePage) => (
+  <ProviderColorThemeCustom>
+    <SettingsPageWithoutProvider
+      setTitle={props.setTitle}
+      setLocation={props.setLocation}
+    />
+  </ProviderColorThemeCustom>
+);

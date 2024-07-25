@@ -1,4 +1,6 @@
+import { TypeStoreKeys } from "@public/types";
+
 export type TypeStore = {
-  get: <T>(value: string) => Promise<T | undefined>;
-  set: <T>(value: string, key: T) => void;
+  get: <T>(value: TypeStoreKeys) => Promise<T | undefined>;
+  set: <T>(value: TypeStoreKeys, key: T) => void;
 };

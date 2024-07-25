@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 
-import "@shared/scripts/i18n";
-import "@shared/scripts/theme";
+import "@shared/services/language";
+import "@shared/services/theme";
 import "@shared/styles/App.scss";
 
 import { AddWallpaperPage, HomePage, SettingsPage } from "@pages";

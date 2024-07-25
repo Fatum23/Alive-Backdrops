@@ -16,11 +16,11 @@ export const Select = (props: {
 
   useEffect(() => {
     setOptions(
-      props.dropdownValues.map((val) => ({
+      props.dropdownValues.map((value) => ({
         label: t(
-          val.replace(/(^\w{1}|[\s.-]\w{1})/g, (match) => match.toUpperCase())
+          value.replace(/(^\w{1}|[\s.-]\w{1})/g, (match) => match.toUpperCase())
         ),
-        value: val,
+        value: value,
       }))
     );
   }, [props.dropdownValues]);
@@ -31,14 +31,9 @@ export const Select = (props: {
       isSearchable={false}
       onChange={(item) => props.setValue(item!.value)}
       options={options}
-      value={{
-        label: t(
-          props.value.replace(/(^\w{1}|[\s.-]\w{1})/g, (match) =>
-            match.toUpperCase()
-          )
-        ),
-        value: props.value,
-      }}
+      value={options.at(
+        options.findIndex((option) => option.value === props.value)
+      )}
       menuPlacement="auto"
       menuPosition="fixed"
     />

@@ -32,15 +32,17 @@ export type TypeContextMenu = {
 export type TypeWallpaperBehavior = "nothing" | "mute" | "pause";
 export type TypeColorTheme = "system" | "dark" | "light" | "custom";
 
-export type TypeColorThemeCustom = {
-  bg: string;
-  text: string;
-  primary: string;
-  secondary: string;
-  accent: string;
-  accentHover: string;
-  link: string;
-};
+export type TypeColorThemeCustom =
+  | {
+      bg: string;
+      text: string;
+      primary: string;
+      secondary: string;
+      accent: string;
+      accentHover: string;
+      link: string;
+    }
+  | undefined;
 
 export type TypeLanguage = "system" | "en" | "ru";
 
@@ -51,8 +53,10 @@ export type TypeSettingsStoreKeys =
   | "volume"
   | "autolaunch"
   | "colorTheme"
+  | "colorThemeCustom"
+  | "colorThemeCustom"
   | "language"
-  | "wallpaperPath";
+  | "wallpapersPath";
 
 export type TypeSettingsStore = {
   behaviorWindow: TypeWallpaperBehavior;
@@ -73,11 +77,14 @@ export type TypeSettingsStore = {
   colorTheme: TypeColorTheme;
   setColorTheme: (theme: TypeColorTheme) => void;
 
+  colorThemeCustom: TypeColorThemeCustom;
+  setColorThemeCustom: (theme: TypeColorThemeCustom) => void;
+
   language: TypeLanguage;
   setLanguage: (language: TypeLanguage) => void;
 
-  wallpaperPath: string;
-  setWallpaperPath: (path: string) => void;
+  wallpapersPath: string;
+  setWallpapersPath: (path: string) => void;
 };
 
 export type TypeAppStoreKeys = "activeWallpaper";
@@ -86,3 +93,10 @@ export type TypeAppStore = {
   activeWallpaper: TypeWallpaper | undefined;
   setActiveWallpaper: (wallpaper: TypeWallpaper) => void;
 };
+
+export type TypeElectronStoreKeys = "mainWindowState";
+
+export type TypeStoreKeys =
+  | TypeSettingsStoreKeys
+  | TypeAppStoreKeys
+  | TypeElectronStoreKeys;

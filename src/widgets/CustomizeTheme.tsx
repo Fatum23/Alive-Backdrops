@@ -2,6 +2,7 @@ import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -12,10 +13,22 @@ import { SlEqualizer } from "react-icons/sl";
 import { LuPipette } from "react-icons/lu";
 
 import { Modal } from "@ui";
+import { contextColorThemeCustom } from "@shared/contexts";
 
 export const CustomizeTheme = () => {
   const { t } = useTranslation();
+
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const getCSSVar = useCallback(
+    (name: string) =>
+      window.getComputedStyle(document.documentElement).getPropertyValue(name),
+    []
+  );
+
+  const { colorThemeCustom, setColorThemeCustom } = useContext(
+    contextColorThemeCustom
+  );
 
   const [bg, setBg] = useState<string>("");
   const [text, setText] = useState<string>("");
@@ -25,89 +38,29 @@ export const CustomizeTheme = () => {
   const [accentHover, setAccentHover] = useState<string>("");
   const [link, setLink] = useState<string>("");
 
-  const [modalTimeout, setModalTimeout] = useState<
-    NodeJS.Timeout | undefined
-  >();
-
-  const rgbToHex = useCallback(
-    (r: number, g: number, b: number) =>
-      "#" +
-      [r, g, b]
-        .map((x) => {
-          const hex = x.toString(16);
-          return hex.length === 1 ? "0" + hex : hex;
-        })
-        .join(""),
-    []
-  );
-
-  const hexToRgb = useCallback(
-    (hex: string) =>
-      hex
-        .replace(
-          /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-          (_m, r, g, b) => "#" + r + r + g + g + b + b
-        )
-        .substring(1)
-        .match(/.{2}/g)!
-        .map((x) => parseInt(x, 16)),
-    []
-  );
-
   useEffect(() => {
-    if (modalOpen) {
-      clearTimeout(modalTimeout);
-      setBg(
-        getComputedStyle(document.documentElement).getPropertyValue("--default")
-      );
-      setText(
-        getComputedStyle(document.documentElement).getPropertyValue("--text")
-      );
+    const ue = async () => {
+      setBg(colorThemeCustom ? colorThemeCustom.bg : getCSSVar("--default"));
+      setText(colorThemeCustom ? colorThemeCustom.text : getCSSVar("--text"));
       setPrimary(
-        getComputedStyle(document.documentElement).getPropertyValue("--light")
+        colorThemeCustom ? colorThemeCustom.primary : getCSSVar("--light")
       );
       setSecondary(
-        getComputedStyle(document.documentElement).getPropertyValue("--dark")
+        colorThemeCustom ? colorThemeCustom.secondary : getCSSVar("--dark")
       );
-
-      const accentComputedValue = getComputedStyle(
-        document.documentElement
-      ).getPropertyValue("--accent");
-      setAccent(accentComputedValue);
-
-      const accentHoverComputedValue = getComputedStyle(
-        document.documentElement
-      ).getPropertyValue("--accent-hover");
-
-      if (accentHoverComputedValue.includes("color-mix")) {
-        const [r, g, b] = hexToRgb(accentComputedValue);
-        setAccentHover(
-          rgbToHex(
-            Math.round(r! * 0.8),
-            Math.round(g! * 0.8),
-            Math.round(b! * 0.8)
-          )
-        );
-      } else {
-        setAccentHover(accentHoverComputedValue);
-      }
-
-      setLink(
-        getComputedStyle(document.documentElement).getPropertyValue("--link")
+      setAccent(
+        colorThemeCustom ? colorThemeCustom.accent : getCSSVar("--accent")
       );
-    } else {
-      setModalTimeout(
-        setTimeout(() => {
-          setBg("");
-          setText("");
-          setPrimary("");
-          setSecondary("");
-          setAccent("");
-          setAccentHover("");
-          setLink("");
-        }, 300)
+      setAccentHover(
+        colorThemeCustom
+          ? colorThemeCustom.accentHover
+          : await window.ipcRenderer.theme.calculateAccentHover(
+              getCSSVar("--accent")
+            )
       );
-    }
+      setLink(colorThemeCustom ? colorThemeCustom.bg : getCSSVar("--link"));
+    };
+    ue();
   }, [modalOpen]);
 
   return (
@@ -135,15 +88,15 @@ export const CustomizeTheme = () => {
         }
         onCancel={() => setModalOpen(false)}
         onConfirm={() => {
-          // props.setTheme({
-          //   bg: bg,
-          //   text: text,
-          //   primary: primary,
-          //   secondary: secondary,
-          //   accent: accent,
-          //   accentHover: accentHover,
-          //   link: link,
-          // });
+          setColorThemeCustom({
+            bg: bg,
+            text: text,
+            primary: primary,
+            secondary: secondary,
+            accent: accent,
+            accentHover: accentHover,
+            link: link,
+          });
           setModalOpen(false);
         }}
       >

@@ -3,6 +3,11 @@ document.head.appendChild(separateStylesheet);
 
 let themeLoaded: boolean = false;
 window.ipcRenderer.theme.onChange((_e, theme) => {
+  window.ipcRenderer.theme.getAccent().then((accent) => {
+    theme !== "custom" &&
+      document.documentElement.style.setProperty("--accent", accent);
+  });
+
   const classList = document.documentElement.classList;
   const classNames = document.documentElement.className;
   const getPrevTheme = (className: string) => className.includes("theme-");
@@ -22,4 +27,9 @@ window.ipcRenderer.theme.onChange((_e, theme) => {
       })
     );
   }
+});
+
+window.ipcRenderer.theme.onAccentChange((_e, accent) => {
+  !document.documentElement.classList.contains("theme-custom") &&
+    document.documentElement.style.setProperty("--accent", accent);
 });

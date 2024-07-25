@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import {
   TypeColorTheme,
+  TypeColorThemeCustom,
   TypeLanguage,
   TypeSettingsStore,
   TypeWallpaperBehavior,
@@ -62,6 +63,18 @@ export const useSettingsStore = create<TypeSettingsStore>((set) => ({
     window.ipcRenderer.theme.set(theme);
   },
 
+  colorThemeCustom: undefined,
+  setColorThemeCustom: (theme) => {
+    window.ipcRenderer.store.set<TypeColorThemeCustom>(
+      "colorThemeCustom",
+      theme
+    );
+    set(() => ({
+      colorThemeCustom: theme,
+    }));
+    window.ipcRenderer.theme.set(theme);
+  },
+
   language: "system",
   setLanguage: (language) => {
     window.ipcRenderer.store.set<TypeLanguage>("language", language);
@@ -71,11 +84,11 @@ export const useSettingsStore = create<TypeSettingsStore>((set) => ({
     window.ipcRenderer.language.set(language);
   },
 
-  wallpaperPath: "",
-  setWallpaperPath: (path) => {
-    window.ipcRenderer.store.set<string>("wallpaperPath", path);
+  wallpapersPath: "",
+  setWallpapersPath: (path) => {
+    window.ipcRenderer.store.set<string>("wallpapersPath", path);
     set(() => ({
-      wallpaperPath: path,
+      wallpapersPath: path,
     }));
   },
 }));
@@ -118,12 +131,20 @@ const initSettingsStore = async () => {
   await window.ipcRenderer.store
     .get<TypeColorTheme>("colorTheme")
     .then(async (theme) => {
-      (theme = theme !== undefined ? theme : "system"),
-        useSettingsStore.setState({
-          colorTheme: theme,
-        });
+      theme = theme ? theme : "system";
+      useSettingsStore.setState({
+        colorTheme: theme,
+      });
 
       window.ipcRenderer.theme.set(theme);
+    });
+
+  await window.ipcRenderer.store
+    .get<TypeColorThemeCustom>("colorThemeCustom")
+    .then((theme) => {
+      useSettingsStore.setState({
+        colorThemeCustom: theme,
+      });
     });
 
   await window.ipcRenderer.store
@@ -137,15 +158,15 @@ const initSettingsStore = async () => {
     });
 
   await window.ipcRenderer.store
-    .get<string>("wallpaperPath")
+    .get<string>("wallpapersPath")
     .then(async (path) => {
       if (path !== undefined) {
         useSettingsStore.setState({
-          wallpaperPath: path,
+          wallpapersPath: path,
         });
       } else {
         useSettingsStore.setState({
-          wallpaperPath: await window.ipcRenderer.path.get("userData"),
+          wallpapersPath: await window.ipcRenderer.path.get("userData"),
         });
       }
     });

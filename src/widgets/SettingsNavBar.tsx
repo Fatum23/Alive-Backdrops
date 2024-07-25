@@ -32,8 +32,9 @@ export const SettingsNavBar = (props: TypeSettingsStore) => {
               props.volume === store.volume &&
               props.autolaunch === store.autolaunch &&
               props.colorTheme === store.colorTheme &&
+              props.colorThemeCustom === store.colorThemeCustom &&
               props.language === store.language &&
-              props.wallpaperPath === store.wallpaperPath
+              props.wallpapersPath === store.wallpapersPath
             }
             onClick={() => {
               store.setBehaviorWindow(props.behaviorWindow);
@@ -42,8 +43,9 @@ export const SettingsNavBar = (props: TypeSettingsStore) => {
               store.setVolume(props.volume);
               store.setAutolaunch(props.autolaunch);
               store.setColorTheme(props.colorTheme);
+              store.setColorThemeCustom(props.colorThemeCustom);
               store.setLanguage(props.language);
-              store.setWallpaperPath(props.wallpaperPath);
+              store.setWallpapersPath(props.wallpapersPath);
             }}
           >
             {t("Apply")}
@@ -57,16 +59,18 @@ export const SettingsNavBar = (props: TypeSettingsStore) => {
               props.volume === "100" &&
               props.autolaunch === true &&
               props.colorTheme === "system" &&
+              props.colorThemeCustom === undefined &&
               props.language === "system" &&
-              props.wallpaperPath === userDataPath &&
+              props.wallpapersPath === userDataPath &&
               store.behaviorWindow === "mute" &&
               store.behaviorMaximizedWindow === "pause" &&
               store.behaviorFullscreenWindow === "pause" &&
               store.volume === "100" &&
               store.autolaunch === true &&
               store.colorTheme === "system" &&
+              store.colorThemeCustom === undefined &&
               store.language === "system" &&
-              store.wallpaperPath === userDataPath
+              store.wallpapersPath === userDataPath
             }
             onClick={async () => {
               props.setBehaviorWindow("mute");
@@ -75,16 +79,18 @@ export const SettingsNavBar = (props: TypeSettingsStore) => {
               props.setVolume("100");
               props.setAutolaunch(true);
               props.setColorTheme("system");
+              props.setColorThemeCustom(undefined);
               props.setLanguage("system");
-              props.setWallpaperPath(userDataPath!);
+              props.setWallpapersPath(userDataPath!);
               store.setBehaviorWindow("mute");
               store.setBehaviorMaximizedWindow("pause");
               store.setBehaviorFullscreenWindow("pause");
               store.setVolume("100");
               store.setAutolaunch(true);
               store.setColorTheme("system");
+              store.setColorThemeCustom(undefined);
               store.setLanguage("system");
-              store.setWallpaperPath(userDataPath!);
+              store.setWallpapersPath(userDataPath!);
             }}
           >
             {t("Reset")}
