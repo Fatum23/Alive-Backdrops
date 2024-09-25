@@ -1,17 +1,8 @@
-import { app, net, protocol } from "electron";
-
-protocol.registerSchemesAsPrivileged([
-  {
-    scheme: "fs",
-    privileges: {
-      bypassCSP: true,
-      stream: true,
-    },
-  },
-]);
+import { app, protocol } from "electron";
 
 app.whenReady().then(() => {
-  protocol.handle("fs", function (request) {
-    return net.fetch("file://" + request.url.slice("fs://".length));
+  protocol.registerFileProtocol("fs", (req, callback) => {
+    const filePath = decodeURI(req.url.replace("fs://", ""));
+    callback(filePath);
   });
 });

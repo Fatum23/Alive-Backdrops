@@ -1,12 +1,13 @@
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "@shared/store";
 
 import { RiShoppingBag4Fill } from "react-icons/ri";
-import { IoIosClose, IoIosSearch, IoMdSettings } from "react-icons/io";
+import { IoMdSettings } from "react-icons/io";
 import { IoAddOutline } from "react-icons/io5";
 import { FaDesktop } from "react-icons/fa";
+import { Search } from "@widgets";
 
 export const HomeNavbar = (props: {
   search: string;
@@ -14,7 +15,6 @@ export const HomeNavbar = (props: {
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const { activeWallpaper } = useAppStore();
   return (
@@ -24,23 +24,7 @@ export const HomeNavbar = (props: {
           <RiShoppingBag4Fill size={20} />
           <span className="hidden sm:inline">{t("Library")}</span>
         </button>
-        <div className="flex flex-row items-center flex-grow relative">
-          <IoIosSearch size={20} className="absolute mx-1" />
-          <input
-            className={"flex-grow w-full pl-7 pr-9"}
-            ref={inputRef}
-            value={props.search}
-            onChange={(event) => props.setSearch(event.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && inputRef.current!.blur()}
-          />
-          {props.search !== "" && (
-            <IoIosClose
-              size={28}
-              className="cursor-pointer absolute right-0 mx-1"
-              onClick={() => props.setSearch("")}
-            />
-          )}
-        </div>
+        <Search search={props.search} setSearch={props.setSearch} />
         <div className="flex flex-row gap-2 items-center">
           <button
             className="flex flex-row items-center p-2 h-8 "

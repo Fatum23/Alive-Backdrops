@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { app, BrowserWindow } from "electron";
 import localShortcut from "electron-localshortcut";
 import path from "node:path";
 import {
@@ -28,6 +28,8 @@ export const createMainWindow = async () => {
     frame: false,
     webPreferences: {
       preload: path.join(ELECTRON_DIST, "preload.mjs"),
+      webSecurity: app.isPackaged,
+      allowRunningInsecureContent: false,
     },
   });
 
@@ -69,13 +71,20 @@ export const createMainWindow = async () => {
   });
 
   mainWindow.on("show", () => {
-    mainWindow!.webContents.setAudioMuted(false);
+    mainWindow?.webContents.setAudioMuted(false);
   });
   mainWindow.on("hide", () => {
-    mainWindow!.webContents.setAudioMuted(true);
+    mainWindow?.webContents.setAudioMuted(true);
   });
 
-  mainWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+  mainWindow.on("focus", () => {
+    mainWindow?.webContents.setAudioMuted(false);
+    mainWindow?.webContents.send("window:focusChange", true);
+  });
+  mainWindow.on("blur", () => {
+    mainWindow?.webContents.setAudioMuted(true);
+    mainWindow?.webContents.send("window:focusChange", false);
+  });
 };
 
 export const onMainWindowReady = async () => {

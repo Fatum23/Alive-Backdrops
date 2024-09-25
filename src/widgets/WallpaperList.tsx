@@ -10,7 +10,7 @@ export const WallpaperList = (props: {
   menu: TypeContextMenu;
   setMenu: Dispatch<SetStateAction<TypeContextMenu>>;
 }) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [wallpapers, _setWallpapers] = useState<TypeWallpaper[]>([]);
 
   // useEffect(() => {
@@ -36,33 +36,8 @@ export const WallpaperList = (props: {
       <div
         style={{ opacity: loading ? 0 : 1 }}
         className="flex-row flex-grow flex-wrap transition-opacity duration-500 inline-block"
-      >
-        {memoizedWallpapers.map((el, index) => (
-          <Wallpaper
-            key={el.id!.toString()}
-            id={el.id!}
-            title={el.title}
-            src={el.src}
-            volume={el.volume}
-            speed={el.speed}
-            setLoading={
-              index + 1 === wallpapers.length ? setLoading : undefined
-            }
-            search={props.search}
-            menu={props.menu}
-            setMenu={props.setMenu}
-          />
-        ))}
-      </div>
-      {loading && (
-        <div className="absolute top-0 left-0 flex w-full h-full justify-center items-center">
-          <div className="h-10 flex flex-row items-center gap-3">
-            <div className="h-full aspect-square border-4 border-dark border-t-accent border-l-accent rounded-full animate-loading"></div>
-            <div>{t("Loading")}</div>
-          </div>
-        </div>
-      )}
-      {!loading && wallpapers.length === 0 && (
+      ></div>
+      {/* {!loading && wallpapers.length === 0 && (
         <div className="flex absolute top-0 left-0 w-full h-full justify-center flex-col items-center gap-1">
           <NoImage size={64} />
           <div className="text-xl">
@@ -73,7 +48,7 @@ export const WallpaperList = (props: {
             )}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

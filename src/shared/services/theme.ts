@@ -1,11 +1,13 @@
-const separateStylesheet = document.createElement("style");
-document.head.appendChild(separateStylesheet);
+const accentStylesheet = document.createElement("style");
+document.head.appendChild(accentStylesheet);
+
+const transitionStylesheet = document.createElement("style");
+document.head.appendChild(transitionStylesheet);
 
 let themeLoaded: boolean = false;
 window.ipcRenderer.theme.onChange((_e, theme) => {
   window.ipcRenderer.theme.getAccent().then((accent) => {
-    theme !== "custom" &&
-      document.documentElement.style.setProperty("--accent", accent);
+    accentStylesheet.innerHTML = `html:not(.theme-custom) {--accent: ${accent};}`;
   });
 
   const classList = document.documentElement.classList;
@@ -19,8 +21,8 @@ window.ipcRenderer.theme.onChange((_e, theme) => {
   if (!themeLoaded) {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
-        separateStylesheet.sheet!.insertRule(
-          "* { transition: color 0.3s, background-color 0.3s !important; }",
+        transitionStylesheet.sheet!.insertRule(
+          "* { transition: color 0.3s, background 0.3s, border-color 0.3s; }",
           0
         );
         themeLoaded = true;
@@ -30,6 +32,25 @@ window.ipcRenderer.theme.onChange((_e, theme) => {
 });
 
 window.ipcRenderer.theme.onAccentChange((_e, accent) => {
-  !document.documentElement.classList.contains("theme-custom") &&
-    document.documentElement.style.setProperty("--accent", accent);
+  accentStylesheet.innerHTML = `html:not(.theme-custom) {--accent: ${accent};}`;
+});
+
+const customThemeStylesheet = document.createElement("style");
+document.head.appendChild(customThemeStylesheet);
+
+window.ipcRenderer.theme.onCustomChange((_e, theme) => {
+  if (theme) {
+    customThemeStylesheet.innerHTML = `
+    html.theme-custom {
+      --default: ${theme.bg};
+      --text: ${theme.text};
+      --light: ${theme.primary};
+      --dark: ${theme.secondary};
+      --accent: ${theme.accent};
+      --accent-hover: ${theme.accentHover};
+      --link: ${theme.link};
+    }`;
+  } else {
+    customThemeStylesheet.innerHTML = "";
+  }
 });

@@ -46,7 +46,7 @@ export const Wallpaper = (
 
   return (
     <div
-      className="sm:w-[calc(33.333%-32px)] lg:w-[calc(25%-32px)] m-4 rounded-md overflow-hidden cursor-pointer [transition:transform_0.2s] hover:scale-105 relative aspect-video bg-dark drop-shadow-lg inline-block"
+      className="sm:w-[calc(33.333%-32px)] lg:w-[calc(25%-32px)] m-4 rounded-md overflow-hidden cursor-pointer [transition:transform_0.3s] hover:scale-105 relative aspect-video bg-dark drop-shadow-lg inline-block"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => {
@@ -74,6 +74,7 @@ export const Wallpaper = (
         preload="metadata"
         src={props.src}
         loop
+        autoPlay
         onLoadedData={() => {
           handleLoad(props);
         }}
@@ -103,11 +104,11 @@ export const Wallpaper = (
           </button>
         )}
       </div>
-      {!hovered &&
+      {/* {!hovered &&
         activeWallpaper !== null &&
         props.id! === activeWallpaper!.id! && (
           <div className="absolute bottom-0 left-0 w-full h-1 bg-accent"></div>
-        )}
+        )} */}
     </div>
   );
 };

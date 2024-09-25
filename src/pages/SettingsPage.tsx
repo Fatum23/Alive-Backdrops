@@ -31,7 +31,10 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
     useState<TypeWallpaperBehavior>(store.behaviorMaximizedWindow);
   const [behaviorFullscreenWindow, setBehaviorFullscreenWindow] =
     useState<TypeWallpaperBehavior>(store.behaviorFullscreenWindow);
+
   const [volume, setVolume] = useState<string>(store.volume);
+  const [volumeValid, setVolumeValid] = useState<boolean>(true);
+
   const [autolaunch, setAutolaunch] = useState<boolean>(store.autolaunch);
   const [colorTheme, setColorTheme] = useState<TypeColorTheme>(
     store.colorTheme
@@ -44,6 +47,8 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
     store.wallpapersPath
   );
 
+  const [search, setSearch] = useState<string>("");
+
   return (
     <div className="h-screen w-screen overflow-hidden">
       <SettingsNavBar
@@ -55,6 +60,7 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
         setBehaviorFullscreenWindow={setBehaviorFullscreenWindow}
         volume={volume}
         setVolume={setVolume}
+        volumeValid={volumeValid}
         autolaunch={autolaunch}
         setAutolaunch={setAutolaunch}
         colorTheme={colorTheme}
@@ -65,11 +71,13 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
         setLanguage={setLanguage}
         wallpapersPath={wallpapersPath}
         setWallpapersPath={setWallpapersPath}
+        search={search}
+        setSearch={setSearch}
       />
-      <div className="h-[calc(100%-72px)] overflow-y-auto">
+      <div className="h-[calc(100%-72px)] overflow-y-auto" id="12">
         <div className="flex flex-col gap-6 m-4">
           <div className="flex flex-col">
-            <h1>{t("Wallpaper behavior")}</h1>
+            <h1>{t("Wallpapers")}</h1>
             <SettingsItem
               value={behaviorWindow}
               dropdownValues={["nothing", "mute", "pause"]}
@@ -94,15 +102,21 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
               title="Fullscreen window"
               description="If there is an active fullscreen window"
             />
-          </div>
-          <div className="flex flex-col">
-            <h1>{t("Volume")}</h1>
             <SettingsItem
               value={volume}
               setValue={setVolume}
+              sliderValueValid={volumeValid}
+              setSliderValueValid={setVolumeValid}
               storekey="volume"
               title="General volume"
               description="General volume for all wallpapers"
+            />
+            <SettingsItem
+              value={wallpapersPath}
+              setValue={setWallpapersPath}
+              storekey="wallpapersPath"
+              title="Path to wallpapers folder"
+              description="Path to the folder where the wallpapers are stored"
             />
           </div>
           <div className="flex flex-col">
@@ -129,13 +143,6 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
               storekey="language"
               title="Language"
               description="App language"
-            />
-            <SettingsItem
-              value={wallpapersPath}
-              setValue={setWallpapersPath}
-              storekey="wallpapersPath"
-              title="Path to wallpapers folder"
-              description="Path to the folder where the wallpapers are stored"
             />
           </div>
           <SettingsFooter />

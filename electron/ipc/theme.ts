@@ -1,8 +1,15 @@
+import { TypeColorTheme, TypeColorThemeCustom } from "@public/types";
 import { BrowserWindow, ipcMain, systemPreferences } from "electron";
 
-ipcMain.handle("theme:set", (_e, theme: string) => {
+ipcMain.handle("theme:set", (_e, theme: TypeColorTheme) => {
   BrowserWindow.getAllWindows().forEach((win) =>
     win.webContents.send("theme:set", theme)
+  );
+});
+
+ipcMain.handle("theme:setCustom", (_e, theme: TypeColorThemeCustom) => {
+  BrowserWindow.getAllWindows().forEach((win) =>
+    win.webContents.send("theme:setCustom", theme)
   );
 });
 

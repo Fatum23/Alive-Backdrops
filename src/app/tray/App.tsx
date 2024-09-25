@@ -10,8 +10,8 @@ export const App = () => {
   const [volume, setVolume] = useState("");
   useSettingsStore();
   return (
-    <div className="scale-90">
-      <Slider value={volume} setValue={setVolume} min="0" max="100" step="1" />
+    <div className="m-2">
+      <Slider value={volume} setValue={setVolume} min={0} max={100} step={1} />
     </div>
   );
 };

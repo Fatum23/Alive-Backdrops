@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { TypeApp } from "public/preloadTypes";
+import { TypeApp } from "@public/preloadTypes";
 
 export const app: TypeApp = {
   quit: () => ipcRenderer.invoke("app:quit"),

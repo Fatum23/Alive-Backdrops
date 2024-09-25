@@ -2,16 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --default: #e2e8f0;
-    --light: #f1f5f9;
-    --dark: #cbd5e1;
-    --text: #000;
-    --accent: #ffbf00;
-    --accent-hover: color-mix(in srgb, var(--accent), black 20%);
-    --link: #0ea5e9;
-  }
+:root {
+  --default: #e2e8f0;
+  --light: #f1f5f9;
+  --dark: #cbd5e1;
+  --text: #000;
+  --accent: #ffbf00;
+  --accent-hover: color-mix(in srgb, var(--accent), black 20%);
+  --link: #0ea5e9;
 }
 
 .theme-system {
@@ -66,8 +64,9 @@ body {
 button,
 .button {
   @apply cursor-pointer bg-light hover:bg-dark rounded-md;
-  &:disabled {
-    @apply bg-dark;
+  &:disabled,
+  [data-disabled="true"] {
+    @apply bg-dark cursor-default;
     &:hover {
       @apply bg-dark;
     }
@@ -119,6 +118,10 @@ hr {
   @apply w-full h-0.5 bg-dark border-0;
 }
 
-.window-drag-region {
+*[data-window-drag-region] {
   -webkit-app-region: drag;
 }
+
+/* * {
+  font-size: 12px !important;
+} */

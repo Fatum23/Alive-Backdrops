@@ -9,6 +9,8 @@ import {
 import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 
+import { IoClose } from "react-icons/io5";
+
 export const Modal = (props: {
   title?: string;
   open: boolean;
@@ -82,14 +84,34 @@ export const Modal = (props: {
       onMouseDown={() =>
         props.closable ? props.setOpen(false) : window.ipcRenderer.shell.beep()
       }
-      className="absolute w-full h-full z-50 flex items-center justify-center !transition-opacity"
+      className="absolute w-full h-full z-50 flex items-center justify-center transition-opacity"
     >
       <div
         onMouseDown={(e) => e.stopPropagation()}
+        style={
+          {
+            // transform: `scale(${props.open ? 1 : 0.9})`,
+          }
+        }
+        // className="transition-transform"
         {...{ inert: props.open ? undefined : "" }}
       >
         <div className="min-w-48 p-2 bg-default rounded-md flex flex-col gap-2 justify-between drop-shadow-2xl">
-          {props.title && <h1 className="text-center">{t(props.title)}</h1>}
+          {props.title && (
+            <div className="flex flex-row justify-between">
+              <div></div>
+              <h1>{t(props.title)}</h1>
+              {props.closable ? (
+                <IoClose
+                  size={24}
+                  className="cursor-pointer transition-opacity hover:opacity-70"
+                  onClick={() => props.setOpen(false)}
+                />
+              ) : (
+                <div></div>
+              )}
+            </div>
+          )}
           <div>{props.children}</div>
           <div className="flex flex-row gap-2">
             <button className="w-1/2 p-1 px-2" onClick={props.onCancel}>

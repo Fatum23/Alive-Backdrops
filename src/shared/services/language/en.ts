@@ -6,7 +6,7 @@ export const enTranslations = {
   Back: "Back",
   Apply: "Apply",
   Reset: "Reset",
-  Loading: "Loading wallpapers...",
+  "Loading wallpapers": "Loading wallpapers",
   "No such wallpapers found": "No such wallpapers found",
   "You have no wallpapers added yet": "You have no wallpapers added yet",
 
@@ -15,7 +15,7 @@ export const enTranslations = {
   "Drop or select file": "Drop or select file",
   Title: "Title",
 
-  "Wallpaper behavior": "Wallpaper behavior",
+  Wallpapers: "Wallpapers",
   Window: "Window",
   "If there is an active window": "If there is an active window",
 
@@ -72,4 +72,9 @@ export const enTranslations = {
   Accent: "Accent",
   "Accent hover": "Accent hover",
   "Links color": "Links color",
+
+  Version: "Version",
+  Copied: "Copied",
+  Update: "Update",
+  "Notify about updates": "Notify about updates",
 };

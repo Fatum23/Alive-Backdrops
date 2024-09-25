@@ -26,16 +26,19 @@ export const Select = (props: {
   }, [props.dropdownValues]);
 
   return (
-    <ReactSelect
-      classNamePrefix="react-select"
-      isSearchable={false}
-      onChange={(item) => props.setValue(item!.value)}
-      options={options}
-      value={options.at(
-        options.findIndex((option) => option.value === props.value)
-      )}
-      menuPlacement="auto"
-      menuPosition="fixed"
-    />
+    <div className="react-select-container">
+      <ReactSelect
+        classNamePrefix="react-select"
+        isSearchable={false}
+        onChange={(item) => props.setValue(item!.value)}
+        options={options}
+        value={options.at(
+          options.findIndex((option) => option.value === props.value)
+        )}
+        menuPlacement="auto"
+        menuPosition="fixed"
+        menuPortalTarget={document.getElementById("a")}
+      />
+    </div>
   );
 };

@@ -14,14 +14,14 @@
 
 .react-select {
   &__control {
-    @apply cursor-pointer shadow-none border-none bg-dark group-hover:bg-light #{!important};
+    @apply cursor-pointer shadow-none border-none bg-dark group-hover/settings-item:bg-light #{!important};
   }
   &__single-value {
     @apply text-text #{!important};
   }
   &__menu {
-    @apply bg-dark w-max min-w-full #{!important};
-    animation: scaleIn 0.1s ease-in-out;
+    @apply bg-dark w-max min-w-full transition-opacity #{!important};
+    animation: scaleIn 0.1s;
   }
   &__option {
     @apply cursor-pointer #{!important};
@@ -40,4 +40,8 @@
   &__indicator {
     @apply text-text #{!important};
   }
+}
+
+.react-select-container * {
+  transition: background-color 0.3s, color 0.3s !important;
 }

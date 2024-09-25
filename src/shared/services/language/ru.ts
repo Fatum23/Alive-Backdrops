@@ -6,7 +6,7 @@ export const ruTranslations = {
   Back: "Назад",
   Apply: "Применить",
   Reset: "Сбросить",
-  Loading: "Загрузка обоев...",
+  "Loading wallpapers": "Загрузка обоев",
   "You have no wallpapers added yet": "У вас пока что нет добавленных обоев",
   "No such wallpapers found": "Такие обои не найдены",
 
@@ -15,7 +15,7 @@ export const ruTranslations = {
   "Drop or select file": "Перетащите или выберите файл",
   Title: "Название",
 
-  "Wallpaper behavior": "Поведение обоев",
+  Wallpapers: "Обои",
   Window: "Окно",
   "If there is an active window": "Если есть активное окно",
 
@@ -72,4 +72,9 @@ export const ruTranslations = {
   Accent: "Акцентный",
   "Accent hover": "Акцентный при наведении",
   "Links color": "Цвет ссылок",
+
+  Version: "Версия",
+  Copied: "Скопировано",
+  Update: "Обновить",
+  "Notify about updates": "Уведомлять об обновлениях",
 };

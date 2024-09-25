@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { BackButton, Filepicker, WallpaperPreview } from "@widgets";
+import { BackButton, Copy, Filepicker, WallpaperPreview } from "@widgets";
 import { AddWallpaperButton } from "@features";
 import { Slider, Textarea } from "@ui";
 import { TypePage } from "@public/types";
@@ -17,7 +17,15 @@ export const AddWallpaperPage = (props: TypePage) => {
   const [wallpaperSrc, setWallpaperSrc] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [volume, setVolume] = useState("100");
+  const [volumeValid, setVolumeValid] = useState<boolean>(true);
+
   const [speed, setSpeed] = useState("1");
+  const [speedValid, setSpeedValid] = useState<boolean>(true);
+
+  // useEffect(
+  //   () => console.log(speed, speedValid, volume, volumeValid),
+  //   [speed, volume]
+  // );
 
   const { state } = useLocation();
 
@@ -45,10 +53,15 @@ export const AddWallpaperPage = (props: TypePage) => {
           <BackButton />
         </div>
         <div className="flex w-full h-[200%] flex-col items-center gap-4 m-2">
-          <WallpaperPreview src={wallpaperSrc} volume={volume} speed={speed} />
+          <WallpaperPreview
+            src={wallpaperSrc}
+            volume={volumeValid ? volume : "0"}
+            speed={speedValid ? speed : "1"}
+          />
           {wallpaperSrc !== "" && (
-            <div className="w-[50%] overflow-hidden break-all flex justify-center select-text">
+            <div className="w-[50%] overflow-hidden break-all flex flex-row gap-1 items-center justify-center select-text">
               {wallpaperSrc}
+              <Copy copyText={wallpaperSrc} />
             </div>
           )}
           <Filepicker setVideoSrc={setWallpaperSrc} />
@@ -68,16 +81,20 @@ export const AddWallpaperPage = (props: TypePage) => {
               <Slider
                 value={volume}
                 setValue={setVolume}
-                min="0"
-                max="100"
-                step="1"
+                valid={volumeValid}
+                setValid={setVolumeValid}
+                min={0}
+                max={100}
+                step={1}
               />
               <Slider
                 value={speed}
                 setValue={setSpeed}
-                min="0.25"
-                max="5"
-                step="0.05"
+                valid={speedValid}
+                setValid={setSpeedValid}
+                min={0.25}
+                max={5}
+                step={0.25}
               />
             </div>
           </div>

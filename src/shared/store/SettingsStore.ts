@@ -72,7 +72,7 @@ export const useSettingsStore = create<TypeSettingsStore>((set) => ({
     set(() => ({
       colorThemeCustom: theme,
     }));
-    window.ipcRenderer.theme.set(theme);
+    window.ipcRenderer.theme.setCustom(theme);
   },
 
   language: "system",
@@ -145,6 +145,7 @@ const initSettingsStore = async () => {
       useSettingsStore.setState({
         colorThemeCustom: theme,
       });
+      window.ipcRenderer.theme.setCustom(theme);
     });
 
   await window.ipcRenderer.store

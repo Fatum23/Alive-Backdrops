@@ -1,7 +1,6 @@
 export const A = (props: JSX.IntrinsicElements["a"]) => {
   return (
     <a
-      title={props.href}
       onClick={async (e) => {
         e.preventDefault();
         window.ipcRenderer.shell.openUrl(props.href!);

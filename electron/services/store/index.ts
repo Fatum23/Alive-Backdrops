@@ -10,5 +10,5 @@ export const getFromStore = async <T>(
 };
 
 export const setToStore = <T>(key: TypeStoreKeys, value: T) => {
-  value ? store.set(key, value) : store.delete(key);
+  value !== undefined ? store.set(key, value) : store.delete(key);
 };

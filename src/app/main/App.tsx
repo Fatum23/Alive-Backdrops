@@ -15,34 +15,38 @@ export const App = () => {
   return (
     <>
       <Titlebar title={title} />
-      <div id="modal"></div>
-      <div id="router">
-        <HashRouter>
-          <DropHandler location={location} />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <HomePage setTitle={setTitle} setLocation={setLocation} />
-              }
-            />
-            <Route
-              path="/AddWallpaper"
-              element={
-                <AddWallpaperPage
-                  setTitle={setTitle}
-                  setLocation={setLocation}
-                />
-              }
-            />
-            <Route
-              path="/Settings"
-              element={
-                <SettingsPage setTitle={setTitle} setLocation={setLocation} />
-              }
-            />
-          </Routes>
-        </HashRouter>
+      <div id="tooltip"></div>
+      <div className="relative overflow-hidden">
+        <div id="modal"></div>
+        <div id="router">
+          <HashRouter>
+            <DropHandler location={location} />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <HomePage setTitle={setTitle} setLocation={setLocation} />
+                }
+              />
+              <Route
+                path="/AddWallpaper"
+                element={
+                  <AddWallpaperPage
+                    setTitle={setTitle}
+                    setLocation={setLocation}
+                  />
+                }
+              />
+              <Route
+                path="/Settings"
+                element={
+                  <SettingsPage setTitle={setTitle} setLocation={setLocation} />
+                }
+              />
+            </Routes>
+            <div id="a" className="relative z-0 overflow-hidden"></div>
+          </HashRouter>
+        </div>
       </div>
     </>
   );

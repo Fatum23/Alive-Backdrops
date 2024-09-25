@@ -1,66 +1,383 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { FaMinus, FaPlus } from "react-icons/fa";
+import { Tooltip } from "@ui";
 
-const isValid = (num: string) => /^-{0,1}\d*\.{0,1}\d+$/.test(num);
+const isNumeric = (num: string) => /^-?\d{0,}\.?\d+$/.test(num);
+
+const doesFitStep = (num: string, step: number) =>
+  Number.isInteger(parseFloat((parseFloat(num) / step).toFixed(8)));
 
 export const Slider = (props: {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
-  min: string;
-  max: string;
-  step: string;
+  valid?: boolean;
+  setValid?: Dispatch<SetStateAction<boolean>>;
+  min: number;
+  max: number;
+  step: number;
 }) => {
-  const range = useRef<HTMLInputElement | null>(null);
-  const [value, setValue] = useState<string>(props.value);
+  const rangeRef = useRef<HTMLDivElement>(null);
+  const handleRef = useRef<HTMLDivElement>(null);
 
-  const handleChange = (value: string) => {
-    if (isValid(value)) {
-      const progress =
-        ((parseFloat(value!) - parseFloat(props.min)) /
-          (parseFloat(range.current!.max) - parseFloat(props.min))) *
-        100;
-      range.current!.style.background = `linear-gradient(to right, var(--accent) ${progress}%, var(--dark) ${progress}%)`;
-    }
-  };
+  const [increaseTimeout, setIncreaseTimeout] = useState<
+    NodeJS.Timeout | undefined
+  >();
+  const [increaseInterval, setIncreaseInterval] = useState<
+    NodeJS.Timeout | undefined
+  >();
 
-  const isFitRange = (num: string) =>
-    parseFloat(num) >= parseFloat(props.min) &&
-    parseFloat(num) <= parseFloat(props.max);
+  const [progress, setProgress] = useState<number>(0);
+
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   useEffect(() => {
-    handleChange(value);
-  }, []);
-  useEffect(() => {
-    if (isValid(value) && isFitRange(value)) {
-      props.setValue(value);
-      handleChange(value);
+    if (!isNumeric(props.value)) {
+      setErrorMessage("Not numeric value");
+      props.setValid && props.setValid(false);
+    } else if (parseFloat(props.value) < props.min) {
+      setErrorMessage(`Minimal value is ${props.min}`);
+      props.setValid && props.setValid(false);
+    } else if (!doesFitStep(props.value, props.step)) {
+      const stepCount = parseFloat(props.value) / props.step;
+      setErrorMessage(
+        `${Math.trunc(stepCount) * props.step} or ${
+          Math.ceil(stepCount) * props.step
+        }`
+      );
+      props.setValid && props.setValid(false);
+    } else {
+      props.setValid && props.setValid(true);
     }
-  }, [value]);
+  }, [props.value]);
+
+  useEffect(() => {
+    if (!rangeRef.current) return;
+
+    setProgress(
+      !isNumeric(props.value) ||
+        props.valid === false ||
+        parseFloat(props.value) < props.min
+        ? 0
+        : parseFloat(
+            (
+              ((parseFloat(props.value) - props.min) /
+                Math.abs(props.max - props.min)) *
+              100
+            ).toFixed(8)
+          )
+    );
+  }, [props.value, props.valid]);
+
+  const [handleMouseDown, setHandleMouseDown] = useState<boolean>(false);
+
+  const onMouseUp = useCallback(() => setHandleMouseDown(false), []);
+  const onMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!rangeRef.current || !handleMouseDown) return;
+
+      if (
+        e.clientX < Math.trunc(rangeRef.current.getBoundingClientRect().left)
+      ) {
+        props.setValue(props.min.toString());
+        return;
+      }
+      if (
+        e.clientX > Math.ceil(rangeRef.current.getBoundingClientRect().right)
+      ) {
+        props.setValue(props.max.toString());
+        return;
+      }
+
+      const progress = parseFloat(
+        (
+          ((e.clientX -
+            Math.round(rangeRef.current.getBoundingClientRect().left)) /
+            rangeRef.current.offsetWidth) *
+            (Math.abs(props.max) + Math.abs(props.min)) -
+          Math.abs(props.min)
+        ).toFixed(8)
+      );
+      if (progress < props.min || progress > props.max) return;
+      props.setValue(
+        parseFloat(
+          (Math.round(progress / props.step) * props.step).toFixed(8)
+        ).toString()
+      );
+    },
+    [handleMouseDown]
+  );
+
+  const clearTimeoutAndInterval = useCallback(() => {
+    clearTimeout(increaseTimeout);
+    clearInterval(increaseInterval);
+    setIncreaseTimeout(undefined);
+    setIncreaseInterval(undefined);
+  }, [increaseTimeout, increaseInterval]);
+
+  useEffect(() => {
+    document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("mousemove", onMouseMove);
+
+    return () => {
+      document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("mousemove", onMouseMove);
+    };
+  }, [handleMouseDown]);
+
   return (
-    <div className="flex flex-row items-center gap-3 w-full my-1">
-      <input
-        ref={range}
-        className="flex-grow"
-        type="range"
-        min={props.min}
-        max={props.max}
-        value={props.value}
-        onChange={(e) => setValue(e.target.value)}
-        step={props.step}
-      />
-      <input
-        className="w-10"
-        maxLength={3}
-        onBlur={() => {
-          if (!isNaN(parseFloat(value))) {
-            setValue(props.value);
-          }
+    <div className="flex flex-row items-center w-full my-1">
+      <div
+        className="flex-grow flex flex-row relative"
+        onClick={(e) => {
+          if (!rangeRef.current) return;
+
+          if (
+            e.clientX > rangeRef.current.getBoundingClientRect().right ||
+            e.clientX < rangeRef.current.getBoundingClientRect().left
+          )
+            return;
+
+          const progress =
+            ((e.clientX - rangeRef.current.getBoundingClientRect().left) /
+              rangeRef.current.offsetWidth) *
+            Math.abs(props.max - props.min);
+          props.setValue(
+            (
+              parseFloat(
+                (Math.round(progress / props.step) * props.step).toFixed(8)
+              ) + props.min
+            ).toString()
+          );
         }}
-        value={value}
-        onChange={(e) => {
-          if (isFitRange(e.target.value) || e.target.value === "") {
-            setValue(e.target.value);
+      >
+        <div
+          ref={handleRef}
+          style={{
+            marginLeft: `calc(${progress}% - ${
+              handleRef.current
+                ? handleRef.current.getBoundingClientRect().width / 2
+                : 0
+            }px)`,
+          }}
+          className={`absolute -top-2 h-6 w-1.5 rounded-sm bg-accent hover:bg-accent-hover cursor-pointer ${
+            handleMouseDown && "bg-accent-hover"
+          }`}
+          onMouseDown={() => setHandleMouseDown(true)}
+        />
+        <div
+          ref={rangeRef}
+          className="flex-grow flex flex-row bg-dark group-hover/settings-item:bg-light rounded-sm cursor-pointer"
+        >
+          <div
+            className="bg-accent h-2 rounded-l-sm"
+            style={{
+              width: `${progress}%`,
+            }}
+          ></div>
+        </div>
+      </div>
+      <Tooltip text={errorMessage} type="error" visible={props.valid === false}>
+        <input
+          className={`w-12 ml-3 text-center bg-dark group-hover/settings-item:bg-light ring-2 transition-all ${
+            props.valid === false ? "ring-red-500" : "ring-transparent"
+          }`}
+          value={props.value}
+          maxLength={
+            Number.isInteger(props.step)
+              ? props.max.toString().length
+              : props.max.toString().length + props.step.toString().length - 1
           }
-        }}
-      />
+          onBlur={() =>
+            props.setValue((prev) =>
+              isNumeric(prev) ? parseFloat(prev).toString() : prev
+            )
+          }
+          onChange={(e) => {
+            let inputValue = e.target.value;
+
+            if (
+              !Number.isInteger(props.step) &&
+              [",", "."].includes(inputValue.slice(-1))
+                ? inputValue.split(".").length + inputValue.split(",").length <=
+                  3
+                  ? isNumeric(
+                      (inputValue.slice(-1) === "."
+                        ? inputValue.split(".")[0]
+                        : inputValue.split(",")[0])!
+                    )
+                  : false
+                : (isNumeric(inputValue) &&
+                    (parseFloat(inputValue) >= props.min ||
+                      inputValue ===
+                        props.min.toString().slice(0, inputValue.length)) &&
+                    parseFloat(inputValue) <= props.max) ||
+                  inputValue === "-" ||
+                  inputValue === ""
+            ) {
+              if (inputValue.slice(-1) === ",") {
+                inputValue = inputValue.replace(/,$/, ".");
+              }
+              props.setValid &&
+                props.setValid(
+                  isNumeric(inputValue) && doesFitStep(inputValue, props.step)
+                );
+              props.setValue(inputValue);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (
+              ["ArrowUp", "="].includes(e.key) &&
+              parseFloat(props.value) + props.step <= props.max
+            ) {
+              //TODO make isNumeric check like in buttons
+              props.setValue((prev) =>
+                (parseFloat(prev) + props.step).toString()
+              );
+              e.preventDefault();
+            } else if (
+              ["ArrowDown", "-"].includes(e.key) &&
+              parseFloat(props.value) - props.step >= props.min
+            ) {
+              props.setValue((prev) =>
+                (parseFloat(prev) - props.step).toString()
+              );
+              e.preventDefault();
+            }
+          }}
+        />
+      </Tooltip>
+      <div className="ml-1 flex flex-col gap-1">
+        <button
+          className="bg-dark group-hover/settings-item:bg-light rounded-sm p-0.5 disabled:!bg-transparent"
+          disabled={
+            isNumeric(props.value)
+              ? parseFloat(props.value) >= props.max
+              : props.value.includes(".")
+              ? parseFloat(props.value.split(".")[0]!) >= props.max
+              : false
+          }
+          onMouseDown={() => {
+            let value = parseFloat(
+              ["", "-"].includes(props.value)
+                ? (props.max - props.step).toString()
+                : props.value
+            );
+            setIncreaseTimeout(
+              setTimeout(
+                () =>
+                  setIncreaseInterval(
+                    setInterval(() => {
+                      if (value < props.max) {
+                        props.setValue((prev) =>
+                          ["", "-"].includes(prev)
+                            ? props.max.toString()
+                            : parseFloat(
+                                (
+                                  (props.valid
+                                    ? parseFloat(prev)
+                                    : Math.ceil(parseFloat(prev) / props.step) *
+                                      props.step) + props.step
+                                ).toFixed(8)
+                              ).toString()
+                        );
+                        value = parseFloat((value + props.step).toFixed(8));
+                      }
+                    }, 100)
+                  ),
+                500
+              )
+            );
+          }}
+          onMouseLeave={clearTimeoutAndInterval}
+          onMouseUp={() => {
+            if (!increaseInterval) {
+              props.setValue((prev) =>
+                ["", "-"].includes(props.value)
+                  ? props.max.toString()
+                  : parseFloat(
+                      (
+                        (props.valid
+                          ? parseFloat(prev)
+                          : Math.trunc(parseFloat(prev) / props.step) *
+                            props.step) + props.step
+                      ).toFixed(8)
+                    ).toString()
+              );
+            }
+            clearTimeoutAndInterval();
+          }}
+        >
+          <FaPlus size={10} />
+        </button>
+        <button
+          className="bg-dark group-hover/settings-item:bg-light rounded-sm p-0.5 disabled:!bg-transparent"
+          disabled={
+            isNumeric(props.value)
+              ? parseFloat(props.value) <= props.min
+              : props.value.includes(".")
+              ? parseFloat(props.value.split(".")[0]!) <= props.min
+              : false
+          }
+          onMouseDown={() => {
+            let value = parseFloat(
+              ["", "-"].includes(props.value)
+                ? (props.min + props.step).toString()
+                : props.value
+            );
+            setIncreaseTimeout(
+              setTimeout(
+                () =>
+                  setIncreaseInterval(
+                    setInterval(() => {
+                      if (value > props.min) {
+                        props.setValue((prev) =>
+                          ["", "-"].includes(prev)
+                            ? props.min.toString()
+                            : parseFloat(
+                                (
+                                  (props.valid
+                                    ? parseFloat(prev)
+                                    : Math.trunc(
+                                        parseFloat(prev) / props.step
+                                      ) * props.step) - props.step
+                                ).toFixed(8)
+                              ).toString()
+                        );
+                        value = parseFloat((value - props.step).toFixed(8));
+                      }
+                    }, 100)
+                  ),
+                500
+              )
+            );
+          }}
+          onMouseLeave={clearTimeoutAndInterval}
+          onMouseUp={() => {
+            if (!increaseInterval) {
+              props.setValue((prev) =>
+                ["", "-"].includes(props.value)
+                  ? props.min.toString()
+                  : parseFloat(
+                      (props.valid
+                        ? parseFloat(prev) - props.step
+                        : Math.trunc(parseFloat(prev) / props.step) * props.step
+                      ).toFixed(8)
+                    ).toString()
+              );
+            }
+            clearTimeoutAndInterval();
+          }}
+        >
+          <FaMinus size={10} />
+        </button>
+      </div>
     </div>
   );
 };

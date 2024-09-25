@@ -12,6 +12,10 @@ export type TypeWindow = {
       isMaximized: boolean,
       isFullScreen: boolean
     ) => void
-  ) => void;
+  ) => () => void;
+  onFocusChange: (
+    callback: (e: Electron.IpcRendererEvent, isFocused: boolean) => void
+  ) => () => void;
+  isFocused: () => Promise<boolean>;
   settingsLoaded: () => void;
 };

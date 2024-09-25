@@ -14,8 +14,10 @@ import { Select, Slider, Switch } from "@ui";
 
 export const SettingsItem = <T,>(props: {
   value: T;
-  dropdownValues?: T[];
   setValue: Dispatch<SetStateAction<T>>;
+  dropdownValues?: T[];
+  sliderValueValid?: boolean;
+  setSliderValueValid?: Dispatch<SetStateAction<boolean>>;
   storekey: TypeSettingsStoreKeys;
   title: string;
   description: string;
@@ -23,7 +25,7 @@ export const SettingsItem = <T,>(props: {
   const { t } = useTranslation();
 
   return (
-    <button className="p-2 my-1 h-16 cursor-default gap-2 flex flex-row items-center group">
+    <div className="p-2 my-1 h-16 gap-2 flex flex-row items-center group/settings-item bg-light hover:bg-dark rounded-md">
       <div className="flex flex-row w-[60%] h-full items-center">
         <div className="w-6">
           {props.storekey === "behaviorWindow" && (
@@ -37,7 +39,7 @@ export const SettingsItem = <T,>(props: {
           )}
           {props.storekey === "volume" &&
             (props.value === "0" ? (
-              <FaVolumeMute size={21} />
+              <FaVolumeMute className="mt-[1px]" size={21} />
             ) : (
               <FaVolumeUp size={24} />
             ))}
@@ -82,26 +84,28 @@ export const SettingsItem = <T,>(props: {
           {props.storekey === "volume" && (
             <Slider
               value={props.value as string}
-              min="0"
-              max="100"
-              step="1"
               setValue={props.setValue as Dispatch<SetStateAction<string>>}
+              valid={props.sliderValueValid!}
+              setValid={props.setSliderValueValid!}
+              min={0}
+              max={100}
+              step={1}
             />
           )}
           {props.storekey === "autolaunch" && (
             <Switch
-              checked={props.value as boolean}
-              setChecked={props.setValue as Dispatch<SetStateAction<boolean>>}
+              enabled={props.value as boolean}
+              setEnabled={props.setValue as Dispatch<SetStateAction<boolean>>}
             />
           )}
           {props.storekey === "wallpapersPath" && (
             <PathPicker
-              value={props.value as string}
-              setValue={props.setValue as Dispatch<SetStateAction<string>>}
+              path={props.value as string}
+              setPath={props.setValue as Dispatch<SetStateAction<string>>}
             />
           )}
         </div>
       </div>
-    </button>
+    </div>
   );
 };

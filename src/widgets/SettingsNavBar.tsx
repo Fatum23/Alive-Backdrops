@@ -1,10 +1,16 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "@shared/store";
 import { TypeSettingsStore } from "@public/types";
-import { BackButton } from "@widgets";
+import { BackButton, Search } from "@widgets";
 
-export const SettingsNavBar = (props: TypeSettingsStore) => {
+export const SettingsNavBar = (
+  props: TypeSettingsStore & {
+    volumeValid: boolean;
+    search: string;
+    setSearch: Dispatch<SetStateAction<string>>;
+  }
+) => {
   const { t } = useTranslation();
   const store = useSettingsStore();
 
@@ -19,83 +25,82 @@ export const SettingsNavBar = (props: TypeSettingsStore) => {
 
   return (
     <>
-      <div className="flex flex-row justify-between items-center h-8 m-2">
+      <div className="flex flex-row gap-2 items-center h-8 m-2">
         <BackButton />
-        <div className="flex flex-row gap-2 items-center">
-          <button
-            className="p-1"
-            disabled={
-              props.behaviorWindow === store.behaviorWindow &&
-              props.behaviorMaximizedWindow === store.behaviorMaximizedWindow &&
-              props.behaviorFullscreenWindow ===
-                store.behaviorFullscreenWindow &&
-              props.volume === store.volume &&
-              props.autolaunch === store.autolaunch &&
-              props.colorTheme === store.colorTheme &&
-              props.colorThemeCustom === store.colorThemeCustom &&
-              props.language === store.language &&
-              props.wallpapersPath === store.wallpapersPath
-            }
-            onClick={() => {
-              store.setBehaviorWindow(props.behaviorWindow);
-              store.setBehaviorMaximizedWindow(props.behaviorMaximizedWindow);
-              store.setBehaviorFullscreenWindow(props.behaviorFullscreenWindow);
-              store.setVolume(props.volume);
-              store.setAutolaunch(props.autolaunch);
-              store.setColorTheme(props.colorTheme);
-              store.setColorThemeCustom(props.colorThemeCustom);
-              store.setLanguage(props.language);
-              store.setWallpapersPath(props.wallpapersPath);
-            }}
-          >
-            {t("Apply")}
-          </button>
-          <button
-            className="p-1"
-            disabled={
-              props.behaviorWindow === "mute" &&
-              props.behaviorMaximizedWindow === "pause" &&
-              props.behaviorFullscreenWindow === "pause" &&
-              props.volume === "100" &&
-              props.autolaunch === true &&
-              props.colorTheme === "system" &&
-              props.colorThemeCustom === undefined &&
-              props.language === "system" &&
-              props.wallpapersPath === userDataPath &&
-              store.behaviorWindow === "mute" &&
-              store.behaviorMaximizedWindow === "pause" &&
-              store.behaviorFullscreenWindow === "pause" &&
-              store.volume === "100" &&
-              store.autolaunch === true &&
-              store.colorTheme === "system" &&
-              store.colorThemeCustom === undefined &&
-              store.language === "system" &&
-              store.wallpapersPath === userDataPath
-            }
-            onClick={async () => {
-              props.setBehaviorWindow("mute");
-              props.setBehaviorMaximizedWindow("pause");
-              props.setBehaviorFullscreenWindow("pause");
-              props.setVolume("100");
-              props.setAutolaunch(true);
-              props.setColorTheme("system");
-              props.setColorThemeCustom(undefined);
-              props.setLanguage("system");
-              props.setWallpapersPath(userDataPath!);
-              store.setBehaviorWindow("mute");
-              store.setBehaviorMaximizedWindow("pause");
-              store.setBehaviorFullscreenWindow("pause");
-              store.setVolume("100");
-              store.setAutolaunch(true);
-              store.setColorTheme("system");
-              store.setColorThemeCustom(undefined);
-              store.setLanguage("system");
-              store.setWallpapersPath(userDataPath!);
-            }}
-          >
-            {t("Reset")}
-          </button>
-        </div>
+        <Search search={props.search} setSearch={props.setSearch} />
+        <button
+          className="p-1"
+          disabled={
+            props.behaviorWindow === store.behaviorWindow &&
+            props.behaviorMaximizedWindow === store.behaviorMaximizedWindow &&
+            props.behaviorFullscreenWindow === store.behaviorFullscreenWindow &&
+            (!props.volumeValid || props.volume === store.volume) &&
+            props.autolaunch === store.autolaunch &&
+            props.colorTheme === store.colorTheme &&
+            JSON.stringify(props.colorThemeCustom) ===
+              JSON.stringify(store.colorThemeCustom) &&
+            props.language === store.language &&
+            props.wallpapersPath === store.wallpapersPath
+          }
+          onClick={() => {
+            store.setBehaviorWindow(props.behaviorWindow);
+            store.setBehaviorMaximizedWindow(props.behaviorMaximizedWindow);
+            store.setBehaviorFullscreenWindow(props.behaviorFullscreenWindow);
+            store.setVolume(props.volume);
+            store.setAutolaunch(props.autolaunch);
+            store.setColorTheme(props.colorTheme);
+            store.setColorThemeCustom(props.colorThemeCustom);
+            store.setLanguage(props.language);
+            store.setWallpapersPath(props.wallpapersPath);
+          }}
+        >
+          {t("Apply")}
+        </button>
+        <button
+          className="p-1"
+          disabled={
+            props.behaviorWindow === "mute" &&
+            props.behaviorMaximizedWindow === "pause" &&
+            props.behaviorFullscreenWindow === "pause" &&
+            props.volume === "100" &&
+            props.autolaunch === true &&
+            props.colorTheme === "system" &&
+            props.colorThemeCustom === undefined &&
+            props.language === "system" &&
+            props.wallpapersPath === userDataPath &&
+            store.behaviorWindow === "mute" &&
+            store.behaviorMaximizedWindow === "pause" &&
+            store.behaviorFullscreenWindow === "pause" &&
+            store.volume === "100" &&
+            store.autolaunch === true &&
+            store.colorTheme === "system" &&
+            store.colorThemeCustom === undefined &&
+            store.language === "system" &&
+            store.wallpapersPath === userDataPath
+          }
+          onClick={async () => {
+            props.setBehaviorWindow("mute");
+            props.setBehaviorMaximizedWindow("pause");
+            props.setBehaviorFullscreenWindow("pause");
+            props.setVolume("100");
+            props.setAutolaunch(true);
+            props.setColorTheme("system");
+            props.setColorThemeCustom(undefined);
+            props.setLanguage("system");
+            props.setWallpapersPath(userDataPath!);
+            store.setBehaviorWindow("mute");
+            store.setBehaviorMaximizedWindow("pause");
+            store.setBehaviorFullscreenWindow("pause");
+            store.setVolume("100");
+            store.setAutolaunch(true);
+            store.setColorTheme("system");
+            store.setColorThemeCustom(undefined);
+            store.setLanguage("system");
+            store.setWallpapersPath(userDataPath!);
+          }}
+        >
+          {t("Reset")}
+        </button>
       </div>
       <hr />
     </>

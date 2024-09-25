@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { SlEqualizer } from "react-icons/sl";
 import { LuPipette } from "react-icons/lu";
 
-import { Modal } from "@ui";
+import { Modal, Tooltip } from "@ui";
 import { contextColorThemeCustom } from "@shared/contexts";
 
 export const CustomizeTheme = () => {
@@ -58,28 +58,31 @@ export const CustomizeTheme = () => {
               getCSSVar("--accent")
             )
       );
-      setLink(colorThemeCustom ? colorThemeCustom.bg : getCSSVar("--link"));
+      setLink(colorThemeCustom ? colorThemeCustom.link : getCSSVar("--link"));
     };
     ue();
   }, [modalOpen]);
 
   return (
     <>
-      <div
-        title={t("Customize theme")}
-        className="button p-1 px-2 !bg-dark group-hover:!bg-light flex items-center justify-center"
-        onClick={() => setModalOpen(true)}
-      >
-        <SlEqualizer size={22} className="rotate-90" />
-      </div>
+      <Tooltip text="Customize theme">
+        <div
+          className="button p-2 !bg-dark group-hover/settings-item:!bg-light flex items-center justify-center"
+          onClick={() => {
+            setModalOpen(true);
+          }}
+        >
+          <SlEqualizer className="rotate-90" size={22} />
+        </div>
+      </Tooltip>
       <Modal
         title="Customize theme"
         open={modalOpen}
         setOpen={setModalOpen}
         closable
         confirmEnabled={
-          CSS.supports("color", bg) &&
-          CSS.supports("color", text) &&
+          CSS.supports("background", bg) &&
+          CSS.supports("background", text) &&
           CSS.supports("color", primary) &&
           CSS.supports("color", secondary) &&
           CSS.supports("color", accent) &&
@@ -177,7 +180,7 @@ const ColorPicker = (props: {
           opacity: pickerOpen ? 1 : 0,
         }}
         tabIndex={-1}
-        className="cursor-pointer !transition-opacity focus:outline-none"
+        className="cursor-pointer transition-opacity focus:outline-none"
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             setPickerOpen(false);

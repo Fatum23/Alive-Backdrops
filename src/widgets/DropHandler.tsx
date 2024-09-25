@@ -60,7 +60,7 @@ export const DropHandler = (props: { location: string }) => {
       style={{
         opacity: visible ? 1 : 0,
       }}
-      className="pointer-events-none absolute h-screen w-screen bg-transparent !transition-all z-50 backdrop-blur-sm flex flex-col items-center justify-center"
+      className="pointer-events-none absolute h-screen w-screen bg-transparent transition-all z-50 backdrop-blur-sm flex flex-col items-center justify-center"
     >
       <IoAddOutline size={48} />
       <div className="text-2xl">{t("Add wallpaper")}</div>

@@ -13,3 +13,5 @@ export { SettingsFooter } from "./SettingsFooter";
 export { UpdateButton } from "./UpdateButton";
 export { DropHandler } from "./DropHandler";
 export { CustomizeTheme } from "./CustomizeTheme";
+export { Search } from "./Search";
+export { Copy } from "./Copy";

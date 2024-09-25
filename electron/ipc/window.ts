@@ -18,6 +18,10 @@ ipcMain.handle("window:isFullscreen", (e) =>
   BrowserWindow.fromWebContents(e.sender)?.isFullScreen()
 );
 
+ipcMain.handle("window:isFocused", (e) =>
+  BrowserWindow.fromWebContents(e.sender)?.isFocused()
+);
+
 ipcMain.handle("window:minimize", (e) =>
   BrowserWindow.fromWebContents(e.sender)?.minimize()
 );
