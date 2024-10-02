@@ -13,29 +13,49 @@ export const Switch = (props: {
 }) => {
   const [dragging, setDragging] = useState<boolean | null>(null);
   const [mouseDown, setMouseDown] = useState<number | false>(false);
-  const [translateX, setTranslateX] = useState<number>(props.enabled ? 29 : 4);
   const [thumbPressX, setThumbPressX] = useState<number>(0);
 
   const switchRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setTranslateX(props.enabled ? 29 : 4);
+    if (!thumbRef.current || !switchRef.current) return;
+    thumbRef.current.style.transform = `translateX(${
+      props.enabled
+        ? switchRef.current.getBoundingClientRect().width -
+          thumbRef.current.getBoundingClientRect().width -
+          thumbRef.current.getBoundingClientRect().height * 0.2
+        : thumbRef.current.getBoundingClientRect().height * 0.2
+    }px)`;
   }, [props.enabled]);
 
   useEffect(() => {
+    requestAnimationFrame(() => {
+      if (!thumbRef.current) return;
+      thumbRef.current.style.transition = "";
+    });
+  }, []);
+
+  useEffect(() => {
     if (!dragging && switchRef.current && thumbRef.current) {
-      if (translateX === (props.enabled ? 29 : 4)) {
-        props.setEnabled((prev) => !prev);
-      } else if (
-        (translateX - 4) /
-          (switchRef.current.offsetWidth - thumbRef.current.offsetWidth - 8) >=
+      if (
+        (parseFloat(thumbRef.current.style.transform.replace(/[^\d.]/g, "")) -
+          thumbRef.current.getBoundingClientRect().height * 0.2) /
+          (switchRef.current.getBoundingClientRect().width -
+            thumbRef.current.getBoundingClientRect().width -
+            thumbRef.current.getBoundingClientRect().height * 0.4) >=
         0.5
       ) {
-        props.enabled && setTranslateX(29);
+        thumbRef.current.style.transform = `translateX(${
+          switchRef.current.getBoundingClientRect().width -
+          thumbRef.current.getBoundingClientRect().width -
+          thumbRef.current.getBoundingClientRect().height * 0.2
+        }px)`;
         props.setEnabled(true);
       } else {
-        !props.enabled && setTranslateX(4);
+        thumbRef.current.style.transform = `translateX(${
+          thumbRef.current.getBoundingClientRect().height * 0.2
+        }px)`;
         props.setEnabled(false);
       }
     }
@@ -47,26 +67,46 @@ export const Switch = (props: {
 
   const onMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!thumbRef.current || !switchRef.current) return;
+      if (!thumbRef.current || !switchRef.current || !mouseDown) return;
+
+      setDragging(true);
+
       if (
-        mouseDown &&
+        e.clientX < Math.trunc(switchRef.current.getBoundingClientRect().left)
+      ) {
+        thumbRef.current.style.transform = `translateX(${
+          thumbRef.current.getBoundingClientRect().height * 0.2
+        }px)`;
+        return;
+      }
+      if (
+        e.clientX > Math.ceil(switchRef.current.getBoundingClientRect().right)
+      ) {
+        thumbRef.current.style.transform = `translateX(${
+          switchRef.current.getBoundingClientRect().width -
+          thumbRef.current.getBoundingClientRect().width -
+          thumbRef.current.getBoundingClientRect().height * 0.2
+        }px)`;
+        return;
+      }
+
+      if (
         e.clientX -
           thumbPressX -
           switchRef.current.getBoundingClientRect().left >=
-          4 &&
+          thumbRef.current.getBoundingClientRect().height * 0.2 &&
         e.clientX +
           thumbRef.current.getBoundingClientRect().width -
           thumbPressX <=
           switchRef.current.getBoundingClientRect().left +
             switchRef.current.getBoundingClientRect().width -
-            4
+            thumbRef.current.getBoundingClientRect().height * 0.2
       ) {
-        setDragging(true);
-        setTranslateX(
+        thumbRef.current.style.transform = `translateX(${
           e.clientX -
-            switchRef.current.getBoundingClientRect().left -
-            thumbPressX
-        );
+          switchRef.current.getBoundingClientRect().left -
+          thumbPressX
+        }px)`;
       }
     },
     [mouseDown, thumbPressX]
@@ -104,20 +144,23 @@ export const Switch = (props: {
       }`}
       onClick={() => props.setEnabled((prev) => !prev)}
     >
-      <div
-        ref={thumbRef}
-        className="cursor-pointer h-6 aspect-square rounded-full bg-white text-black"
-        style={{
-          transition: dragging ? "" : "transform 0.3s",
-          transform: `translateX(${translateX}px)`,
-        }}
-        onMouseDown={(e) => {
-          if (e.button === 2) return;
-          setThumbPressX(e.nativeEvent.offsetX);
-          setMouseDown(e.clientX);
-        }}
-        onClick={(e) => e.stopPropagation()}
-      />
+      <div className="w-full h-[70%]">
+        <div
+          ref={thumbRef}
+          className={`cursor-pointer h-full aspect-square rounded-full bg-white text-black ${
+            dragging ? "transition-none" : "transition-transform"
+          }`}
+          style={{
+            transition: "none",
+          }}
+          onMouseDown={(e) => {
+            if (e.button === 2) return;
+            setThumbPressX(e.nativeEvent.offsetX);
+            setMouseDown(e.clientX);
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>
     </div>
   );
 };

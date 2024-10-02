@@ -50,7 +50,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-accent hover:bg-accent-hover;
+  @apply bg-accent hover:bg-accent-hover rounded-sm opacity-10;
 }
 
 html {

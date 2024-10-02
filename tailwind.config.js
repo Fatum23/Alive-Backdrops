@@ -22,7 +22,7 @@ export default {
         DEFAULT: "300ms",
       },
       dropShadow: {
-        tooltip: "0px 4px 4px",
+        tooltip: "0px 4px 4px rgba(0, 0, 0, 0.4)",
       },
     },
   },

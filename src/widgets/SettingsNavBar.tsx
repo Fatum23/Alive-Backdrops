@@ -1,14 +1,16 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "@shared/store";
-import { TypeSettingsStore } from "@public/types";
-import { BackButton, Search } from "@widgets";
+import { TypeSettingsChapter, TypeSettingsStateStore } from "@public/types";
+import { BackButton } from "@widgets";
+import { Select } from "@ui";
 
 export const SettingsNavBar = (
-  props: TypeSettingsStore & {
+  props: TypeSettingsStateStore & {
     volumeValid: boolean;
-    search: string;
-    setSearch: Dispatch<SetStateAction<string>>;
+    settingsChapter: TypeSettingsChapter;
+    setSettingsChapter: Dispatch<SetStateAction<TypeSettingsChapter>>;
+    setSettingsChapterTrigger: Dispatch<SetStateAction<boolean>>;
   }
 ) => {
   const { t } = useTranslation();
@@ -27,7 +29,24 @@ export const SettingsNavBar = (
     <>
       <div className="flex flex-row gap-2 items-center h-8 m-2">
         <BackButton />
-        <Search search={props.search} setSearch={props.setSearch} />
+        <Select
+          dropdownValues={[
+            "General",
+            "Wallpapers",
+            "System",
+            "Appearance",
+            "App window",
+            "Hotkeys",
+            "Other",
+            "About the program",
+          ]}
+          value={props.settingsChapter}
+          setValue={
+            props.setSettingsChapter as Dispatch<SetStateAction<string>>
+          }
+          onOptionClick={() => props.setSettingsChapterTrigger((val) => !val)}
+          classNamePrefix="settings-navbar"
+        />
         <button
           className="p-1"
           disabled={

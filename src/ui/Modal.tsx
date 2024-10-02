@@ -88,12 +88,10 @@ export const Modal = (props: {
     >
       <div
         onMouseDown={(e) => e.stopPropagation()}
-        style={
-          {
-            // transform: `scale(${props.open ? 1 : 0.9})`,
-          }
-        }
-        // className="transition-transform"
+        style={{
+          transform: `scale(${props.open ? 1 : 1.1})`,
+        }}
+        className="transition-transform"
         {...{ inert: props.open ? undefined : "" }}
       >
         <div className="min-w-48 p-2 bg-default rounded-md flex flex-col gap-2 justify-between drop-shadow-2xl">

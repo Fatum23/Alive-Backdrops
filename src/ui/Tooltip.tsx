@@ -165,7 +165,7 @@ export const Tooltip = (props: {
                       targetRef.current.children[0]!.getBoundingClientRect()
                         .width /
                         2
-                    : 0
+                    : 4
                   : 0,
             }}
             {...{ inert: "" }}
@@ -200,7 +200,7 @@ export const Tooltip = (props: {
                           targetRef.current.children[0]!.getBoundingClientRect()
                             .width /
                             2
-                        : 0) +
+                        : 4) +
                       targetRef.current.children[0]!.getBoundingClientRect()
                         .width /
                         2 -

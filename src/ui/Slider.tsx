@@ -17,8 +17,8 @@ const doesFitStep = (num: string, step: number) =>
 export const Slider = (props: {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
-  valid?: boolean;
-  setValid?: Dispatch<SetStateAction<boolean>>;
+  valid: boolean;
+  setValid: Dispatch<SetStateAction<boolean>>;
   min: number;
   max: number;
   step: number;
@@ -36,6 +36,34 @@ export const Slider = (props: {
   const [progress, setProgress] = useState<number>(0);
 
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const incrementValue = useCallback(
+    (value: string) =>
+      ["", "-"].includes(props.value)
+        ? props.max.toString()
+        : parseFloat(
+            (
+              (props.valid
+                ? parseFloat(value)
+                : Math.trunc(parseFloat(value) / props.step) * props.step) +
+              props.step
+            ).toFixed(8)
+          ).toString(),
+    [props.max, props.step, props.valid]
+  );
+
+  const decrementValue = useCallback(
+    (value: string) =>
+      ["", "-"].includes(value)
+        ? props.min.toString()
+        : parseFloat(
+            (props.valid
+              ? parseFloat(value) - props.step
+              : Math.trunc(parseFloat(value) / props.step) * props.step
+            ).toFixed(8)
+          ).toString(),
+    [props.min, props.step, props.valid]
+  );
 
   useEffect(() => {
     if (!isNumeric(props.value)) {
@@ -61,9 +89,7 @@ export const Slider = (props: {
     if (!rangeRef.current) return;
 
     setProgress(
-      !isNumeric(props.value) ||
-        props.valid === false ||
-        parseFloat(props.value) < props.min
+      props.valid === false || parseFloat(props.value) < props.min
         ? 0
         : parseFloat(
             (
@@ -134,7 +160,8 @@ export const Slider = (props: {
   return (
     <div className="flex flex-row items-center w-full my-1">
       <div
-        className="flex-grow flex flex-row relative"
+        className="flex-grow flex flex-row relative focus:outline-none group"
+        tabIndex={0}
         onClick={(e) => {
           if (!rangeRef.current) return;
 
@@ -156,6 +183,27 @@ export const Slider = (props: {
             ).toString()
           );
         }}
+        onKeyDown={(e) => {
+          if (
+            ["ArrowUp", "ArrowRight", "Equal", "KeyW", "KeyD"].includes(
+              e.code
+            ) &&
+            (!isNumeric(props.value) ||
+              parseFloat(props.value) + props.step <= props.max)
+          ) {
+            //TODO make isNumeric check like in buttons
+            props.setValue((value) => incrementValue(value));
+          } else if (
+            ["ArrowDown", "ArrowLeft", "Minus", "KeyS", "KeyA"].includes(
+              e.code
+            ) &&
+            (!isNumeric(props.value) ||
+              parseFloat(props.value) - props.step >= props.min)
+          ) {
+            props.setValue((value) => decrementValue(value));
+          }
+          e.preventDefault();
+        }}
       >
         <div
           ref={handleRef}
@@ -166,14 +214,12 @@ export const Slider = (props: {
                 : 0
             }px)`,
           }}
-          className={`absolute -top-2 h-6 w-1.5 rounded-sm bg-accent hover:bg-accent-hover cursor-pointer ${
-            handleMouseDown && "bg-accent-hover"
-          }`}
+          className="absolute -top-2 h-6 w-1.5 rounded-sm bg-accent hover:bg-accent-hover cursor-pointer group-focus:bg-accent-hover"
           onMouseDown={() => setHandleMouseDown(true)}
         />
         <div
           ref={rangeRef}
-          className="flex-grow flex flex-row bg-dark group-hover/settings-item:bg-light rounded-sm cursor-pointer"
+          className="flex-grow flex flex-row bg-dark group-hover/settings-item:bg-light rounded-sm cursor-pointer focus:outline-none"
         >
           <div
             className="bg-accent h-2 rounded-l-sm"
@@ -233,21 +279,19 @@ export const Slider = (props: {
           }}
           onKeyDown={(e) => {
             if (
-              ["ArrowUp", "="].includes(e.key) &&
-              parseFloat(props.value) + props.step <= props.max
+              ["ArrowUp", "KeyW", "KeyD"].includes(e.code) &&
+              (!isNumeric(props.value) ||
+                parseFloat(props.value) + props.step <= props.max)
             ) {
               //TODO make isNumeric check like in buttons
-              props.setValue((prev) =>
-                (parseFloat(prev) + props.step).toString()
-              );
+              props.setValue((value) => incrementValue(value));
               e.preventDefault();
             } else if (
-              ["ArrowDown", "-"].includes(e.key) &&
-              parseFloat(props.value) - props.step >= props.min
+              ["ArrowDown", "KeyS", "KeyA"].includes(e.code) &&
+              (!isNumeric(props.value) ||
+                parseFloat(props.value) - props.step >= props.min)
             ) {
-              props.setValue((prev) =>
-                (parseFloat(prev) - props.step).toString()
-              );
+              props.setValue((value) => decrementValue(value));
               e.preventDefault();
             }
           }}
@@ -275,18 +319,7 @@ export const Slider = (props: {
                   setIncreaseInterval(
                     setInterval(() => {
                       if (value < props.max) {
-                        props.setValue((prev) =>
-                          ["", "-"].includes(prev)
-                            ? props.max.toString()
-                            : parseFloat(
-                                (
-                                  (props.valid
-                                    ? parseFloat(prev)
-                                    : Math.ceil(parseFloat(prev) / props.step) *
-                                      props.step) + props.step
-                                ).toFixed(8)
-                              ).toString()
-                        );
+                        props.setValue((value) => incrementValue(value));
                         value = parseFloat((value + props.step).toFixed(8));
                       }
                     }, 100)
@@ -298,18 +331,6 @@ export const Slider = (props: {
           onMouseLeave={clearTimeoutAndInterval}
           onMouseUp={() => {
             if (!increaseInterval) {
-              props.setValue((prev) =>
-                ["", "-"].includes(props.value)
-                  ? props.max.toString()
-                  : parseFloat(
-                      (
-                        (props.valid
-                          ? parseFloat(prev)
-                          : Math.trunc(parseFloat(prev) / props.step) *
-                            props.step) + props.step
-                      ).toFixed(8)
-                    ).toString()
-              );
             }
             clearTimeoutAndInterval();
           }}
@@ -337,19 +358,7 @@ export const Slider = (props: {
                   setIncreaseInterval(
                     setInterval(() => {
                       if (value > props.min) {
-                        props.setValue((prev) =>
-                          ["", "-"].includes(prev)
-                            ? props.min.toString()
-                            : parseFloat(
-                                (
-                                  (props.valid
-                                    ? parseFloat(prev)
-                                    : Math.trunc(
-                                        parseFloat(prev) / props.step
-                                      ) * props.step) - props.step
-                                ).toFixed(8)
-                              ).toString()
-                        );
+                        props.setValue((value) => decrementValue(value));
                         value = parseFloat((value - props.step).toFixed(8));
                       }
                     }, 100)
@@ -361,16 +370,7 @@ export const Slider = (props: {
           onMouseLeave={clearTimeoutAndInterval}
           onMouseUp={() => {
             if (!increaseInterval) {
-              props.setValue((prev) =>
-                ["", "-"].includes(props.value)
-                  ? props.min.toString()
-                  : parseFloat(
-                      (props.valid
-                        ? parseFloat(prev) - props.step
-                        : Math.trunc(parseFloat(prev) / props.step) * props.step
-                      ).toFixed(8)
-                    ).toString()
-              );
+              props.setValue((value) => decrementValue(value));
             }
             clearTimeoutAndInterval();
           }}

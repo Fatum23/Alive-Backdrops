@@ -44,7 +44,6 @@ export const App = () => {
                 }
               />
             </Routes>
-            <div id="a" className="relative z-0 overflow-hidden"></div>
           </HashRouter>
         </div>
       </div>

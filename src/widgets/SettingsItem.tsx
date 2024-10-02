@@ -69,6 +69,7 @@ export const SettingsItem = <T,>(props: {
               value={props.value as string}
               dropdownValues={props.dropdownValues! as string[]}
               setValue={props.setValue as Dispatch<SetStateAction<string>>}
+              classNamePrefix="settings-item"
             />
           )}
           {props.storekey === "colorTheme" && (
@@ -78,6 +79,7 @@ export const SettingsItem = <T,>(props: {
                 value={props.value as string}
                 dropdownValues={props.dropdownValues! as string[]}
                 setValue={props.setValue as Dispatch<SetStateAction<string>>}
+                classNamePrefix="settings-item"
               />
             </div>
           )}

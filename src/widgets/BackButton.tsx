@@ -20,13 +20,12 @@ export const BackButton = () => {
     };
   }, []);
 
-  //TODO remove tooltip
   return (
     <button
       className="flex flex-row items-center p-1"
       onClick={() => navigate(-1)}
     >
-      <IoMdArrowRoundBack size={25} />
+      <IoMdArrowRoundBack size={24} />
       <div className="hidden sm:inline">{t("Back")}</div>
     </button>
   );

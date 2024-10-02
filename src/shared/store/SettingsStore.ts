@@ -3,11 +3,11 @@ import {
   TypeColorTheme,
   TypeColorThemeCustom,
   TypeLanguage,
-  TypeSettingsStore,
+  TypeSettingsStateStore,
   TypeWallpaperBehavior,
 } from "@public/types";
 
-export const useSettingsStore = create<TypeSettingsStore>((set) => ({
+export const useSettingsStore = create<TypeSettingsStateStore>((set) => ({
   behaviorWindow: "mute",
   setBehaviorWindow: (behavior) => {
     window.ipcRenderer.store.set<TypeWallpaperBehavior>(

@@ -8,6 +8,8 @@ export const Select = (props: {
   value: string;
   dropdownValues: string[];
   setValue: Dispatch<SetStateAction<string>>;
+  onOptionClick?: () => void;
+  classNamePrefix: string;
 }) => {
   const { t } = useTranslation();
   const [options, setOptions] = useState<
@@ -26,18 +28,20 @@ export const Select = (props: {
   }, [props.dropdownValues]);
 
   return (
-    <div className="react-select-container">
+    <div className={`react-select-container ${props.classNamePrefix}`}>
       <ReactSelect
-        classNamePrefix="react-select"
+        classNamePrefix={`react-select-${props.classNamePrefix}`}
         isSearchable={false}
-        onChange={(item) => props.setValue(item!.value)}
+        onChange={(item) => {
+          props.setValue(item!.value);
+          props.onOptionClick && props.onOptionClick();
+        }}
         options={options}
         value={options.at(
           options.findIndex((option) => option.value === props.value)
         )}
         menuPlacement="auto"
         menuPosition="fixed"
-        menuPortalTarget={document.getElementById("a")}
       />
     </div>
   );

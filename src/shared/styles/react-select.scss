@@ -12,7 +12,18 @@
   }
 }
 
-.react-select {
+@keyframes translateY {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.react-select-settings-item {
   &__control {
     @apply cursor-pointer shadow-none border-none bg-dark group-hover/settings-item:bg-light #{!important};
   }
@@ -42,6 +53,40 @@
   }
 }
 
+.react-select-settings-navbar {
+  &__control {
+    @apply cursor-pointer shadow-none border-none bg-light group-hover/settings-item:bg-light w-full h-8 min-h-8 #{!important};
+  }
+  &__single-value {
+    @apply text-text h-8 min-h-8 #{!important};
+  }
+  &__menu {
+    @apply bg-dark w-max min-w-full transition-all #{!important};
+    animation: translateY 0.3s;
+  }
+  &__option {
+    @apply cursor-pointer h-8 min-h-8 flex items-center #{!important};
+
+    &--is-focused {
+      @apply bg-light #{!important};
+    }
+
+    &--is-selected {
+      @apply bg-accent #{!important};
+    }
+  }
+  &__indicator-separator {
+    @apply hidden;
+  }
+  &__indicator {
+    @apply text-text h-4 min-h-4 flex items-center #{!important};
+  }
+}
+
 .react-select-container * {
   transition: background-color 0.3s, color 0.3s !important;
+}
+
+.react-select-container.settings-navbar {
+  @apply w-full;
 }

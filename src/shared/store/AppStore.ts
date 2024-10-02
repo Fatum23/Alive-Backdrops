@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { TypeAppStore, TypeWallpaper } from "@public/types";
+import { TypeAppStateStore, TypeWallpaper } from "@public/types";
 
-export const useAppStore = create<TypeAppStore>((set) => ({
+export const useAppStore = create<TypeAppStateStore>((set) => ({
   activeWallpaper: undefined,
   setActiveWallpaper: (wallpaper: TypeWallpaper) => {
     window.ipcRenderer.store.set<number>("activeWallpaper", wallpaper.id!);

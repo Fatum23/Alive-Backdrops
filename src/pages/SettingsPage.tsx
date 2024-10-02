@@ -1,11 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SettingsItem, SettingsNavBar, SettingsFooter } from "@widgets";
+import { Tooltip } from "@ui";
 import { useSettingsStore } from "@shared/store";
 import {
   TypeColorTheme,
   TypeLanguage,
   TypePage,
+  TypeSettingsChapter,
   TypeWallpaperBehavior,
 } from "@public/types";
 import { useLocation } from "react-router-dom";
@@ -13,6 +15,8 @@ import {
   contextColorThemeCustom,
   ProviderColorThemeCustom,
 } from "@shared/contexts";
+
+import { IoMdInformationCircleOutline } from "react-icons/io";
 
 const SettingsPageWithoutProvider = (props: TypePage) => {
   const location = useLocation();
@@ -47,7 +51,68 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
     store.wallpapersPath
   );
 
-  const [search, setSearch] = useState<string>("");
+  const [settingsChapter, setSettingsChapter] =
+    useState<TypeSettingsChapter>("General");
+  const [settingsChapterTrigger, setSettingsChapterTrigger] =
+    useState<boolean>(false);
+
+  const scrollableDivRef = useRef<HTMLDivElement>(null);
+  const generalChapterRef = useRef<HTMLDivElement>(null);
+  const wallpapersChapterRef = useRef<HTMLDivElement>(null);
+  const systemChapterRef = useRef<HTMLDivElement>(null);
+  const appearanceChapterRef = useRef<HTMLDivElement>(null);
+  const appWindowChapterRef = useRef<HTMLDivElement>(null);
+  const hotkeysChapterRef = useRef<HTMLDivElement>(null);
+  const otherChapterRef = useRef<HTMLDivElement>(null);
+  const aboutChapterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (
+      !scrollableDivRef.current ||
+      !generalChapterRef.current ||
+      !wallpapersChapterRef.current ||
+      !systemChapterRef.current ||
+      !appearanceChapterRef.current ||
+      !appWindowChapterRef.current ||
+      !hotkeysChapterRef.current ||
+      !otherChapterRef.current ||
+      !aboutChapterRef.current
+    )
+      return;
+
+    let chapterTop = 0;
+    switch (settingsChapter) {
+      case "General":
+        chapterTop = generalChapterRef.current.getBoundingClientRect().top;
+        break;
+      case "Wallpapers":
+        chapterTop = wallpapersChapterRef.current.getBoundingClientRect().top;
+        break;
+      case "System":
+        chapterTop = systemChapterRef.current.getBoundingClientRect().top;
+        break;
+      case "Appearance":
+        chapterTop = appearanceChapterRef.current.getBoundingClientRect().top;
+        break;
+      case "App window":
+        chapterTop = appWindowChapterRef.current.getBoundingClientRect().top;
+        break;
+      case "Hotkeys":
+        chapterTop = hotkeysChapterRef.current.getBoundingClientRect().top;
+        break;
+      case "Other":
+        chapterTop = otherChapterRef.current.getBoundingClientRect().top;
+        break;
+      case "About the program":
+        chapterTop = aboutChapterRef.current.getBoundingClientRect().top;
+        break;
+    }
+    scrollableDivRef.current.scrollBy({
+      top:
+        chapterTop - scrollableDivRef.current.getBoundingClientRect().top - 24,
+      behavior: "smooth",
+    });
+  }, [settingsChapterTrigger]);
 
   return (
     <div className="h-screen w-screen overflow-hidden">
@@ -71,12 +136,58 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
         setLanguage={setLanguage}
         wallpapersPath={wallpapersPath}
         setWallpapersPath={setWallpapersPath}
-        search={search}
-        setSearch={setSearch}
+        settingsChapter={settingsChapter}
+        setSettingsChapter={setSettingsChapter}
+        setSettingsChapterTrigger={setSettingsChapterTrigger}
       />
-      <div className="h-[calc(100%-72px)] overflow-y-auto" id="12">
+      <div
+        ref={scrollableDivRef}
+        className="h-[calc(100%-72px)] overflow-y-auto"
+        // onScroll={(e) => {
+        //   if (
+        //     !generalChapterRef.current ||
+        //     !wallpapersChapterRef.current ||
+        //     !systemChapterRef.current ||
+        //     !appearanceChapterRef.current ||
+        //     !appWindowChapterRef.current ||
+        //     !otherChapterRef.current ||
+        //     !aboutChapterRef.current
+        //   )
+        //     return;
+
+        //   const el = document.elementFromPoint(
+        //     window.innerWidth / 2,
+        //     e.currentTarget.getBoundingClientRect().top
+        //   ) as HTMLElement;
+        //   if (generalChapterRef.current.contains(el))
+        //     setSettingsChapter("Основные");
+        //   if (wallpapersChapterRef.current.contains(el))
+        //     setSettingsChapter("Обои");
+        //   if (systemChapterRef.current.contains(el))
+        //     setSettingsChapter("Система");
+        //   if (appearanceChapterRef.current.contains(el))
+        //     setSettingsChapter("Внешний вид");
+        //   if (appWindowChapterRef.current.contains(el))
+        //     setSettingsChapter("Окно приложения");
+        //   if (otherChapterRef.current.contains(el))
+        //     setSettingsChapter("Другое");
+        //   if (aboutChapterRef.current.contains(el))
+        //     setSettingsChapter("О программе");
+        // }}
+      >
         <div className="flex flex-col gap-6 m-4">
-          <div className="flex flex-col">
+          <div ref={generalChapterRef} className="flex flex-col">
+            <h1>{t("General")}</h1>
+            <SettingsItem
+              value={language}
+              dropdownValues={["system", "en", "ru"]}
+              setValue={setLanguage}
+              storekey="language"
+              title="Language"
+              description="App language"
+            />
+          </div>
+          <div ref={wallpapersChapterRef} className="flex flex-col">
             <h1>{t("Wallpapers")}</h1>
             <SettingsItem
               value={behaviorWindow}
@@ -119,8 +230,8 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
               description="Path to the folder where the wallpapers are stored"
             />
           </div>
-          <div className="flex flex-col">
-            <h1>{t("General")}</h1>
+          <div ref={systemChapterRef} className="flex flex-col">
+            <h1>System</h1>
             <SettingsItem
               value={autolaunch}
               setValue={setAutolaunch}
@@ -128,6 +239,9 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
               title="Autolaunch"
               description="Launch app with system to enable wallpapers"
             />
+          </div>
+          <div ref={appearanceChapterRef} className="flex flex-col">
+            <h1>Appearance</h1>
             <SettingsItem
               value={colorTheme}
               dropdownValues={["system", "light", "dark", "custom"]}
@@ -136,16 +250,25 @@ const SettingsPageWithoutProvider = (props: TypePage) => {
               title="Color theme"
               description="App color theme"
             />
-            <SettingsItem
-              value={language}
-              dropdownValues={["system", "en", "ru"]}
-              setValue={setLanguage}
-              storekey="language"
-              title="Language"
-              description="App language"
-            />
           </div>
-          <SettingsFooter />
+          <div ref={appWindowChapterRef} className="flex flex-col">
+            <h1>App window</h1>
+          </div>
+          <div ref={hotkeysChapterRef} className="flex flex-col">
+            <div className="flex flex-row items-center gap-1">
+              <h1>Hotkeys</h1>
+              <Tooltip text="Hotkeys work only when desktop is focused">
+                <IoMdInformationCircleOutline size={22} />
+              </Tooltip>
+            </div>
+          </div>
+          <div ref={otherChapterRef} className="flex flex-col">
+            <h1>Other</h1>
+          </div>
+          <div ref={aboutChapterRef} className="flex flex-col">
+            <h1>About the program</h1>
+            <SettingsFooter />
+          </div>
         </div>
       </div>
     </div>
