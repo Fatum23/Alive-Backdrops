@@ -1,0 +1,11 @@
+{
+  "navbar": {
+    "library": "Library",
+    "add": "Add",
+    "active": "Active",
+    "playlists": "Playlists",
+    "scheduling": "Scheduling",
+    "taskbar": "Taskbar",
+    "settings": "Settings"
+  }
+}

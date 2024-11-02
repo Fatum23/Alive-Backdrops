@@ -1,0 +1,30 @@
+{
+  "drop-or-select-file": "Drop or select file",
+  "file-properties": {
+    "title": "File properties",
+    "name": "Name",
+    "author": "Author",
+    "description": "Description",
+    "comment": "Comment",
+    "extension": "Extension",
+    "location": "Location",
+    "full-path": "Full path"
+  },
+  "title": "Title",
+  "description": "Description",
+
+  "wallpaper": "Wallpaper",
+  "wallpaper-info": "Fullscreen wallpaper",
+  "widget": "Widget",
+  "widget-info": "Custom sized wallpapers that are placed on top of fullscreen wallpapers",
+  "audio": "Audio",
+  "audio-info": "Desktop background sound",
+
+  "volume": "Volume",
+  "speed": "Speed",
+  "brightness": "Brightness",
+  "contrast": "Contrast",
+  "saturation": "Saturation",
+  "hue": "Hue",
+  "mirrored": "Mirrored"
+}

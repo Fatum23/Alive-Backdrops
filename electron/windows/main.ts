@@ -8,14 +8,21 @@ import {
   VITE_PUBLIC,
 } from "@paths";
 
-import { TypeWindowState } from "@public/types";
+import {
+  TypeElectronStoreKeys,
+  TypeSettingsStoreKeys,
+  TypeWindowState,
+} from "@public/types";
 import { getFromStore, setToStore } from "@services";
 
 export let mainWindow: BrowserWindow | null = null;
 export let mainWindowReady: boolean = false;
 
 export const createMainWindow = async () => {
-  const windowState = await getFromStore<TypeWindowState>("mainWindowState");
+  const windowState = await getFromStore<
+    TypeElectronStoreKeys,
+    TypeWindowState
+  >("mainWindowState");
   mainWindow = new BrowserWindow({
     center: true,
     width: windowState ? windowState.width : 900,
@@ -32,6 +39,7 @@ export const createMainWindow = async () => {
       allowRunningInsecureContent: false,
     },
   });
+  mainWindow.setMenu(null);
 
   if (windowState) {
     mainWindow!.setBounds({
@@ -43,11 +51,17 @@ export const createMainWindow = async () => {
     windowState.isFullscreen && mainWindow!.setFullScreen(true);
   }
 
-  localShortcut.register("F11", () => {
-    mainWindow?.setFullScreen(!mainWindow.isFullScreen());
+  localShortcut.register("F11", async () => {
+    await mainWindow?.webContents
+      .executeJavaScript(
+        "document.documentElement.classList.contains('hotkey')"
+      )
+      .then(
+        (isHotkey) =>
+          !isHotkey && mainWindow?.setFullScreen(!mainWindow.isFullScreen())
+      );
   });
 
-  mainWindow.setMenu(null);
   if (VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(
       path.join(VITE_DEV_SERVER_URL, "src", "app", "main", "main.html")
@@ -57,9 +71,23 @@ export const createMainWindow = async () => {
       path.join(VITE_DIST, "src", "app", "main", "main.html")
     );
   }
-  mainWindow.on("close", (e) => {
-    e.preventDefault();
-    mainWindow?.hide();
+
+  // mainWindow.on("focus", () => {
+  //   mainWindow?.setOverlayIcon(
+  //     nativeImage.createFromPath(path.join(VITE_PUBLIC, "activeWallpaper.png")),
+  //     "Running wallpaper"
+  //   );
+  // });
+
+  mainWindow.on("close", async (e) => {
+    await getFromStore<TypeSettingsStoreKeys, boolean>(
+      "hide-window-on-close"
+    ).then((hide) => {
+      if (hide) {
+        e.preventDefault();
+        mainWindow?.hide();
+      }
+    });
   });
 
   mainWindow.on("resize", () => {
@@ -88,7 +116,10 @@ export const createMainWindow = async () => {
 };
 
 export const onMainWindowReady = async () => {
-  const windowState = await getFromStore<TypeWindowState>("mainWindowState");
+  const windowState = await getFromStore<
+    TypeElectronStoreKeys,
+    TypeWindowState
+  >("mainWindowState");
   if (windowState && windowState.isMaximized) {
     mainWindow!.maximize();
   }
@@ -102,7 +133,7 @@ export const saveMainWindowState = () => {
   const isFullscreen = mainWindow!.isFullScreen();
   mainWindow!.unmaximize();
   mainWindow?.setFullScreen(false);
-  setToStore<TypeWindowState>("mainWindowState", {
+  setToStore<TypeElectronStoreKeys, TypeWindowState>("mainWindowState", {
     ...mainWindow!.getBounds(),
     isMaximized: isMaximized,
     isFullscreen: isFullscreen,

@@ -26,8 +26,8 @@ ipcMain.handle("window:minimize", (e) =>
   BrowserWindow.fromWebContents(e.sender)?.minimize()
 );
 
-ipcMain.handle("window:hide", (e) =>
-  BrowserWindow.fromWebContents(e.sender)?.hide()
+ipcMain.handle("window:close", (e) =>
+  BrowserWindow.fromWebContents(e.sender)?.close()
 );
 
 ipcMain.handle("window:toggleMaximize", (e, maximize: boolean | undefined) => {
@@ -52,6 +52,12 @@ ipcMain.handle(
     );
   }
 );
+
+ipcMain.handle("window:setZoomFactor", (e, zoomFactor: number) => {
+  BrowserWindow.fromWebContents(e.sender)?.webContents.setZoomFactor(
+    zoomFactor
+  );
+});
 
 ipcMain.handle("window:settingsLoaded", (e) => {
   const window = BrowserWindow.fromWebContents(e.sender);

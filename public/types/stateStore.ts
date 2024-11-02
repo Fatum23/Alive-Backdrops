@@ -2,12 +2,19 @@ import {
   TypeColorTheme,
   TypeColorThemeCustom,
   TypeLanguage,
+  TypeShowWindow,
   TypeWallpaperBehavior,
 } from "./settings";
 
 import { TypeWallpaper } from "./wallpaper";
 
 export type TypeSettingsStateStore = {
+  language: TypeLanguage;
+  setLanguage: (language: TypeLanguage) => void;
+
+  wallpapersPath: string;
+  setWallpapersPath: (path: string) => void;
+
   behaviorWindow: TypeWallpaperBehavior;
   setBehaviorWindow: (behavior: TypeWallpaperBehavior) => void;
 
@@ -21,7 +28,13 @@ export type TypeSettingsStateStore = {
   setVolume: (volume: string) => void;
 
   autolaunch: boolean;
-  setAutolaunch: (autolaunch: boolean) => void;
+  setAutolaunch: (value: boolean) => void;
+
+  tray: boolean;
+  setTray: (value: boolean) => void;
+
+  hardwareAcceleration: boolean;
+  setHardwareAcceleration: (value: boolean) => void;
 
   colorTheme: TypeColorTheme;
   setColorTheme: (theme: TypeColorTheme) => void;
@@ -29,11 +42,41 @@ export type TypeSettingsStateStore = {
   colorThemeCustom: TypeColorThemeCustom;
   setColorThemeCustom: (theme: TypeColorThemeCustom) => void;
 
-  language: TypeLanguage;
-  setLanguage: (language: TypeLanguage) => void;
+  interfaceScale: string;
+  setInterfaceScale: (scale: string) => void;
 
-  wallpapersPath: string;
-  setWallpapersPath: (path: string) => void;
+  showWindowOnLaunch: TypeShowWindow;
+  setShowWindowOnLaunch: (value: TypeShowWindow) => void;
+
+  showWindowOnAutolaunch: TypeShowWindow;
+  setShowWindowOnAutolaunch: (value: TypeShowWindow) => void;
+
+  hideWindowOnClose: boolean;
+  setHideWindowOnClose: (value: boolean) => void;
+
+  quitAppOnWindowClose: boolean;
+  setQuitAppOnWindowClose: (value: boolean) => void;
+
+  hotkeysEnabled: boolean;
+  setHotkeysEnabled: (value: boolean) => void;
+
+  hotkeyPause: string;
+  setHotkeyPause: (hotkey: string) => void;
+
+  hotkeyMute: string;
+  setHotkeyMute: (hotkey: string) => void;
+
+  hotkeyVolumeUp: string;
+  setHotkeyVolumeUp: (hotkey: string) => void;
+
+  hotkeyVolumeDown: string;
+  setHotkeyVolumeDown: (hotkey: string) => void;
+
+  activityInDiscord: boolean;
+  setActivityInDiscord: (value: boolean) => void;
+
+  notifyAboutUpdates: boolean;
+  setNotifyAboutUpdates: (value: boolean) => void;
 };
 
 export type TypeAppStateStore = {

@@ -6,3 +6,6 @@ export { Textarea } from "./Textarea";
 export { Modal } from "./Modal";
 export { Tooltip } from "./Tooltip";
 export { Checkbox } from "./Checkbox";
+export { Video } from "./Video";
+export { RadioButton } from "./RadioButton";
+export { Scrollbar } from "./Scrollbar";

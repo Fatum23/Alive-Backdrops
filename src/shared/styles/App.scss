@@ -45,12 +45,17 @@
   @apply select-none text-text focus:outline-accent;
 }
 
+.scrollbar-thin::-webkit-scrollbar {
+  height: 2px;
+}
+
 ::-webkit-scrollbar {
+  display: none;
   width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-accent hover:bg-accent-hover rounded-sm opacity-10;
+  @apply bg-accent hover:bg-accent-hover rounded-sm;
 }
 
 html {
@@ -97,21 +102,8 @@ h6 {
   @apply font-light;
 }
 
-input,
-textarea {
-  @apply outline-0 p-1 rounded-md bg-light;
-}
-
-input[type="range"] {
-  @apply appearance-none p-0 cursor-pointer bg-dark;
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-  @apply rounded h-2;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  @apply appearance-none bg-accent rounded w-2 h-7 -mt-[10px] hover:bg-accent-hover;
+input {
+  @apply outline-0 p-1 break-all rounded-md bg-light;
 }
 
 hr {
@@ -122,6 +114,22 @@ hr {
   -webkit-app-region: drag;
 }
 
-/* * {
-  font-size: 12px !important;
-} */
+@keyframes loading {
+  to {
+    background-position-x: -20%;
+  }
+}
+
+.skeleton {
+  background-color: var(--light);
+  background: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 60%
+    )
+    var(--light);
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 1.5s loading ease-in-out infinite;
+}

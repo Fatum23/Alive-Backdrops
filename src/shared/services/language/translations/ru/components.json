@@ -1,0 +1,17 @@
+{
+  "back": {
+    "back": "Назад"
+  },
+  "copy": {
+    "copy": "Скопировать",
+    "copied": "Скопировано"
+  },
+  "modal": {
+    "do-not-show-again": "Не показывать снова",
+    "cancel": "Отмена",
+    "ok": "Ок",
+    "close": "Закрыть"
+  },
+  "open-in-explorer": "Открыть в проводнике",
+  "drop-handler": { "add-wallpaper": "Add wallpaper" }
+}

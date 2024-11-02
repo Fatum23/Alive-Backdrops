@@ -1,5 +1,6 @@
 import {
   AUDIO_WALLPAPER_EXTENSIONS,
+  IMAGE_WALLPAPER_EXTENSIONS,
   VIDEO_WALLPAPER_EXTENSIONS,
   WEB_WALLPAPER_EXTENSIONS,
 } from "../../public/constants";
@@ -11,7 +12,16 @@ ipcMain.handle("dialog:pickWallpaper", async (e) => {
     .showOpenDialog(BrowserWindow.fromWebContents(e.sender)!, {
       properties: ["openFile"],
       filters: [
+        {
+          name: "All",
+          extensions: VIDEO_WALLPAPER_EXTENSIONS.concat(
+            IMAGE_WALLPAPER_EXTENSIONS
+          )
+            .concat(AUDIO_WALLPAPER_EXTENSIONS)
+            .concat(WEB_WALLPAPER_EXTENSIONS),
+        },
         { name: "Video", extensions: VIDEO_WALLPAPER_EXTENSIONS },
+        { name: "Image", extensions: IMAGE_WALLPAPER_EXTENSIONS },
         { name: "Audio", extensions: AUDIO_WALLPAPER_EXTENSIONS },
         { name: "Web", extensions: WEB_WALLPAPER_EXTENSIONS },
       ],
@@ -24,7 +34,7 @@ ipcMain.handle("dialog:pickWallpaper", async (e) => {
   return path;
 });
 
-ipcMain.handle("dialog:openDir", async (e) => {
+ipcMain.handle("dialog:pickDir", async (e) => {
   let path: string | null = null;
   await dialog
     .showOpenDialog(BrowserWindow.fromWebContents(e.sender)!, {

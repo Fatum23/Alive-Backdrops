@@ -22,7 +22,7 @@ window.ipcRenderer.theme.onChange((_e, theme) => {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         transitionStylesheet.sheet!.insertRule(
-          "* { transition: color 0.3s, background 0.3s, border-color 0.3s; }",
+          "* { transition: background-color 0.3s; }",
           0
         );
         themeLoaded = true;

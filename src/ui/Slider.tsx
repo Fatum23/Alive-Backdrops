@@ -109,13 +109,13 @@ export const Slider = (props: {
       if (!rangeRef.current || !handleMouseDown) return;
 
       if (
-        e.clientX < Math.trunc(rangeRef.current.getBoundingClientRect().left)
+        e.clientX < Math.ceil(rangeRef.current.getBoundingClientRect().left)
       ) {
         props.setValue(props.min.toString());
         return;
       }
       if (
-        e.clientX > Math.ceil(rangeRef.current.getBoundingClientRect().right)
+        e.clientX > Math.trunc(rangeRef.current.getBoundingClientRect().right)
       ) {
         props.setValue(props.max.toString());
         return;
@@ -126,11 +126,10 @@ export const Slider = (props: {
           ((e.clientX -
             Math.round(rangeRef.current.getBoundingClientRect().left)) /
             rangeRef.current.offsetWidth) *
-            (Math.abs(props.max) + Math.abs(props.min)) -
-          Math.abs(props.min)
+            Math.abs(props.max - props.min) +
+          props.min
         ).toFixed(8)
       );
-      if (progress < props.min || progress > props.max) return;
       props.setValue(
         parseFloat(
           (Math.round(progress / props.step) * props.step).toFixed(8)
@@ -160,16 +159,19 @@ export const Slider = (props: {
   return (
     <div className="flex flex-row items-center w-full my-1">
       <div
-        className="flex-grow flex flex-row relative focus:outline-none group"
+        className="relative flex flex-row w-full focus:outline-none group"
         tabIndex={0}
         onClick={(e) => {
           if (!rangeRef.current) return;
 
-          if (
-            e.clientX > rangeRef.current.getBoundingClientRect().right ||
-            e.clientX < rangeRef.current.getBoundingClientRect().left
-          )
+          if (e.clientX > rangeRef.current.getBoundingClientRect().right) {
+            props.setValue(props.max.toString());
             return;
+          }
+          if (e.clientX < rangeRef.current.getBoundingClientRect().left) {
+            props.setValue(props.min.toString());
+            return;
+          }
 
           const progress =
             ((e.clientX - rangeRef.current.getBoundingClientRect().left) /
@@ -191,7 +193,6 @@ export const Slider = (props: {
             (!isNumeric(props.value) ||
               parseFloat(props.value) + props.step <= props.max)
           ) {
-            //TODO make isNumeric check like in buttons
             props.setValue((value) => incrementValue(value));
           } else if (
             ["ArrowDown", "ArrowLeft", "Minus", "KeyS", "KeyA"].includes(
@@ -219,10 +220,10 @@ export const Slider = (props: {
         />
         <div
           ref={rangeRef}
-          className="flex-grow flex flex-row bg-dark group-hover/settings-item:bg-light rounded-sm cursor-pointer focus:outline-none"
+          className="flex flex-row flex-grow rounded-sm cursor-pointer bg-dark group-hover/settings-item:bg-light focus:outline-none"
         >
           <div
-            className="bg-accent h-2 rounded-l-sm"
+            className="h-2 rounded-l-sm bg-accent"
             style={{
               width: `${progress}%`,
             }}
@@ -283,7 +284,6 @@ export const Slider = (props: {
               (!isNumeric(props.value) ||
                 parseFloat(props.value) + props.step <= props.max)
             ) {
-              //TODO make isNumeric check like in buttons
               props.setValue((value) => incrementValue(value));
               e.preventDefault();
             } else if (
@@ -297,7 +297,7 @@ export const Slider = (props: {
           }}
         />
       </Tooltip>
-      <div className="ml-1 flex flex-col gap-1">
+      <div className="flex flex-col gap-1 ml-1">
         <button
           className="bg-dark group-hover/settings-item:bg-light rounded-sm p-0.5 disabled:!bg-transparent"
           disabled={
@@ -331,6 +331,7 @@ export const Slider = (props: {
           onMouseLeave={clearTimeoutAndInterval}
           onMouseUp={() => {
             if (!increaseInterval) {
+              props.setValue((value) => incrementValue(value));
             }
             clearTimeoutAndInterval();
           }}

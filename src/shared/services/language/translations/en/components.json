@@ -1,0 +1,17 @@
+{
+  "back": {
+    "back": "Back"
+  },
+  "copy": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "modal": {
+    "do-not-show-again": "Don't show again",
+    "cancel": "Cancel",
+    "ok": "Ok",
+    "close": "Close"
+  },
+  "open-in-explorer": "Open in explorer",
+  "drop-handler": { "add-wallpaper": "Add wallpaper" }
+}

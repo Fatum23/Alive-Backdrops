@@ -1,28 +1,26 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { TypeContextMenu, TypePage } from "@public/types";
-import { ContextMenu, HomeNavbar, WallpaperList } from "@widgets";
+import { TypeHomeTab } from "@public/types";
+import { HomeNavbar, WallpaperList } from "@widgets";
 import { useAppStore } from "@shared/store";
+import i18next from "i18next";
+import { APP_NAME } from "@public/constants";
+import { useTranslation } from "react-i18next";
 
-export const HomePage = (props: TypePage) => {
-  const location = useLocation();
+export const HomePage = () => {
   useEffect(() => {
-    props.setTitle("");
-    props.setLocation(location.pathname);
-  }, []);
+    document.title = APP_NAME;
+  }, [i18next.language]);
+
+  const [tab, setTab] = useState<TypeHomeTab>("all");
   const [search, setSearch] = useState<string>("");
-  const activeWallpaper = useAppStore((state) => state.activeWallpaper);
-  const [menu, setMenu] = useState<TypeContextMenu>({
-    x: -1,
-    y: -1,
-    activeWallpaper: activeWallpaper !== undefined ? activeWallpaper.id! : -1,
-    clickedWallpaper: -1,
-  });
   return (
-    <div className="h-screen w-screen overflow-hidden">
-      <HomeNavbar search={search} setSearch={setSearch} />
-      <WallpaperList search={search} menu={menu} setMenu={setMenu} />
-      <ContextMenu contextMenu={menu} setContextMenu={setMenu} />
+    <div className="w-screen h-screen overflow-hidden">
+      <HomeNavbar
+        tab={tab}
+        setTab={setTab}
+        search={search}
+        setSearch={setSearch}
+      />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { FaCheck } from "react-icons/fa";
 export const Checkbox = (props: {
   checked: boolean;
   setChecked: Dispatch<SetStateAction<boolean>>;
+  size: number;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [borderTimeout, setBorderTimeout] = useState<
@@ -26,16 +27,16 @@ export const Checkbox = (props: {
   }, [props.checked]);
 
   return (
-    <div className="relative w-5 h-5">
+    <div className="relative" style={{ width: props.size, height: props.size }}>
       <div
         ref={ref}
-        className={`absolute cursor-pointer w-5 h-5 border-[3px] rounded-sm flex justify-center items-center ${
+        className={`absolute cursor-pointer w-full h-full border-[3px] rounded-sm flex justify-center items-center ${
           props.checked ? "bg-accent" : "border-dark"
         }`}
         onClick={() => props.setChecked((prev) => !prev)}
       >
         <FaCheck
-          size={14}
+          size={`${props.size * 0.7}px`}
           style={{
             transform: `scale(${props.checked ? 1 : 0})`,
           }}

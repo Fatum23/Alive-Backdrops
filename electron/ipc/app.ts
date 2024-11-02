@@ -1,5 +1,7 @@
 import { app, ipcMain } from "electron";
 
+ipcMain.handle("app:isPackaged", () => app.isPackaged);
+
 ipcMain.handle("app:quit", () => app.quit());
 
 ipcMain.handle(
@@ -15,6 +17,11 @@ ipcMain.handle(
   }
 );
 
-ipcMain.handle("app:getVersion", () => {
-  return app.getVersion();
+ipcMain.handle("app:getVersion", () => app.getVersion());
+
+ipcMain.handle("app:relaunch", (_e, arg: "settings") => {
+  app.relaunch({
+    args: [arg],
+  });
+  app.quit();
 });

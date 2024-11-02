@@ -81,10 +81,13 @@
   &__indicator {
     @apply text-text h-4 min-h-4 flex items-center #{!important};
   }
+  &__control--menu-is-open &__indicator {
+    @apply rotate-180 #{!important};
+  }
 }
 
 .react-select-container * {
-  transition: background-color 0.3s, color 0.3s !important;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s !important;
 }
 
 .react-select-container.settings-navbar {

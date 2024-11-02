@@ -1,4 +1,4 @@
-export type TypePath = {
+export type TypePreloadPath = {
   get: (
     name:
       | "home"

@@ -1,14 +1,13 @@
 import Store from "electron-store";
-import { TypeStoreKeys } from "@public/types";
 
 const store = new Store();
 
-export const getFromStore = async <T>(
-  key: TypeStoreKeys
-): Promise<T | undefined> => {
-  return (await store.get(key as string)) as T;
+export const getFromStore = async <K, V>(key: K): Promise<V | undefined> => {
+  return await (store.get(key as string) as V | undefined);
 };
 
-export const setToStore = <T>(key: TypeStoreKeys, value: T) => {
-  value !== undefined ? store.set(key, value) : store.delete(key);
+export const setToStore = <K, V>(key: K, value: V) => {
+  value !== undefined
+    ? store.set(key as string, value)
+    : store.delete(key as string);
 };

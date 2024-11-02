@@ -6,5 +6,7 @@ export * from "./store";
 export * from "./shell";
 export * from "./theme";
 export * from "./language";
-// export * from "./wallpaper";
+export * from "./wallpaper";
 export * from "./db";
+export * from "./fs";
+export * from "./other";

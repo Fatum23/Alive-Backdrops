@@ -8,9 +8,10 @@ export const Search = (props: {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <div className="flex flex-row items-center flex-grow relative">
+    <div className="relative flex flex-row items-center flex-grow min-w-[25%]">
       <IoIosSearch size={20} className="absolute mx-1" />
       <input
+        id="search"
         className={"flex-grow w-full pl-7 pr-9"}
         ref={inputRef}
         value={props.search}
@@ -20,7 +21,7 @@ export const Search = (props: {
       {props.search !== "" && (
         <IoIosClose
           size={28}
-          className="cursor-pointer absolute right-0 mx-1"
+          className="absolute right-0 mx-1 cursor-pointer"
           onClick={() => props.setSearch("")}
         />
       )}

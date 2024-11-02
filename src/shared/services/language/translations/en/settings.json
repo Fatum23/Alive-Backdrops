@@ -1,0 +1,140 @@
+{
+  "navbar": {
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+
+  "restart-required": "App restart required",
+  "restart-now": "Restart now?",
+
+  "general": {
+    "title": "General",
+    "language": {
+      "title": "Language",
+      "description": "App interface language",
+      "system": "System",
+      "en": "English",
+      "ru": "Russian"
+    },
+    "wallpapers-path": {
+      "title": "Path to wallpapers folder",
+      "description": "Path to the folder where the wallpapers are stored"
+    }
+  },
+  "wallpapers-behavior": {
+    "title": "Wallpapers behavior",
+
+    "window": {
+      "title": "Focused window",
+      "description": "If there is an active window"
+    },
+    "maximized-window": {
+      "title": "Focused maximized window",
+      "description": "If there is an active maximized window"
+    },
+    "fullscreen-window": {
+      "title": "Focused fullscreen window",
+      "description": "If there is an active fullscreen window"
+    },
+
+    "keep-running": "Keep running",
+    "mute": "Mute",
+    "pause": "Pause"
+  },
+  "system": {
+    "title": "System",
+    "autolaunch": {
+      "title": "Autolaunch",
+      "description": "Launch app with system to enable wallpapers"
+    },
+    "tray": {
+      "title": "Tray icon",
+      "description": "Show app menu in tray to manage wallpapers"
+    },
+    "hardware-acceleration": {
+      "title": "Hardware acceleration",
+      "description": "Hardware acceleration improves wallpapers performance"
+    }
+  },
+  "appearance": {
+    "title": "Appearance",
+    "theme": {
+      "title": "Color theme",
+      "description": "App interface color theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "custom": "Custom",
+
+      "customize": "Customize theme"
+    },
+
+    "interface-scale": {
+      "title": "Interface scale",
+      "description": "App interface scale"
+    }
+  },
+  "app-window": {
+    "title": "App window",
+
+    "on-launch": {
+      "title": "Show window on launch",
+      "description": "Show app window on launch"
+    },
+    "on-autolaunch": {
+      "title": "Show window on autolaunch",
+      "description": "Show app window on autolaunch"
+    },
+
+    "do-not-show": "Don't show",
+    "if-no-active-wallpaper": "If no active wallpaper",
+    "show": "Show",
+
+    "hide-on-close": {
+      "title": "Hide app window instead of closing",
+      "description": "Hide app window on X or Alt + F4 press"
+    },
+    "quit-app-on-close": {
+      "title": "Quit the app on window close",
+      "description": "Turn off wallpapers on app window close"
+    }
+  },
+  "hotkeys": {
+    "title": "Hotkeys",
+    "info": "Hotkeys only work on the desktop",
+
+    "hotkeys-enabled": {
+      "title": "Enable hotkeys",
+      "description": "Manage wallpapers with keyboard"
+    },
+    "pause": "Pause",
+    "mute": "Mute",
+    "volume-up": "Volume up",
+    "volume-down": "Volume down"
+  },
+  "other": {
+    "title": "Other",
+    "activity-in-discord": {
+      "title": "Activity in Discord",
+      "description": "Show app activity in Discord"
+    }
+  },
+  "about": {
+    "title": "About the program",
+    "version": {
+      "title": "Version: {{version}}"
+    },
+    "notify-about-updates": {
+      "title": "Notify about available updates",
+      "description": "Notify about available updates when app launches"
+    },
+    "github": {
+      "title": "Github",
+      "description": "Project repository on Github"
+    },
+    "report-a-bug": {
+      "title": "Report a bug",
+      "description": "Report a bug in the app"
+    }
+  }
+}

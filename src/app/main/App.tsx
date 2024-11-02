@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 
 import "@shared/services/language";
@@ -7,46 +6,29 @@ import "@shared/styles/App.scss";
 
 import { AddWallpaperPage, HomePage, SettingsPage } from "@pages";
 import { DropHandler, Titlebar } from "@widgets";
+import { useSettingsStore } from "@shared/store";
 
 export const App = () => {
-  const [title, setTitle] = useState<string>("");
-  const [location, setLocation] = useState<string>("/");
+  // useSettingsStore();
 
   return (
-    <>
-      <Titlebar title={title} />
-      <div id="tooltip"></div>
-      <div className="relative overflow-hidden">
-        <div id="modal"></div>
-        <div id="router">
+    <div className="flex flex-col w-screen h-screen overflow-hidden">
+      <Titlebar />
+      <div id="tooltip-portal"></div>
+      <div id="scrollbar-portal"></div>
+      <div className="relative flex-1 w-full overflow-hidden">
+        <div id="modal-portal"></div>
+        <div id="router" className="w-full h-full">
           <HashRouter>
-            <DropHandler location={location} />
+            <DropHandler />
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <HomePage setTitle={setTitle} setLocation={setLocation} />
-                }
-              />
-              <Route
-                path="/AddWallpaper"
-                element={
-                  <AddWallpaperPage
-                    setTitle={setTitle}
-                    setLocation={setLocation}
-                  />
-                }
-              />
-              <Route
-                path="/Settings"
-                element={
-                  <SettingsPage setTitle={setTitle} setLocation={setLocation} />
-                }
-              />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/AddWallpaper" element={<AddWallpaperPage />} />
+              <Route path="/Settings" element={<SettingsPage />} />
             </Routes>
           </HashRouter>
         </div>
       </div>
-    </>
+    </div>
   );
 };

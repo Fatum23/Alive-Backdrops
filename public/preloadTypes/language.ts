@@ -1,7 +1,7 @@
-import { TypeLanguage as TypeLng } from "../types";
+import { TypeLanguage } from "../types";
 
-export type TypeLanguage = {
-  set: (language: TypeLng) => void;
+export type TypePreloadLanguage = {
+  set: (language: TypeLanguage) => void;
   onChange: (
     callback: (e: Electron.IpcRendererEvent, language: string) => void
   ) => void;

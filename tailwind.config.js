@@ -18,11 +18,14 @@ export default {
       animation: {
         loading: "spin 1s linear infinite",
       },
+      transitionProperty: {
+        bg: "background-color",
+      },
       transitionDuration: {
         DEFAULT: "300ms",
       },
       dropShadow: {
-        tooltip: "0px 4px 4px rgba(0, 0, 0, 0.4)",
+        tooltip: "0px 4px 4px rgba(0, 0, 0, 0.3)",
       },
     },
   },

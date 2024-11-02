@@ -18,7 +18,7 @@ import { contextColorThemeCustom } from "@shared/contexts";
 export const CustomizeTheme = () => {
   const { t } = useTranslation();
 
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalOpened, setModalOpened] = useState<boolean>(false);
 
   const getCSSVar = useCallback(
     (name: string) =>
@@ -61,25 +61,27 @@ export const CustomizeTheme = () => {
       setLink(colorThemeCustom ? colorThemeCustom.link : getCSSVar("--link"));
     };
     ue();
-  }, [modalOpen]);
+  }, [modalOpened]);
 
   return (
     <>
-      <Tooltip text="Customize theme">
-        <div
-          className="button p-2 !bg-dark group-hover/settings-item:!bg-light flex items-center justify-center"
+      <Tooltip text={t("settings.appearance.theme.customize")}>
+        <button
+          className="flex items-center justify-center p-2 bg-dark group-hover/settings-item:bg-light"
           onClick={() => {
-            setModalOpen(true);
+            setModalOpened(true);
           }}
         >
           <SlEqualizer className="rotate-90" size={22} />
-        </div>
+        </button>
       </Tooltip>
       <Modal
-        title="Customize theme"
-        open={modalOpen}
-        setOpen={setModalOpen}
+        title={t("settings.appearance.theme.customize")}
+        opened={modalOpened}
+        setOpened={setModalOpened}
         closable
+        cancelButton
+        confirmButton
         confirmEnabled={
           CSS.supports("background", bg) &&
           CSS.supports("background", text) &&
@@ -89,7 +91,7 @@ export const CustomizeTheme = () => {
           CSS.supports("color", accentHover) &&
           CSS.supports("color", link)
         }
-        onCancel={() => setModalOpen(false)}
+        onCancel={() => setModalOpened(false)}
         onConfirm={() => {
           setColorThemeCustom({
             bg: bg,
@@ -100,7 +102,7 @@ export const CustomizeTheme = () => {
             accentHover: accentHover,
             link: link,
           });
-          setModalOpen(false);
+          setModalOpened(false);
         }}
       >
         <div className="flex flex-row gap-2">
@@ -129,7 +131,7 @@ export const CustomizeTheme = () => {
 };
 
 const LabelItem = (props: { label: string }) => (
-  <div className="h-8 flex items-center">{props.label}</div>
+  <div className="flex items-center h-8">{props.label}</div>
 );
 
 const InputItem = (props: {
@@ -137,7 +139,7 @@ const InputItem = (props: {
   onChange: Dispatch<SetStateAction<string>>;
 }) => {
   return (
-    <div className="h-8 flex flex-row gap-1">
+    <div className="flex flex-row h-8 gap-1">
       <input
         value={props.color}
         onChange={(e) => props.onChange(e.target.value)}
@@ -171,7 +173,7 @@ const ColorPicker = (props: {
           ? props.color
           : "transparent",
       }}
-      className="cursor-pointer flex items-center justify-center aspect-square h-full rounded-md"
+      className="flex items-center justify-center h-full rounded-md cursor-pointer aspect-square"
     >
       {!CSS.supports("color", props.color) && <LuPipette />}
       <div
@@ -180,7 +182,7 @@ const ColorPicker = (props: {
           opacity: pickerOpen ? 1 : 0,
         }}
         tabIndex={-1}
-        className="cursor-pointer transition-opacity focus:outline-none"
+        className="transition-opacity cursor-pointer focus:outline-none"
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             setPickerOpen(false);

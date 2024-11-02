@@ -7,7 +7,7 @@ export const window: TypeWindow = {
   isFullscreen: async () => await ipcRenderer.invoke("window:isFullscreen"),
   isFocused: async () => await ipcRenderer.invoke("window:isFocused"),
   minimize: () => ipcRenderer.invoke("window:minimize"),
-  hide: () => ipcRenderer.invoke("window:hide"),
+  close: () => ipcRenderer.invoke("window:close"),
   toggleMaximize: (maximize) =>
     ipcRenderer.invoke("window:toggleMaximize", maximize),
   toggleFullscreen: (fullscreen) =>
@@ -24,5 +24,7 @@ export const window: TypeWindow = {
       ipcRenderer.off("window:focusChange", callback);
     };
   },
+  setZoomFactor: (zoomFactor) =>
+    ipcRenderer.invoke("window:setZoomFactor", zoomFactor),
   settingsLoaded: () => ipcRenderer.invoke("window:settingsLoaded"),
 };

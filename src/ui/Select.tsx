@@ -1,44 +1,31 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Dispatch, SetStateAction } from "react";
 import { default as ReactSelect } from "react-select";
 
 import "@shared/styles/react-select.scss";
 
-export const Select = (props: {
+export const Select = <T,>(props: {
   value: string;
-  dropdownValues: string[];
+  options: {
+    label: string;
+    value: T;
+  }[];
   setValue: Dispatch<SetStateAction<string>>;
   onOptionClick?: () => void;
-  classNamePrefix: string;
+  classNameStylePrefix: string;
 }) => {
-  const { t } = useTranslation();
-  const [options, setOptions] = useState<
-    { label: string; value: string }[] | []
-  >([]);
-
-  useEffect(() => {
-    setOptions(
-      props.dropdownValues.map((value) => ({
-        label: t(
-          value.replace(/(^\w{1}|[\s.-]\w{1})/g, (match) => match.toUpperCase())
-        ),
-        value: value,
-      }))
-    );
-  }, [props.dropdownValues]);
-
   return (
-    <div className={`react-select-container ${props.classNamePrefix}`}>
+    <div className={`react-select-container ${props.classNameStylePrefix}`}>
       <ReactSelect
-        classNamePrefix={`react-select-${props.classNamePrefix}`}
+        classNamePrefix={`react-select-${props.classNameStylePrefix}`}
         isSearchable={false}
         onChange={(item) => {
-          props.setValue(item!.value);
+          if (!item) return;
+          props.setValue(item.value as string);
           props.onOptionClick && props.onOptionClick();
         }}
-        options={options}
-        value={options.at(
-          options.findIndex((option) => option.value === props.value)
+        options={props.options}
+        value={props.options.at(
+          props.options.findIndex((option) => option.value === props.value)
         )}
         menuPlacement="auto"
         menuPosition="fixed"

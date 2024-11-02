@@ -30,10 +30,12 @@ export const Switch = (props: {
   }, [props.enabled]);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      if (!thumbRef.current) return;
-      thumbRef.current.style.transition = "";
-    });
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        if (!thumbRef.current) return;
+        thumbRef.current.style.transition = "";
+      })
+    );
   }, []);
 
   useEffect(() => {

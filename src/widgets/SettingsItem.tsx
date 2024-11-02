@@ -1,110 +1,163 @@
-import { Dispatch, SetStateAction } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
-import { BsWindow } from "react-icons/bs";
-import { CgMaximize } from "react-icons/cg";
-import { FaVolumeUp, FaDesktop, FaPalette, FaVolumeMute } from "react-icons/fa";
-import { MdRocketLaunch } from "react-icons/md";
-import { GrLanguage } from "react-icons/gr";
-import { GoFileDirectoryFill } from "react-icons/go";
+import { Select, Slider, Switch, Tooltip } from "@ui";
+import { Copy, CustomizeTheme, Hotkey, PathPicker } from "@widgets";
+import { TypeSettingsKeys } from "@public/types";
+import { GITHUB_LINK } from "@public/constants";
 
-import { TypeSettingsStoreKeys } from "@public/types";
-import { CustomizeTheme, PathPicker } from "@widgets";
-import { Select, Slider, Switch } from "@ui";
+import { TbRefresh } from "react-icons/tb";
 
 export const SettingsItem = <T,>(props: {
-  value: T;
-  setValue: Dispatch<SetStateAction<T>>;
-  dropdownValues?: T[];
+  icon?: ReactNode;
+  value?: T;
+  setValue?: Dispatch<SetStateAction<T>>;
+  selectOptions?: { label: string; value: T }[];
+  sliderMinValue?: number;
+  sliderStep?: number;
+  sliderMaxValue?: number;
   sliderValueValid?: boolean;
   setSliderValueValid?: Dispatch<SetStateAction<boolean>>;
-  storekey: TypeSettingsStoreKeys;
+  settingsKey: TypeSettingsKeys;
   title: string;
-  description: string;
+  description?: string;
+  active?: boolean;
 }) => {
   const { t } = useTranslation();
 
+  const [version, setVersion] = useState<string>("");
+
+  useEffect(() => {
+    const getVersion = async () =>
+      setVersion(await window.ipcRenderer.app.getVersion());
+    getVersion();
+  }, []);
+
   return (
-    <div className="p-2 my-1 h-16 gap-2 flex flex-row items-center group/settings-item bg-light hover:bg-dark rounded-md">
-      <div className="flex flex-row w-[60%] h-full items-center">
-        <div className="w-6">
-          {props.storekey === "behaviorWindow" && (
-            <BsWindow size={24} className="[transform:rotateY(180deg)]" />
+    <div
+      className={`flex flex-row items-center justify-between h-16 w-full gap-2 p-2 my-1 rounded-md group/settings-item bg-light hover:bg-dark [transition:background-color_0.3s,opacity_0.3s] ${
+        props.active === false && "opacity-40"
+      }`}
+    >
+      <div className="flex flex-row items-center h-full">
+        {props.icon && (
+          <>
+            <div className="w-[26px]">{props.icon}</div>
+            <div className="w-4"></div>
+          </>
+        )}
+        <div className="flex flex-col items-start">
+          <div className="flex flex-row items-center gap-1">
+            <div className="break-all text-ellipsis line-clamp-1">
+              {props.title}
+            </div>
+            {props.settingsKey === "version" && <Copy data={version} />}
+            {["wallpapers-path", "hardware-acceleration"].includes(
+              props.settingsKey
+            ) && (
+              <div>
+                <Tooltip text={t("settings.restart-required")} info>
+                  <div>
+                    <TbRefresh size={18} />
+                  </div>
+                </Tooltip>
+              </div>
+            )}
+          </div>
+          {props.description && (
+            <h6 className="break-all text-ellipsis line-clamp-1">
+              {props.description}
+            </h6>
           )}
-          {props.storekey === "behaviorMaximizedWindow" && (
-            <CgMaximize size={24} />
-          )}
-          {props.storekey === "behaviorFullscreenWindow" && (
-            <FaDesktop size={24} />
-          )}
-          {props.storekey === "volume" &&
-            (props.value === "0" ? (
-              <FaVolumeMute className="mt-[1px]" size={21} />
-            ) : (
-              <FaVolumeUp size={24} />
-            ))}
-          {props.storekey === "autolaunch" && <MdRocketLaunch size={24} />}
-          {props.storekey === "colorTheme" && <FaPalette size={24} />}
-          {props.storekey === "language" && <GrLanguage size={24} />}
-          {props.storekey === "wallpapersPath" && (
-            <GoFileDirectoryFill size={24} />
-          )}
-        </div>
-        <div className="flex flex-col items-start ml-4">
-          <div>{t(props.title)}</div>
-          <h6 className="text-ellipsis line-clamp-1 break-all">
-            {t(props.description)}
-          </h6>
         </div>
       </div>
-      <div className="flex w-[40%] h-full mr-3">
-        <div className="flex items-center justify-end h-full flex-grow">
-          {[
-            "behaviorWindow",
-            "behaviorMaximizedWindow",
-            "behaviorFullscreenWindow",
-            "language",
-          ].includes(props.storekey) && (
-            <Select
-              value={props.value as string}
-              dropdownValues={props.dropdownValues! as string[]}
-              setValue={props.setValue as Dispatch<SetStateAction<string>>}
-              classNamePrefix="settings-item"
-            />
-          )}
-          {props.storekey === "colorTheme" && (
+      <div className="flex h-full mr-3">
+        <div className="flex items-center justify-end flex-grow h-full">
+          {props.selectOptions && (
             <div className="flex flex-row gap-2">
-              {props.value === "custom" && <CustomizeTheme />}
+              {props.settingsKey === "theme" && props.value === "custom" && (
+                <CustomizeTheme />
+              )}
               <Select
                 value={props.value as string}
-                dropdownValues={props.dropdownValues! as string[]}
+                options={props.selectOptions!}
                 setValue={props.setValue as Dispatch<SetStateAction<string>>}
-                classNamePrefix="settings-item"
+                classNameStylePrefix="settings-item"
               />
             </div>
           )}
-          {props.storekey === "volume" && (
+
+          {props.sliderValueValid !== undefined && (
             <Slider
               value={props.value as string}
               setValue={props.setValue as Dispatch<SetStateAction<string>>}
               valid={props.sliderValueValid!}
               setValid={props.setSliderValueValid!}
-              min={0}
-              max={100}
-              step={1}
+              min={props.sliderMinValue!}
+              max={props.sliderMaxValue!}
+              step={props.sliderStep!}
             />
           )}
-          {props.storekey === "autolaunch" && (
+
+          {typeof props.value === "boolean" && (
             <Switch
               enabled={props.value as boolean}
               setEnabled={props.setValue as Dispatch<SetStateAction<boolean>>}
             />
           )}
-          {props.storekey === "wallpapersPath" && (
+
+          {props.settingsKey === "wallpapers-path" && (
             <PathPicker
               path={props.value as string}
               setPath={props.setValue as Dispatch<SetStateAction<string>>}
             />
+          )}
+
+          {props.settingsKey.includes("hotkey-") && (
+            <Hotkey
+              hotkey={props.value as string}
+              setHotkey={props.setValue as Dispatch<SetStateAction<string>>}
+            />
+          )}
+
+          {props.settingsKey === "version" && (
+            <div className="flex flex-row items-center gap-2">
+              <button className="flex flex-row gap-1 p-1 bg-dark group-hover/settings-item:bg-light">
+                {/* <CgNotes size={24} /> */}
+                Release Notes
+              </button>
+              <button className="p-1 bg-dark group-hover/settings-item:bg-light">
+                Check for updates
+              </button>
+            </div>
+          )}
+          {props.settingsKey === "github" && (
+            <Tooltip text={GITHUB_LINK}>
+              <button
+                className="p-1 bg-dark group-hover/settings-item:bg-light"
+                onClick={() => window.ipcRenderer.shell.openUrl(GITHUB_LINK)}
+              >
+                Open
+              </button>
+            </Tooltip>
+          )}
+          {props.settingsKey === "report-a-bug" && (
+            <Tooltip text={GITHUB_LINK + "/issues"}>
+              <button
+                className="p-1 bg-dark group-hover/settings-item:bg-light"
+                onClick={() =>
+                  window.ipcRenderer.shell.openUrl(GITHUB_LINK + "/issues")
+                }
+              >
+                Go to Github
+              </button>
+            </Tooltip>
           )}
         </div>
       </div>

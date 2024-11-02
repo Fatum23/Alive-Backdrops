@@ -1,18 +1,20 @@
 import i18next from "i18next";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import { enTranslations } from "./en";
-import { ruTranslations } from "./ru";
+
+import { en } from "./translations/en/";
+import { ru } from "./translations/ru/";
 
 i18n.use(initReactI18next).init({
-  lng: "ru",
+  lng: "en",
   fallbackLng: "en",
+  keySeparator: ".",
   resources: {
     en: {
-      translation: enTranslations,
+      translation: en,
     },
     ru: {
-      translation: ruTranslations,
+      translation: ru,
     },
   },
   interpolation: {

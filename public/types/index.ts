@@ -2,8 +2,7 @@ export * from "./settings";
 export * from "./stateStore";
 export * from "./store";
 export * from "./wallpaper";
-
-import { Dispatch, SetStateAction } from "react";
+export * from "./fs";
 
 export type TypeWindowState = {
   x: number;
@@ -14,14 +13,11 @@ export type TypeWindowState = {
   isFullscreen: boolean;
 };
 
-export type TypePage = {
-  setTitle: Dispatch<SetStateAction<string>>;
-  setLocation: Dispatch<SetStateAction<string>>;
-};
-
 export type TypeContextMenu = {
   x: number;
   y: number;
   activeWallpaper: number;
   clickedWallpaper: number;
 };
+
+export type TypeHomeTab = "all" | "playlists" | "scheduling";

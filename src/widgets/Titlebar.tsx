@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import i18next from "i18next";
-import { useTranslation } from "react-i18next";
 
 import icon from "/icon.jpg";
 import { FaMinus as Minimize } from "react-icons/fa";
 import { CgMinimize as Unmaximize } from "react-icons/cg";
 import { CgMaximize as Maximize } from "react-icons/cg";
 import { IoClose as Close } from "react-icons/io5";
+import { APP_NAME } from "@public/constants";
 
-export const Titlebar = (props: { title: string }) => {
-  const { t } = useTranslation();
+export const Titlebar = () => {
   const [isWindowMaximized, setIsWindowMaximized] = useState<boolean>(false);
   const [isWindowFullscreen, setIsWindowFullscreen] = useState<boolean>(false);
   const [isWindowFocused, setIsWindowFocused] = useState<boolean>(false);
@@ -40,37 +39,50 @@ export const Titlebar = (props: { title: string }) => {
       setIsWindowFocused(await window.ipcRenderer.window.isFocused());
     };
     init();
-    window.ipcRenderer.window.onResize(onResize);
-    window.ipcRenderer.window.onFocusChange(onFocusChange);
+    const removeResizeListener = window.ipcRenderer.window.onResize(onResize);
+    const removeFocusListener =
+      window.ipcRenderer.window.onFocusChange(onFocusChange);
+
+    return () => {
+      removeResizeListener && removeResizeListener();
+      removeFocusListener && removeFocusListener();
+    };
   }, []);
 
+  const [title, setTitle] = useState<string>(APP_NAME);
+
   useEffect(() => {
-    const title =
-      "Alive Backdrops" + (props.title !== "" ? " - " + t(props.title) : "");
-    window.ipcRenderer.window.setTitle(title);
-  }, [props.title, i18next.language]);
+    const observer = new MutationObserver((mutations) => {
+      setTitle((mutations[0]?.target as HTMLElement).innerText);
+    });
+    observer.observe(document.querySelector("title")!, {
+      subtree: true,
+      characterData: true,
+      childList: true,
+    });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
       {!isWindowFullscreen && (
         <>
-          <div className="flex flex-row justify-between bg-dark h-6 w-full z-[2147483647] fixed">
+          <div className="flex flex-row justify-between bg-dark h-6 w-full z-[2147483647]">
             <div className="flex flex-row grow" data-window-drag-region>
               <img className="h-6" src={icon} alt="" />
               <div className={`pl-1 ${!isWindowFocused && "opacity-70"}`}>
-                {"Alive Backdrops" +
-                  (props.title !== "" ? " - " + t(props.title) : "")}
+                {title}
               </div>
             </div>
             <div className="flex flex-row">
               <button
-                className="cursor-default flex items-center px-1 bg-transparent hover:bg-light rounded-none"
+                className="flex items-center px-1 bg-transparent rounded-none cursor-default hover:bg-light"
                 onClick={() => window.ipcRenderer.window.minimize()}
               >
                 <Minimize size={16} />
               </button>
               <button
-                className="cursor-default flex items-center px-1 bg-transparent hover:bg-light rounded-none"
+                className="flex items-center px-1 bg-transparent rounded-none cursor-default hover:bg-light"
                 onClick={() => window.ipcRenderer.window.toggleMaximize()}
               >
                 {isWindowMaximized ? (
@@ -80,14 +92,13 @@ export const Titlebar = (props: { title: string }) => {
                 )}
               </button>
               <button
-                className="cursor-default flex items-center bg-transparent hover:bg-red-500 rounded-none"
-                onClick={() => window.ipcRenderer.window.hide()}
+                className="flex items-center bg-transparent rounded-none cursor-default hover:bg-red-500"
+                onClick={() => window.ipcRenderer.window.close()}
               >
                 <Close size={26} />
               </button>
             </div>
           </div>
-          <div className="h-6"></div>
         </>
       )}
     </>

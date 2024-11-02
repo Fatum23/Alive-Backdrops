@@ -7,6 +7,11 @@ import { path } from "./path";
 import { theme } from "./theme";
 import { language } from "./language";
 import { shell } from "./shell";
+import { wallpaper } from "./wallpaper";
+import { fs } from "./fs";
+import { other } from "./other";
+
+ipcRenderer.setMaxListeners(30);
 
 contextBridge.exposeInMainWorld("ipcRenderer", {
   on(channel: string, func: (...args: unknown[]) => void) {
@@ -34,4 +39,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
   theme: theme,
   language: language,
   shell: shell,
+  wallpaper: wallpaper,
+  fs: fs,
+  other: other,
 });

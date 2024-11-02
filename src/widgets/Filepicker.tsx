@@ -6,9 +6,14 @@ import {
   useRef,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { FaFile } from "react-icons/fa";
+import { FiFilePlus } from "react-icons/fi";
+import { IoIosArrowDown } from "react-icons/io";
+import { LuFilePlus } from "react-icons/lu";
+import { PiFilePlus, PiFilePlusLight } from "react-icons/pi";
 
 export const Filepicker = (props: {
-  setVideoSrc: Dispatch<SetStateAction<string>>;
+  setWallpaperSrc: Dispatch<SetStateAction<string>>;
 }) => {
   const { t } = useTranslation();
   const dropzoneRef = useRef<HTMLButtonElement>(null);
@@ -17,7 +22,7 @@ export const Filepicker = (props: {
     e.preventDefault();
     e.stopPropagation();
     const dt = e.dataTransfer!;
-    props.setVideoSrc(
+    props.setWallpaperSrc(
       dt?.types.includes("Files") && dt.types.length === 1
         ? dt.files![0]?.path!
         : dt?.getData("text/plain")
@@ -25,24 +30,31 @@ export const Filepicker = (props: {
   }, []);
 
   useEffect(() => {
-    document.addEventListener("drop", drop);
+    document.getElementById("router")!.addEventListener("drop", drop);
     return () => {
-      document.removeEventListener("drop", drop);
+      document.getElementById("router")!.removeEventListener("drop", drop);
     };
   }, []);
 
   return (
-    <button
-      ref={dropzoneRef}
-      className="w-[50%] h-24 flex items-center justify-center text-lg"
-      onClick={async () => {
-        const path = await window.ipcRenderer.dialog.pickWallpaper();
-        if (path !== null) {
-          props.setVideoSrc(path);
-        }
-      }}
-    >
-      {t("Drop or select file")}
-    </button>
+    <div className="flex flex-row w-full">
+      <button
+        ref={dropzoneRef}
+        className="flex items-center justify-center w-full gap-2 p-4 text-lg rounded-r-none"
+        onClick={async () => {
+          const path = await window.ipcRenderer.dialog.pickWallpaper();
+          if (path) props.setWallpaperSrc(path);
+        }}
+      >
+        <PiFilePlusLight size={32} />
+        <div>{t("add-wallpaper.drop-or-select-file")}</div>
+      </button>
+      <button
+        onClick={() => undefined}
+        className="flex items-center justify-center px-1 rounded-l-none"
+      >
+        <IoIosArrowDown size={24} />
+      </button>
+    </div>
   );
 };

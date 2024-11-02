@@ -9,7 +9,9 @@ export const BackButton = () => {
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     e.key === "Escape" &&
-      !document.getElementById("router")!.classList.contains("modal-open") &&
+      !["modal-open", "hotkey"].some((v) =>
+        document.documentElement.className.includes(v)
+      ) &&
       navigate(-1);
   }, []);
 
@@ -26,7 +28,7 @@ export const BackButton = () => {
       onClick={() => navigate(-1)}
     >
       <IoMdArrowRoundBack size={24} />
-      <div className="hidden sm:inline">{t("Back")}</div>
+      <div className="hidden md:inline">{t("components.back.back")}</div>
     </button>
   );
 };

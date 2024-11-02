@@ -1,16 +1,16 @@
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { cloneElement, ReactElement } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import { useTranslation } from "react-i18next";
 
 export const Tooltip = (props: {
-  children: ReactNode;
+  children: ReactElement;
   text: string;
   type?: "hint" | "success" | "warning" | "error";
   visible?: boolean;
-  wrapperClassName?: string;
+  visibleCondition?: boolean;
+  showTimeout?: number;
+  info?: boolean;
 }) => {
-  const { t } = useTranslation();
-
   const [color, setColor] = useState<string>("");
 
   useEffect(() => {
@@ -33,6 +33,8 @@ export const Tooltip = (props: {
     setColor(color);
   }, [props.type]);
 
+  const [visible, setVisible] = useState<boolean | undefined>(props.visible);
+  useEffect(() => setVisible(props.visible), [props.visible]);
   const [hovered, setHovered] = useState<boolean>(false);
   const [hoverTimeout, setHoverTimeout] = useState<
     NodeJS.Timeout | undefined
@@ -60,8 +62,14 @@ export const Tooltip = (props: {
   }, [hoverTimeout]);
 
   const targetOnMouseEnter = useCallback(
-    () => setHoverTimeout(setTimeout(() => setHovered(true), 500)),
-    []
+    () =>
+      setHoverTimeout(
+        setTimeout(
+          () => setHovered(true),
+          props.showTimeout !== undefined ? props.showTimeout : 500
+        )
+      ),
+    [props.showTimeout]
   );
 
   const documentOnMouseMove = useCallback((e: MouseEvent) => {
@@ -74,10 +82,8 @@ export const Tooltip = (props: {
 
   const documentOnScroll = useCallback(() => {
     if (!targetRef.current) return;
-    setScrollTargetTop(
-      targetRef.current.children[0]!.getBoundingClientRect().top
-    );
-  }, [targetRef]);
+    setScrollTargetTop(targetRef.current.getBoundingClientRect().top); //TODO rerender only if visible
+  }, [props.visible]);
 
   const documentOnScrollEnd = useCallback(() => {
     setScrollTargetTop(null);
@@ -86,9 +92,7 @@ export const Tooltip = (props: {
   useEffect(() => {
     if (!targetRef.current) return;
 
-    const target = targetRef.current.children[0]! as HTMLElement;
-
-    target.addEventListener("mouseenter", targetOnMouseEnter);
+    targetRef.current.addEventListener("mouseenter", targetOnMouseEnter);
     document.addEventListener("mousemove", documentOnMouseMove);
     props.visible !== undefined &&
       document.addEventListener("scroll", documentOnScroll, true);
@@ -101,7 +105,7 @@ export const Tooltip = (props: {
         : undefined;
 
     return () => {
-      target.removeEventListener("mouseenter", targetOnMouseEnter);
+      targetRef.current?.removeEventListener("mouseenter", targetOnMouseEnter);
       document.removeEventListener("mousemove", documentOnMouseMove);
       props.visible !== undefined &&
         document.removeEventListener("scroll", documentOnScroll, true);
@@ -114,110 +118,147 @@ export const Tooltip = (props: {
   useEffect(() => {
     if (!targetRef.current) return;
 
-    const target = targetRef.current.children[0]! as HTMLElement;
-
-    target.addEventListener("mouseleave", targetSetHoveredFalse);
-    target.addEventListener("mousedown", targetSetHoveredFalse);
+    targetRef.current.addEventListener("mouseleave", targetSetHoveredFalse);
+    !props.info &&
+      targetRef.current.addEventListener("mousedown", targetSetHoveredFalse);
     props.visible === undefined &&
-      target.addEventListener("wheel", targetSetHoveredFalse);
+      targetRef.current.addEventListener("wheel", targetSetHoveredFalse);
     return () => {
-      target.removeEventListener("mouseleave", targetSetHoveredFalse);
-      target.removeEventListener("mousedown", targetSetHoveredFalse);
+      targetRef.current?.removeEventListener(
+        "mouseleave",
+        targetSetHoveredFalse
+      );
+      !props.info &&
+        targetRef.current?.removeEventListener(
+          "mousedown",
+          targetSetHoveredFalse
+        );
 
       props.visible === undefined &&
-        target.removeEventListener("wheel", targetSetHoveredFalse);
+        targetRef.current?.removeEventListener("wheel", targetSetHoveredFalse);
     };
   }, [hoverTimeout]);
 
+  const [modalChild, setModalChild] = useState<boolean>(false);
+  useEffect(() => {
+    if (!document.getElementById("modal-portal") || !targetRef.current) return;
+    setModalChild(
+      document.getElementById("modal-portal")!.contains(targetRef.current)
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!modalChild || !props.visible) return;
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        const htmlTag = mutation.target as HTMLHtmlElement;
+        !htmlTag.classList.contains("modal-open") && setVisible(false);
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, [modalChild, props.visible]);
+
   return (
     <>
-      {document.getElementById("tooltip") ? (
+      {document.getElementById("tooltip-portal") ? (
         ReactDOM.createPortal(
           <div
             ref={tooltipRef}
             style={{
-              opacity: (props.visible !== undefined ? props.visible : hovered)
+              opacity: (
+                visible !== undefined
+                  ? visible
+                  : props.visibleCondition !== undefined
+                  ? props.visibleCondition && hovered
+                  : hovered
+              )
                 ? 1
                 : 0,
               transform: `translateY(${
-                (props.visible !== undefined ? props.visible : hovered) ? 0 : 5
+                (
+                  visible !== undefined
+                    ? visible
+                    : props.visibleCondition !== undefined
+                    ? props.visibleCondition && hovered
+                    : hovered
+                )
+                  ? 0
+                  : 5
               }px)`,
               top:
                 targetRef.current && tooltipRef.current
                   ? scrollTargetTop
                     ? scrollTargetTop -
                       tooltipRef.current.getBoundingClientRect().height
-                    : targetRef.current.children[0]!.getBoundingClientRect()
-                        .top - tooltipRef.current.getBoundingClientRect().height
+                    : targetRef.current.getBoundingClientRect().top -
+                      tooltipRef.current.getBoundingClientRect().height
                   : 0,
               left:
                 targetRef.current && tooltipRef.current
-                  ? targetRef.current.children[0]!.getBoundingClientRect()
-                      .left -
+                  ? targetRef.current.getBoundingClientRect().left -
                       tooltipRef.current.getBoundingClientRect().width / 2 +
-                      targetRef.current.children[0]!.getBoundingClientRect()
-                        .width /
-                        2 >
+                      targetRef.current.getBoundingClientRect().width / 2 >
                     0
-                    ? targetRef.current.children[0]!.getBoundingClientRect()
-                        .left -
+                    ? targetRef.current.getBoundingClientRect().left -
                       tooltipRef.current.getBoundingClientRect().width / 2 +
-                      targetRef.current.children[0]!.getBoundingClientRect()
-                        .width /
-                        2
+                      targetRef.current.getBoundingClientRect().width / 2
                     : 4
                   : 0,
+              zIndex: modalChild ? 51 : 49,
             }}
             {...{ inert: "" }}
             data-rerender={rerender}
-            className="absolute z-[60] [transition:opacity_0.2s,transform_0.2s] flex flex-col"
+            className={`tooltip ${
+              modalChild && "modal-child"
+            } absolute [transition:opacity_0.2s,transform_0.2s] flex flex-col ${
+              color === "black" && "drop-shadow-tooltip"
+            }`}
           >
             <div
-              className="text-white rounded-md py-1 px-2 text-nowrap"
+              className="px-2 py-1 text-white rounded-md text-nowrap"
               style={{
                 backgroundColor: color,
               }}
             >
-              {t(props.text, { nsSeparator: false })}
+              {props.text}
             </div>
             <div
               style={{
                 borderTopColor: color,
                 marginLeft:
                   targetRef.current && tooltipRef.current
-                    ? targetRef.current.children[0]!.getBoundingClientRect()
-                        .left -
-                      (targetRef.current.children[0]!.getBoundingClientRect()
-                        .left -
+                    ? targetRef.current.getBoundingClientRect().left -
+                      (targetRef.current.getBoundingClientRect().left -
                         tooltipRef.current.getBoundingClientRect().width / 2 +
-                        targetRef.current.children[0]!.getBoundingClientRect()
-                          .width /
-                          2 >
+                        targetRef.current.getBoundingClientRect().width / 2 >
                       0
-                        ? targetRef.current.children[0]!.getBoundingClientRect()
-                            .left -
+                        ? targetRef.current.getBoundingClientRect().left -
                           tooltipRef.current.getBoundingClientRect().width / 2 +
-                          targetRef.current.children[0]!.getBoundingClientRect()
-                            .width /
-                            2
+                          targetRef.current.getBoundingClientRect().width / 2
                         : 4) +
-                      targetRef.current.children[0]!.getBoundingClientRect()
-                        .width /
-                        2 -
+                      targetRef.current.getBoundingClientRect().width / 2 -
                       4
                     : 0,
               }}
-              className={`w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-b-4 border-b-transparent border-t-4`}
+              className="w-0 h-0 border-t-4 border-b-4 border-l-4 border-r-4 border-l-transparent border-r-transparent border-b-transparent"
             ></div>
           </div>,
-          document.getElementById("tooltip")!
+          document.getElementById("tooltip-portal")!
         )
       ) : (
         <></>
       )}
-      <div className={props.wrapperClassName} ref={targetRef}>
-        {props.children}
-      </div>
+      {cloneElement(props.children, {
+        ref: targetRef,
+      })}
     </>
   );
 };

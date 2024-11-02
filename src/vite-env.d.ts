@@ -12,13 +12,16 @@ interface Window {
     ): Electron.IpcRenderer;
     invoke(channel: string, ...args: any[]): Promise<any>;
   } & {
-    app: import("../public/preloadTypes").TypeApp;
-    window: import("../public/preloadTypes").TypeWindow;
-    dialog: import("../public/preloadTypes").TypeDialog;
-    store: import("../public/preloadTypes").TypeStore;
-    path: import("../public/preloadTypes").TypePath;
-    theme: import("../public/preloadTypes").TypeTheme;
-    language: import("../public/preloadTypes").TypeLanguage;
-    shell: import("../public/preloadTypes").TypeShell;
+    app: import("../public/preloadTypes").TypePreloadApp;
+    window: import("../public/preloadTypes").TypePreloadWindow;
+    dialog: import("../public/preloadTypes").TypePreloadDialog;
+    store: import("../public/preloadTypes").TypePreloadStore;
+    path: import("../public/preloadTypes").TypePreloadPath;
+    theme: import("../public/preloadTypes").TypePreloadTheme;
+    language: import("../public/preloadTypes").TypePreloadLanguage;
+    shell: import("../public/preloadTypes").TypePreloadShell;
+    wallpaper: import("../public/preloadTypes/wallpaper").TypePreloadWallpaper;
+    fs: import("../public/preloadTypes/fs").TypePreloadFs;
+    other: import("../public/preloadTypes/other").TypePreloadOther;
   };
 }
