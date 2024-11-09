@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AnimatedRoutes } from "@routes/index";
 import { Info, SettingsItem, SettingsNavBar } from "@widgets";
 import { Scrollbar, Tooltip } from "@ui";
 import { useSettingsStore } from "@shared/store";
@@ -7,7 +8,7 @@ import {
   TypeAppSettingsChapter,
   TypeColorTheme,
   TypeLanguage,
-  TypeSettingsTab,
+  TypeSettingsTabsRoutes,
   TypeShowWindow,
   TypeWallpaperBehavior,
 } from "@public/types";
@@ -28,7 +29,13 @@ import {
   FaKeyboard,
   FaVolumeDown,
 } from "react-icons/fa";
-import { MdBugReport, MdLaunch, MdRocketLaunch } from "react-icons/md";
+
+import {
+  MdBugReport,
+  MdFeedback,
+  MdLaunch,
+  MdRocketLaunch,
+} from "react-icons/md";
 import { GrLanguage } from "react-icons/gr";
 import { GoFileDirectoryFill, GoZoomIn } from "react-icons/go";
 import { PiGraphicsCard } from "react-icons/pi";
@@ -38,15 +45,30 @@ import { IoNotifications, IoPower } from "react-icons/io5";
 import { HiMiniPause } from "react-icons/hi2";
 
 import { LuEyeOff } from "react-icons/lu";
-import { APP_NAME } from "@public/constants";
+import { APP_NAME, ROUTES } from "@public/constants";
 import i18next from "i18next";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { duration } from "moment";
+import { AppTab, WallpapersTab } from "@routes/settings";
+import { FaQuestion } from "react-icons/fa6";
 
 const SettingsPageWithoutProvider = () => {
-  useEffect(() => {
-    document.title = `${APP_NAME} - ${t("routes.settings")}`;
-  }, [i18next.language]);
-
   const { t } = useTranslation();
+  const [tab, setTab] = useState<TypeSettingsTabsRoutes>("/app");
+
+  useEffect(() => {
+    document.title = `${APP_NAME} - ${t(
+      `routes.settings.tabs.${tab.slice(1)}.titlebar`
+    )}`;
+  }, [tab, i18next.language]);
+
   const store = useSettingsStore();
 
   const [language, setLanguage] = useState<TypeLanguage>(store.language);
@@ -207,9 +229,13 @@ const SettingsPageWithoutProvider = () => {
     });
   }, [settingsChapterScrolled]);
 
+  const location = useLocation();
+
   return (
     <div className="flex flex-col w-screen h-full">
       <SettingsNavBar
+        tab={tab}
+        setTab={setTab}
         language={language}
         setLanguage={setLanguage}
         wallpapersPath={wallpapersPath}
@@ -262,7 +288,44 @@ const SettingsPageWithoutProvider = () => {
         setSettingsChapter={setSettingsChapter}
         setSettingsChapterScrolled={setSettingsChapterScrolled}
       />
-      {/* <Scrollbar>
+      {/* <div className="w-full h-full">
+        <AnimatedRoutes mode="sync" routesAnimateDepth={2}>
+          <Route
+            index
+            path={ROUTES.settings.tabs.app}
+            element={
+              <motion.div
+                initial={{
+                  x: -window.innerWidth,
+                  width: 0,
+                }}
+                animate={{ x: 0, width: "100%" }}
+                exit={{ x: -window.innerWidth, width: 0 }}
+                className="w-full h-full"
+              >
+                <AppTab />
+              </motion.div>
+            }
+          />
+          <Route
+            path={ROUTES.settings.tabs.wallpapers}
+            element={
+              <motion.div
+                initial={{
+                  x: window.innerWidth,
+                  width: 0,
+                }}
+                animate={{ x: 0, width: "100%" }}
+                exit={{ x: window.innerWidth, width: 0 }}
+                className="w-full h-full"
+              >
+                <WallpapersTab />
+              </motion.div>
+            }
+          />
+        </AnimatedRoutes>
+      </div> */}
+      <Scrollbar>
         <div
           ref={scrollableDivRef}
           className="flex-1 overflow-y-auto"
@@ -650,10 +713,6 @@ const SettingsPageWithoutProvider = () => {
 
             <div ref={aboutChapterRef} className="flex flex-col">
               <h1>{t("settings.about.title")}</h1>
-              <SettingsItem
-                title={t("settings.about.version.title", { version: version })}
-                settingsKey="version"
-              />
               <SettingsItem<boolean>
                 icon={<IoNotifications size={26} />}
                 value={notifyAboutUpdates}
@@ -663,6 +722,20 @@ const SettingsPageWithoutProvider = () => {
                   "settings.about.notify-about-updates.description"
                 )}
                 settingsKey="notify-about-updates"
+              />
+              <SettingsItem
+                title={t("settings.about.version.title", { version: version })}
+                settingsKey="version"
+              />
+              <SettingsItem
+                icon={<FaQuestion size={26} />}
+                title="Faq"
+                settingsKey="faq"
+              />
+              <SettingsItem
+                icon={<MdFeedback size={26} />}
+                title="Feedback"
+                settingsKey="feedback"
               />
               <SettingsItem
                 icon={<FaGithub size={26} />}
@@ -679,7 +752,7 @@ const SettingsPageWithoutProvider = () => {
             </div>
           </div>
         </div>
-      </Scrollbar> */}
+      </Scrollbar>
     </div>
   );
 };

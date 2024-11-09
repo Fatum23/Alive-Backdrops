@@ -1,4 +1,4 @@
-import routes from "./routes.json";
+import { routes } from "./routes";
 import components from "./components.json";
 import home from "./home.json";
 import addWallpaper from "./add-wallpaper.json";

@@ -29,7 +29,7 @@ export const createMainWindow = async () => {
     height: windowState ? windowState.height : 600,
     minWidth: 550,
     minHeight: 400,
-    icon: path.join(VITE_PUBLIC, "icon.jpg"),
+    icon: path.join(VITE_PUBLIC, "images", "icon.jpg"),
     title: "Alive Backdrops",
     show: false,
     frame: false,

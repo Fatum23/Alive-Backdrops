@@ -1,7 +1,4 @@
-import { TypeSettingsStoreKeys } from "./store";
-
-export type TypeSettingsTab = "app" | "wallpaper";
-export type TypeAppSettingsChapter =
+export type TAppSettingsChapter =
   | "general"
   | "system"
   | "appearance"
@@ -10,20 +7,8 @@ export type TypeAppSettingsChapter =
   | "other"
   | "about";
 
-export type TypeWallpapersSettingsChapter = "wallpapers-behavior";
-
-export type TypeSettingsKeys =
-  | TypeSettingsStoreKeys
-  | "version"
-  | "github"
-  | "faq"
-  | "report-a-bug"
-  | "feedback";
-
 export type TypeLanguage = "system" | "en" | "ru";
-export type TypeWallpaperBehavior = "keep-running" | "mute" | "pause";
 export type TypeColorTheme = "system" | "dark" | "light" | "custom";
-
 export type TypeColorThemeCustom =
   | {
       bg: string;

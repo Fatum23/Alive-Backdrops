@@ -5,16 +5,17 @@ import {
   TypeAppSettingsChapter,
   TypeModalDoNotShowAgainKeys,
   TypeSettingsStateStore,
-  TypeSettingsTab,
+  TypeSettingsTabsRoutes,
   TypeWallpapersSettingsChapter,
 } from "@public/types";
 import { BackButton, Tabs } from "@widgets";
 import { Modal, Select } from "@ui";
+import { ROUTES } from "@public/constants";
 
 export const SettingsNavBar = (
   props: TypeSettingsStateStore & {
-    settingsTab: TypeSettingsTab;
-    setSettingsTab: Dispatch<SetStateAction<TypeSettingsTab>>;
+    tab: TypeSettingsTab;
+    setTab: Dispatch<SetStateAction<TypeSettingsTab>>;
     volumeValid: boolean;
     interfaceScaleValid: boolean;
     appSettingsChapter: TypeAppSettingsChapter;
@@ -43,41 +44,61 @@ export const SettingsNavBar = (
   const [restartModalOpened, setRestartModalOpened] = useState<boolean>(false);
   const [doNotShowAgain, setDoNotShowAgain] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getFromStore = async () => {
-      setRestartModalOpened(
-        (await window.ipcRenderer.store.get<
-          TypeModalDoNotShowAgainKeys,
-          boolean
-        >("settings-restart")) && (await window.ipcRenderer.app.isPackaged())
-          ? false
-          : true
-      );
-      setDoNotShowAgain(
-        !!(await window.ipcRenderer.store.get<
-          TypeModalDoNotShowAgainKeys,
-          boolean
-        >("settings-restart"))
-      );
-    };
-    getFromStore();
-  }, [checkDoNotShowAgain]);
+  // useEffect(() => {
+  //   const getFromStore = async () => {
+  //     setRestartModalOpened(
+  //       (await window.ipcRenderer.store.get<
+  //         TypeModalDoNotShowAgainKeys,
+  //         boolean
+  //       >("settings-restart")) && (await window.ipcRenderer.app.isPackaged())
+  //         ? false
+  //         : true
+  //     );
+  //     setDoNotShowAgain(
+  //       !!(await window.ipcRenderer.store.get<
+  //         TypeModalDoNotShowAgainKeys,
+  //         boolean
+  //       >("settings-restart"))
+  //     );
+  //   };
+  //   getFromStore();
+  // }, [checkDoNotShowAgain]);
 
-  const [storeChangeCount, setStoreChangeCount] = useState<number>(0);
+  // const [storeChangeCount, setStoreChangeCount] = useState<number>(0);
 
-  useEffect(
-    () =>
-      storeChangeCount == 2
-        ? setCheckDoNotShowAgain((value) => !value)
-        : setStoreChangeCount((value) => value + 1),
-    [store.wallpapersPath, store.hardwareAcceleration]
-  );
+  // useEffect(
+  //   () =>
+  //     storeChangeCount == 2
+  //       ? setCheckDoNotShowAgain((value) => !value)
+  //       : setStoreChangeCount((value) => value + 1),
+  //   [store.wallpapersPath, store.hardwareAcceleration]
+  // );
 
   return (
     <>
       <div className="flex flex-row items-center h-8 gap-2 m-2">
         <BackButton />
-        <Tabs />
+        <Tabs<TypeSettingsTabsRoutes>
+          route={ROUTES.settings.tabs.app}
+          routes={[
+            {
+              label: t(
+                `routes.settings.tabs.${ROUTES.settings.tabs.app.slice(
+                  1
+                )}.nav-title`
+              ),
+              route: ROUTES.settings.tabs.app,
+            },
+            {
+              label: t(
+                `routes.settings.tabs.${ROUTES.settings.tabs.wallpapers.slice(
+                  1
+                )}.nav-title`
+              ),
+              route: ROUTES.settings.tabs.wallpapers,
+            },
+          ]}
+        />
         <Select<TypeAppSettingsChapter>
           options={[
             {

@@ -1,15 +1,20 @@
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route } from "react-router-dom";
 
 import "@shared/services/language";
 import "@shared/services/theme";
 import "@shared/styles/App.scss";
 
-import { AddWallpaperPage, HomePage, SettingsPage } from "@pages";
+import { AnimatedRoutes } from "@routes/index";
 import { DropHandler, Titlebar } from "@widgets";
 import { useSettingsStore } from "@shared/store";
+import { motion } from "framer-motion";
+import { ROUTES } from "@public/constants";
+import { HomePage } from "@routes/home";
+import { AddWallpaperPage } from "@routes/add-wallpaper";
+import { SettingsPage } from "@routes/settings";
 
 export const App = () => {
-  // useSettingsStore();
+  useSettingsStore();
 
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden">
@@ -21,11 +26,45 @@ export const App = () => {
         <div id="router" className="w-full h-full">
           <HashRouter>
             <DropHandler />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/AddWallpaper" element={<AddWallpaperPage />} />
-              <Route path="/Settings" element={<SettingsPage />} />
-            </Routes>
+            <AnimatedRoutes mode="wait" routesAnimateDepth={1}>
+              <Route
+                path="/"
+                element={<Navigate replace to={ROUTES.home.self} />}
+              />
+              <Route
+                index
+                path={`${ROUTES.home.self}/*`}
+                element={
+                  <motion.div
+                    className="w-full h-full"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <HomePage />
+                  </motion.div>
+                }
+              />
+              <Route
+                path={ROUTES.addWallpaper}
+                element={<AddWallpaperPage />}
+              />
+              <Route
+                path={`${ROUTES.settings.self}/*`}
+                element={
+                  <motion.div
+                    className="w-full h-full"
+                    initial={{ opacity: 0, scale: 1.02 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.02 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <SettingsPage />
+                  </motion.div>
+                }
+              />
+            </AnimatedRoutes>
           </HashRouter>
         </div>
       </div>

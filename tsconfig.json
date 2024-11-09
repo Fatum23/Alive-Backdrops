@@ -24,7 +24,7 @@
     "paths": {
       "@public/*": ["public/*"],
       "@app/*": ["src/app/*"],
-      "@pages": ["src/pages"],
+      "@routes/*": ["src/routes/*"],
       "@ui": ["src/ui"],
       "@entities": ["src/entities"],
       "@features": ["src/features"],

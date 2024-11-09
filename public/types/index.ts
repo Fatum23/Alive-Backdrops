@@ -3,6 +3,8 @@ export * from "./stateStore";
 export * from "./store";
 export * from "./wallpaper";
 export * from "./fs";
+export * from "./routes";
+export * from "./modal";
 
 export type TypeWindowState = {
   x: number;
@@ -12,12 +14,3 @@ export type TypeWindowState = {
   isMaximized: boolean;
   isFullscreen: boolean;
 };
-
-export type TypeContextMenu = {
-  x: number;
-  y: number;
-  activeWallpaper: number;
-  clickedWallpaper: number;
-};
-
-export type TypeHomeTab = "all" | "playlists" | "scheduling";

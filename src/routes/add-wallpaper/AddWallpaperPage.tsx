@@ -113,7 +113,7 @@ export const AddWallpaperPage = () => {
   const [fileProperties, setFileProperties] = useState<TypeFileProperties>();
 
   return (
-    <div className="w-screen h-screen overflow-hidden">
+    <div className="w-full h-full">
       <div className="absolute m-2">
         <BackButton />
       </div>

@@ -1,6 +1,7 @@
+import { motion } from "framer-motion";
 import { cloneElement, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
+import { createPortal } from "react-dom";
 
 export const Tooltip = (props: {
   children: ReactElement;
@@ -166,11 +167,19 @@ export const Tooltip = (props: {
     return () => observer.disconnect();
   }, [modalChild, props.visible]);
 
+  const [portal, setPortal] = useState<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setPortal(document.getElementById("tooltip-portal") as HTMLDivElement);
+  }, []);
+
   return (
     <>
-      {document.getElementById("tooltip-portal") ? (
-        ReactDOM.createPortal(
-          <div
+      {portal &&
+        createPortal(
+          <motion.div
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
             ref={tooltipRef}
             style={{
               opacity: (
@@ -250,12 +259,9 @@ export const Tooltip = (props: {
               }}
               className="w-0 h-0 border-t-4 border-b-4 border-l-4 border-r-4 border-l-transparent border-r-transparent border-b-transparent"
             ></div>
-          </div>,
-          document.getElementById("tooltip-portal")!
-        )
-      ) : (
-        <></>
-      )}
+          </motion.div>,
+          portal
+        )}
       {cloneElement(props.children, {
         ref: targetRef,
       })}

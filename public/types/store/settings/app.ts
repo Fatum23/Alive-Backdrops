@@ -1,0 +1,18 @@
+export type TAppSettingsStoreKeys =
+  | "language"
+  | "autolaunch"
+  | "tray"
+  | "theme"
+  | "theme-custom"
+  | "interface-scale"
+  | "show-window-on-launch"
+  | "show-window-on-autolaunch"
+  | "hide-window-on-close"
+  | "quit-app-on-window-close"
+  | "activity-in-discord"
+  | "notify-about-updates"
+  | "version"
+  | "faq"
+  | "github"
+  | "report-a-bug"
+  | "feedback";

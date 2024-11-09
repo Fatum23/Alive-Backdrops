@@ -1,3 +1,4 @@
+export * from "./routes";
 export const APP_NAME = "Alive Backdrops";
 export const GITHUB_LINK = "https://github.com/Fatum23/Alive-Backdrops";
 export const LIBRARY_LINK = "https://alive-backdrops-library.vercel.app";

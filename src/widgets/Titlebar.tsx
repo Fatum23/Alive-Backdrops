@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import i18next from "i18next";
 
-import icon from "/icon.jpg";
+import icon from "/images/icon.jpg";
 import { FaMinus as Minimize } from "react-icons/fa";
 import { CgMinimize as Unmaximize } from "react-icons/cg";
 import { CgMaximize as Maximize } from "react-icons/cg";
@@ -70,7 +69,11 @@ export const Titlebar = () => {
           <div className="flex flex-row justify-between bg-dark h-6 w-full z-[2147483647]">
             <div className="flex flex-row grow" data-window-drag-region>
               <img className="h-6" src={icon} alt="" />
-              <div className={`pl-1 ${!isWindowFocused && "opacity-70"}`}>
+              <div
+                className={`pl-1 ${
+                  !isWindowFocused && "opacity-70"
+                } transition-all`}
+              >
                 {title}
               </div>
             </div>

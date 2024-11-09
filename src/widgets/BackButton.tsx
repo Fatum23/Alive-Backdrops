@@ -25,7 +25,7 @@ export const BackButton = () => {
   return (
     <button
       className="flex flex-row items-center p-1"
-      onClick={() => navigate(-1)}
+      onClick={() => navigate("..")}
     >
       <IoMdArrowRoundBack size={24} />
       <div className="hidden md:inline">{t("components.back.back")}</div>

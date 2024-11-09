@@ -4,9 +4,9 @@ import {
   TypeColorThemeCustom,
   TypeLanguage,
   TypeSettingsStateStore,
-  TypeSettingsStoreKeys,
+  TAppSettingsStoreKeys,
   TypeShowWindow,
-  TypeWallpaperBehavior,
+  TWallpaperBehavior,
 } from "@public/types";
 
 export const useSettingsStore = create<TypeSettingsStateStore>((set) => ({
